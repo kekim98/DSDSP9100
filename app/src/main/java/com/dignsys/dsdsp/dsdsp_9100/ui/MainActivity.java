@@ -21,16 +21,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         View rootView = findViewById(R.id.main_layout);
-        ImageFragment imageFragment1 = ImageFragment.newInstance(0, 0);
+        //ImageFragment imageFragment1 = ImageFragment.newInstance(0, 0);
         //ImageFragment imageFragment2 = ImageFragment.newInstance(960, 0);
-        VideoFragment videoFragment = VideoFragment.newInstance(960, 0);
+        //VideoFragment videoFragment = VideoFragment.newInstance(960, 0);
+        ClockFragment clockFragment = ClockFragment.newInstance(0, 0);
 
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction
-                .add(rootView.getId(), imageFragment1)
-                .add(rootView.getId(), videoFragment)
+              //  .add(rootView.getId(), imageFragment1)
+                .add(rootView.getId(), clockFragment)
                 .commit();
 
     }
