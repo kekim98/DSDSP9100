@@ -1,0 +1,622 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "66d32a4b0d3be9c4e907ae3ede5f838a",
+    "entities": [
+      {
+        "tableName": "config",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configVersion` TEXT, `firmwareVersion` TEXT, `deviceId` TEXT, `DSPMode` INTEGER NOT NULL, `backlight` INTEGER NOT NULL, `TVMode` INTEGER NOT NULL, `videoOutput` INTEGER NOT NULL, `audioMode` INTEGER NOT NULL, `audioVolume` INTEGER NOT NULL, `serverMode` INTEGER NOT NULL, `serverAddress` TEXT, `serverFolder` TEXT, `serverPort` INTEGER NOT NULL, `serverId` TEXT, `serverPwd` TEXT, `serverSyncInterval` INTEGER NOT NULL, `useLAN` INTEGER NOT NULL, `useLAN_DHCP` INTEGER NOT NULL, `LAN_AutoDNS` INTEGER NOT NULL, `LAN_IP` TEXT, `LAN_Subnet` TEXT, `LAN_Gateway` TEXT, `LAN_DNS` TEXT, `useWifi` INTEGER NOT NULL, `useWifi_DHCP` INTEGER NOT NULL, `Wifi_AutoDNS` INTEGER NOT NULL, `Wifi_AuthMode` INTEGER NOT NULL, `Wifi_IP` TEXT, `Wifi_Subnet` TEXT, `Wifi_Gateway` TEXT, `Wifi_DNS` TEXT, `Wifi_ESSID` TEXT, `Wifi_PWD` TEXT, `ImageChangeEffect` INTEGER NOT NULL, `ImageChangeInterval` INTEGER NOT NULL, `UseAutoResizeMovie` INTEGER NOT NULL, `UseAutoResizeImage` INTEGER NOT NULL, `CapMode` INTEGER NOT NULL, `CapPosition` INTEGER NOT NULL, `CapColor` INTEGER NOT NULL, `CapBackColor` INTEGER NOT NULL, `CapSpeed` INTEGER NOT NULL, `CapFont` INTEGER NOT NULL, `CapSize` INTEGER NOT NULL, `RSSMode` INTEGER NOT NULL, `RSSUpdateInterval` INTEGER NOT NULL, `RSSAddress` TEXT, `NTPServer` INTEGER NOT NULL, `Timezone` INTEGER NOT NULL, `TimeDisplayPosition` INTEGER NOT NULL, `TimeDisplayColor` INTEGER NOT NULL, `TimeDisplayBackColor` INTEGER NOT NULL, `TimeDisplayFont` INTEGER NOT NULL, `TimeDisplayFontSize` INTEGER NOT NULL, `AutoOnOffMode` INTEGER NOT NULL, `OnTime` TEXT, `OffTime` TEXT, `IA_Mode` INTEGER NOT NULL, `IA_ReqMeans` INTEGER NOT NULL, `IA_SerialBaud` INTEGER NOT NULL, `IA_SerialData` INTEGER NOT NULL, `IA_SerialParity` INTEGER NOT NULL, `IA_SerialStop` INTEGER NOT NULL, `IA_NetIP` TEXT, `IA_NetPort` INTEGER NOT NULL, `MS_Mode` INTEGER NOT NULL, `MS_ServerIP` TEXT, `MS_UserCount` INTEGER NOT NULL, `DTV_Modulation` INTEGER NOT NULL, `DTV_AutoSearchRange` INTEGER NOT NULL, `DTV_Channel` TEXT, `UseDefaultContents` INTEGER NOT NULL, `UseSDLogSave` INTEGER NOT NULL, `LogFileSaveDay` INTEGER NOT NULL, `EnableLiveUpload` INTEGER NOT NULL, `EnableLogUpload` INTEGER NOT NULL, `EnableCaptureUpload` INTEGER NOT NULL, `IntervalLive` INTEGER NOT NULL, `IntervalLog` INTEGER NOT NULL, `IntervalCapture` INTEGER NOT NULL, `CaptureScale` INTEGER NOT NULL, `Language` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "configVersion",
+            "columnName": "configVersion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "firmwareVersion",
+            "columnName": "firmwareVersion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deviceId",
+            "columnName": "deviceId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "DSPMode",
+            "columnName": "DSPMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "backlight",
+            "columnName": "backlight",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "TVMode",
+            "columnName": "TVMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "videoOutput",
+            "columnName": "videoOutput",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "audioMode",
+            "columnName": "audioMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "audioVolume",
+            "columnName": "audioVolume",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverMode",
+            "columnName": "serverMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverAddress",
+            "columnName": "serverAddress",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "serverFolder",
+            "columnName": "serverFolder",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "serverPort",
+            "columnName": "serverPort",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "serverId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "serverPwd",
+            "columnName": "serverPwd",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "serverSyncInterval",
+            "columnName": "serverSyncInterval",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "useLAN",
+            "columnName": "useLAN",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "useLAN_DHCP",
+            "columnName": "useLAN_DHCP",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "LAN_AutoDNS",
+            "columnName": "LAN_AutoDNS",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "LAN_IP",
+            "columnName": "LAN_IP",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "LAN_Subnet",
+            "columnName": "LAN_Subnet",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "LAN_Gateway",
+            "columnName": "LAN_Gateway",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "LAN_DNS",
+            "columnName": "LAN_DNS",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "useWifi",
+            "columnName": "useWifi",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "useWifi_DHCP",
+            "columnName": "useWifi_DHCP",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "Wifi_AutoDNS",
+            "columnName": "Wifi_AutoDNS",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "Wifi_AuthMode",
+            "columnName": "Wifi_AuthMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "Wifi_IP",
+            "columnName": "Wifi_IP",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Wifi_Subnet",
+            "columnName": "Wifi_Subnet",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Wifi_Gateway",
+            "columnName": "Wifi_Gateway",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Wifi_DNS",
+            "columnName": "Wifi_DNS",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Wifi_ESSID",
+            "columnName": "Wifi_ESSID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Wifi_PWD",
+            "columnName": "Wifi_PWD",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ImageChangeEffect",
+            "columnName": "ImageChangeEffect",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ImageChangeInterval",
+            "columnName": "ImageChangeInterval",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "UseAutoResizeMovie",
+            "columnName": "UseAutoResizeMovie",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "UseAutoResizeImage",
+            "columnName": "UseAutoResizeImage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "CapMode",
+            "columnName": "CapMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "CapPosition",
+            "columnName": "CapPosition",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "CapColor",
+            "columnName": "CapColor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "CapBackColor",
+            "columnName": "CapBackColor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "CapSpeed",
+            "columnName": "CapSpeed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "CapFont",
+            "columnName": "CapFont",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "CapSize",
+            "columnName": "CapSize",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "RSSMode",
+            "columnName": "RSSMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "RSSUpdateInterval",
+            "columnName": "RSSUpdateInterval",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "RSSAddress",
+            "columnName": "RSSAddress",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "NTPServer",
+            "columnName": "NTPServer",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "Timezone",
+            "columnName": "Timezone",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "TimeDisplayPosition",
+            "columnName": "TimeDisplayPosition",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "TimeDisplayColor",
+            "columnName": "TimeDisplayColor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "TimeDisplayBackColor",
+            "columnName": "TimeDisplayBackColor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "TimeDisplayFont",
+            "columnName": "TimeDisplayFont",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "TimeDisplayFontSize",
+            "columnName": "TimeDisplayFontSize",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "AutoOnOffMode",
+            "columnName": "AutoOnOffMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "OnTime",
+            "columnName": "OnTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "OffTime",
+            "columnName": "OffTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "IA_Mode",
+            "columnName": "IA_Mode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "IA_ReqMeans",
+            "columnName": "IA_ReqMeans",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "IA_SerialBaud",
+            "columnName": "IA_SerialBaud",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "IA_SerialData",
+            "columnName": "IA_SerialData",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "IA_SerialParity",
+            "columnName": "IA_SerialParity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "IA_SerialStop",
+            "columnName": "IA_SerialStop",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "IA_NetIP",
+            "columnName": "IA_NetIP",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "IA_NetPort",
+            "columnName": "IA_NetPort",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "MS_Mode",
+            "columnName": "MS_Mode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "MS_ServerIP",
+            "columnName": "MS_ServerIP",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "MS_UserCount",
+            "columnName": "MS_UserCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "DTV_Modulation",
+            "columnName": "DTV_Modulation",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "DTV_AutoSearchRange",
+            "columnName": "DTV_AutoSearchRange",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "DTV_Channel",
+            "columnName": "DTV_Channel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "UseDefaultContents",
+            "columnName": "UseDefaultContents",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "UseSDLogSave",
+            "columnName": "UseSDLogSave",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "LogFileSaveDay",
+            "columnName": "LogFileSaveDay",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "EnableLiveUpload",
+            "columnName": "EnableLiveUpload",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "EnableLogUpload",
+            "columnName": "EnableLogUpload",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "EnableCaptureUpload",
+            "columnName": "EnableCaptureUpload",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "IntervalLive",
+            "columnName": "IntervalLive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "IntervalLog",
+            "columnName": "IntervalLog",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "IntervalCapture",
+            "columnName": "IntervalCapture",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "CaptureScale",
+            "columnName": "CaptureScale",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "Language",
+            "columnName": "Language",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "dsp_format",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `description` TEXT, `price` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "price",
+            "columnName": "price",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "dsp_play_list",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productId` INTEGER NOT NULL, `text` TEXT, `postedAt` INTEGER, FOREIGN KEY(`productId`) REFERENCES `dsp_format`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "productId",
+            "columnName": "productId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "postedAt",
+            "columnName": "postedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_dsp_play_list_productId",
+            "unique": false,
+            "columnNames": [
+              "productId"
+            ],
+            "createSql": "CREATE  INDEX `index_dsp_play_list_productId` ON `${TABLE_NAME}` (`productId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "dsp_format",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "productId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"66d32a4b0d3be9c4e907ae3ede5f838a\")"
+    ]
+  }
+}
