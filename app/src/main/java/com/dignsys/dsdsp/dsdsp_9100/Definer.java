@@ -6,6 +6,7 @@ public class Definer {
 	/*
 	 * Common.
 	 */
+	public static final int	SCHEDULE_PERIOD = 2*1000; //2s
 	public static final int DEF_FALSE					= 0;
 	public static final int DEF_TRUE					= 1;	
 	public static final int DEF_USE						= 0;

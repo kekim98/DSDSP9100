@@ -10,47 +10,119 @@ import android.view.View;
 
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
-import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigViewModel;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.DspFormatEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.DspPlayListEntity;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static com.dignsys.dsdsp.dsdsp_9100.Definer.SCHEDULE_PERIOD;
 
 
 public class MainActivity extends AppCompatActivity {
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private List<DspFormatEntity> mFormatList;
+    private List<DspPlayListEntity> mPlayList;
+    private TimerTask mTask;
+    private Timer mTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final ConfigViewModel viewModel =
-                ViewModelProviders.of(this).get(ConfigViewModel.class);
+        final ScheduleViewModel viewModel =
+                ViewModelProviders.of(this).get(ScheduleViewModel.class);
 
-        subscribeUi(viewModel);
+        subscribe(viewModel);
 
-        init();
     }
 
-    private void subscribeUi(ConfigViewModel viewModel) {
+    private void subscribe(ScheduleViewModel viewModel) {
         // Update the list when the data changes
-        viewModel.getConfig().observe(this, new Observer<ConfigEntity>() {
+        viewModel.getFormatList().observe(this, new Observer<List<DspFormatEntity>>() {
             @Override
-            public void onChanged(@Nullable ConfigEntity myConfig) {
-                if (myConfig != null) {
-                    Log.d(TAG, "onChanged: ConfigEntity loaded!!!!");
-                  //  mBinding.setIsLoading(false);
+            public void onChanged(@Nullable List<DspFormatEntity> formatList) {
+                if (formatList != null) {
+                    mFormatList = formatList;
+                    runSchedule();
+
+                    Log.d(TAG, "onChanged: DspFormatEntity loaded!!!!");
+
                 } else {
-                    Log.d(TAG, "onChanged: ConfigEntity NOT loaded!!!!");
-                  //  mBinding.setIsLoading(true);
+                    Log.d(TAG, "onChanged: DspFormatEntity NOT loaded!!!!");
+
                 }
-                // espresso does not know how to wait for data binding's loop so we execute changes
-                // sync.
-               // mBinding.executePendingBindings();
+
             }
         });
+
+        viewModel.getPlayList().observe(this, new Observer<List<DspPlayListEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<DspPlayListEntity> playList) {
+                if (playList != null) {
+                    mPlayList = playList;
+                    runSchedule();
+                    Log.d(TAG, "onChanged: DspPlayListEntity loaded!!!!");
+
+                } else {
+                    Log.d(TAG, "onChanged: DspPlayListEntity NOT loaded!!!!");
+
+                }
+
+            }
+        });
+    }
+
+    private void runSchedule() {
+        if (mFormatList == null || mPlayList == null) {
+            Log.d(TAG, "runSchedule:  returned!!!!");
+            return;
+        }
+
+        if (mFormatList.size() == 0 || mPlayList.size() == 0) {
+            stopSchedule();
+        }
+
+
+        if (mTask == null) {
+            //  mGeoFenceServiceHelper.init();
+            mTask = new TimerTask() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "running timer task........");
+                    procScen();
+                }
+            };
+
+            mTimer = new Timer();
+            mTimer.schedule(mTask, 0, SCHEDULE_PERIOD);
+
+        }
+
+    }
+
+    private void procScen() {
+
+    }
+
+    private void createViews() {
+    }
+
+    private void stopSchedule() {
+        deleteViews();
+        Log.d(TAG, "stopSchedule: entered!!!!");
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
+    }
+
+    private void deleteViews() {
+
     }
 
     private void init() {

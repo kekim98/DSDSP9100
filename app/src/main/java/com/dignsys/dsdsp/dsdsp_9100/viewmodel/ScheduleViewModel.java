@@ -22,7 +22,7 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.DspPlayListEntity;
 
 import java.util.List;
 
-public class DspFormatViewModel extends AndroidViewModel {
+public class ScheduleViewModel extends AndroidViewModel {
 
     private static final MutableLiveData ABSENT = new MutableLiveData();
     {
@@ -30,18 +30,12 @@ public class DspFormatViewModel extends AndroidViewModel {
         ABSENT.setValue(null);
     }
 
-    private final LiveData<DspFormatEntity> mObservableDspFormat;
-
-    public ObservableField<DspFormatEntity> dspFormat = new ObservableField<>();
-
-    private final int mDspFormatId;
+    private final LiveData<List<DspFormatEntity>> mObservableDspFormatList;
 
     private final LiveData<List<DspPlayListEntity>> mObservableDspPlayList;
 
-    public DspFormatViewModel(@NonNull Application application,
-                              final int dspFormatId) {
+    public ScheduleViewModel(@NonNull Application application){
         super(application);
-        mDspFormatId = dspFormatId;
 
         final DatabaseCreator databaseCreator = DatabaseCreator.getInstance(this.getApplication());
 
@@ -53,20 +47,20 @@ public class DspFormatViewModel extends AndroidViewModel {
                     return ABSENT;
                 } else {
                     //noinspection ConstantConditions
-                    return databaseCreator.getDatabase().dspPlayListDao().loadComments(mDspFormatId);
+                    return databaseCreator.getDatabase().dspPlayListDao().loadAllPlayList();
                 }
             }
         });
 
-        mObservableDspFormat = Transformations.switchMap(databaseCreator.isDatabaseCreated(), new Function<Boolean, LiveData<DspFormatEntity>>() {
+        mObservableDspFormatList = Transformations.switchMap(databaseCreator.isDatabaseCreated(), new Function<Boolean, LiveData<List<DspFormatEntity>>>() {
             @Override
-            public LiveData<DspFormatEntity> apply(Boolean isDbCreated) {
+            public LiveData<List<DspFormatEntity>> apply(Boolean isDbCreated) {
                 if (!isDbCreated) {
                     //noinspection unchecked
                     return ABSENT;
                 } else {
                     //noinspection ConstantConditions
-                    return databaseCreator.getDatabase().dspFormatDao().loadDspFormat(mDspFormatId);
+                    return databaseCreator.getDatabase().dspFormatDao().loadAllDspFormat();
                 }
             }
         });
@@ -77,24 +71,21 @@ public class DspFormatViewModel extends AndroidViewModel {
     /**
      * Expose the LiveData Comments query so the UI can observe it.
      */
-    public LiveData<List<DspPlayListEntity>> getComments() {
+    public LiveData<List<DspPlayListEntity>> getPlayList() {
         return mObservableDspPlayList;
     }
 
-    public LiveData<DspFormatEntity> getObservableProduct() {
-        return mObservableDspFormat;
+    public LiveData<List<DspFormatEntity>> getFormatList() {
+        return mObservableDspFormatList;
     }
 
-    public void setDspFormat(DspFormatEntity dspFormat) {
-        this.dspFormat.set(dspFormat);
-    }
 
-    /**
+   /* *//**
      * A creator is used to inject the dspFormat ID into the ViewModel
      * <p>
      * This creator is to showcase how to inject dependencies into ViewModels. It's not
      * actually necessary in this case, as the dspFormat ID can be passed in a public method.
-     */
+     *//*
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 
         @NonNull
@@ -110,7 +101,7 @@ public class DspFormatViewModel extends AndroidViewModel {
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new DspFormatViewModel(mApplication, mDspFormatId);
+            return (T) new ScheduleViewModel(mApplication, mDspFormatId);
         }
-    }
+    }*/
 }

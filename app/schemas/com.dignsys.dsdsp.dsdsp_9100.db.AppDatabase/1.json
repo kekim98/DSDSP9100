@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "66d32a4b0d3be9c4e907ae3ede5f838a",
+    "identityHash": "db319cd7e369e5e31d21523b7e54f702",
     "entities": [
       {
         "tableName": "config",
@@ -518,7 +518,7 @@
       },
       {
         "tableName": "dsp_format",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `description` TEXT, `price` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `format_num` INTEGER NOT NULL, `pane_number` INTEGER NOT NULL, `pane_type` INTEGER NOT NULL, `pane_startX` INTEGER NOT NULL, `pane_startY` INTEGER NOT NULL, `pane_width` INTEGER NOT NULL, `pane_height` INTEGER NOT NULL, `op_direction_mode` INTEGER NOT NULL, `op_direction` INTEGER NOT NULL, `op_font_size` INTEGER NOT NULL, `op_msg_speed` INTEGER NOT NULL, `op_modulation_type` INTEGER NOT NULL, `op_receive_type` INTEGER NOT NULL, `op_transparency` INTEGER NOT NULL, `op_font_color` INTEGER NOT NULL, `op_back_color` INTEGER NOT NULL, `op_time_format` TEXT, `op_align` TEXT, `op_channel_num` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -527,59 +527,117 @@
             "notNull": true
           },
           {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "description",
-            "columnName": "description",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "price",
-            "columnName": "price",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "dsp_play_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productId` INTEGER NOT NULL, `text` TEXT, `postedAt` INTEGER, FOREIGN KEY(`productId`) REFERENCES `dsp_format`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "format_num",
+            "columnName": "format_num",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "productId",
-            "columnName": "productId",
+            "fieldPath": "pane_number",
+            "columnName": "pane_number",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "text",
-            "columnName": "text",
+            "fieldPath": "pane_type",
+            "columnName": "pane_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pane_startX",
+            "columnName": "pane_startX",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pane_startY",
+            "columnName": "pane_startY",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pane_width",
+            "columnName": "pane_width",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pane_height",
+            "columnName": "pane_height",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_direction_mode",
+            "columnName": "op_direction_mode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_direction",
+            "columnName": "op_direction",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_font_size",
+            "columnName": "op_font_size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_msg_speed",
+            "columnName": "op_msg_speed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_modulation_type",
+            "columnName": "op_modulation_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_receive_type",
+            "columnName": "op_receive_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_transparency",
+            "columnName": "op_transparency",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_font_color",
+            "columnName": "op_font_color",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_back_color",
+            "columnName": "op_back_color",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_time_format",
+            "columnName": "op_time_format",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "postedAt",
-            "columnName": "postedAt",
-            "affinity": "INTEGER",
+            "fieldPath": "op_align",
+            "columnName": "op_align",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_channel_num",
+            "columnName": "op_channel_num",
+            "affinity": "TEXT",
             "notNull": false
           }
         ],
@@ -589,34 +647,201 @@
           ],
           "autoGenerate": true
         },
-        "indices": [
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "dsp_play_list",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `scen_num` INTEGER NOT NULL, `format_num` INTEGER NOT NULL, `scen_duration` INTEGER NOT NULL, `scen_bgm_mode` INTEGER NOT NULL, `op_spec` TEXT, `op_week` TEXT, `op_start_date` TEXT, `op_end_date` TEXT, `op_start_time` TEXT, `op_end_time` TEXT, `file_path` TEXT, `type` TEXT, `op_duration` INTEGER NOT NULL, `op_not_play` INTEGER NOT NULL, `op_effect` INTEGER NOT NULL, `op_auto_resize` INTEGER NOT NULL, `op_pane_num` INTEGER NOT NULL, `op_msg_type` INTEGER NOT NULL, `op_msg_duration` INTEGER NOT NULL, `op_not_download` INTEGER NOT NULL, `op_start_dtime` TEXT, `op_end_dtime` TEXT, `op_bgm_file` TEXT, `op_msg_file` TEXT, `op_display_startX` INTEGER NOT NULL, `op_display_startY` INTEGER NOT NULL, `op_display_width` INTEGER NOT NULL, `op_display_height` INTEGER NOT NULL)",
+        "fields": [
           {
-            "name": "index_dsp_play_list_productId",
-            "unique": false,
-            "columnNames": [
-              "productId"
-            ],
-            "createSql": "CREATE  INDEX `index_dsp_play_list_productId` ON `${TABLE_NAME}` (`productId`)"
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scen_num",
+            "columnName": "scen_num",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "format_num",
+            "columnName": "format_num",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scen_duration",
+            "columnName": "scen_duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scen_bgm_mode",
+            "columnName": "scen_bgm_mode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_spec",
+            "columnName": "op_spec",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_week",
+            "columnName": "op_week",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_start_date",
+            "columnName": "op_start_date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_end_date",
+            "columnName": "op_end_date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_start_time",
+            "columnName": "op_start_time",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_end_time",
+            "columnName": "op_end_time",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "file_path",
+            "columnName": "file_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_duration",
+            "columnName": "op_duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_not_play",
+            "columnName": "op_not_play",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_effect",
+            "columnName": "op_effect",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_auto_resize",
+            "columnName": "op_auto_resize",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_pane_num",
+            "columnName": "op_pane_num",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_msg_type",
+            "columnName": "op_msg_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_msg_duration",
+            "columnName": "op_msg_duration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_not_download",
+            "columnName": "op_not_download",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_start_dtime",
+            "columnName": "op_start_dtime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_end_dtime",
+            "columnName": "op_end_dtime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_bgm_file",
+            "columnName": "op_bgm_file",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_msg_file",
+            "columnName": "op_msg_file",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "op_display_startX",
+            "columnName": "op_display_startX",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_display_startY",
+            "columnName": "op_display_startY",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_display_width",
+            "columnName": "op_display_width",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "op_display_height",
+            "columnName": "op_display_height",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "dsp_format",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "productId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"66d32a4b0d3be9c4e907ae3ede5f838a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"db319cd7e369e5e31d21523b7e54f702\")"
     ]
   }
 }

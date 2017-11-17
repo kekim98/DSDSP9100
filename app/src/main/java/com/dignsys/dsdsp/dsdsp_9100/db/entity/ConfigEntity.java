@@ -9,7 +9,7 @@ import android.arch.persistence.room.PrimaryKey;
  */
 
 @Entity(tableName = "config")
-public class ConfigEntity /*implements Config*/ {
+public class ConfigEntity  {
     @PrimaryKey(autoGenerate = true)
     private int id;
 

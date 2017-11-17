@@ -7,14 +7,7 @@ package com.dignsys.dsdsp.dsdsp_9100.db;
 
 
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.DspPlayListEntity;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.DspFormatEntity;
-import com.dignsys.dsdsp.dsdsp_9100.model.DspFormat;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_BOARD_ID;
 import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_COMPANY_ID;
@@ -25,24 +18,8 @@ import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_VERSION;
 /** Generates dummy data and inserts them into the database */
 class DatabaseInitUtil {
 
-    private static final String[] FIRST = new String[]{
-            "Special edition", "New", "Cheap", "Quality", "Used"};
-    private static final String[] SECOND = new String[]{
-            "Three-headed Monkey", "Rubber Chicken", "Pint of Grog", "Monocle"};
-    private static final String[] DESCRIPTION = new String[]{
-            "is finally here", "is recommended by Stan S. Stanman",
-            "is the best sold product on Mêlée Island", "is \uD83D\uDCAF", "is ❤️", "is fine"};
-    private static final String[] COMMENTS = new String[]{
-            "Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5", "Comment 6",
-    };
 
     static void initializeDb(AppDatabase db) {
-       /* List<DspFormatEntity> products = new ArrayList<>(FIRST.length * SECOND.length);
-        List<DspPlayListEntity> comments = new ArrayList<>();
-
-        generateData(products, comments);
-
-        insertData(db, products, comments);*/
 
         ConfigEntity configEntity = new ConfigEntity();
 
@@ -153,40 +130,4 @@ class DatabaseInitUtil {
         configEntity.setCaptureScale(30);
     }
 
-    private static void generateData(List<DspFormatEntity> products, List<DspPlayListEntity> comments) {
-        Random rnd = new Random();
-        for (int i = 0; i < FIRST.length; i++) {
-            for (int j = 0; j < SECOND.length; j++) {
-                DspFormatEntity product = new DspFormatEntity();
-                product.setName(FIRST[i] + " " + SECOND[j]);
-                product.setDescription(product.getName() + " " + DESCRIPTION[j]);
-                product.setPrice(rnd.nextInt(240));
-                product.setId(FIRST.length * i + j + 1);
-                products.add(product);
-            }
-        }
-
-        for (DspFormat dspFormat : products) {
-            int commentsNumber = rnd.nextInt(5) + 1;
-            for (int i = 0; i < commentsNumber; i++) {
-                DspPlayListEntity comment = new DspPlayListEntity();
-                comment.setProductId(dspFormat.getId());
-                comment.setText(COMMENTS[i] + " for " + dspFormat.getName());
-                comment.setPostedAt(new Date(System.currentTimeMillis()
-                        - TimeUnit.DAYS.toMillis(commentsNumber - i) + TimeUnit.HOURS.toMillis(i)));
-                comments.add(comment);
-            }
-        }
-    }
-
-    private static void insertData(AppDatabase db, List<DspFormatEntity> products, List<DspPlayListEntity> comments) {
-        db.beginTransaction();
-        try {
-            db.dspFormatDao().insertAll(products);
-            db.dspPlayListDao().insertAll(comments);
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
 }
