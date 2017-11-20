@@ -10,14 +10,18 @@ import android.arch.persistence.room.TypeConverters;
 
 import com.dignsys.dsdsp.dsdsp_9100.db.converter.DateConverter;
 import com.dignsys.dsdsp.dsdsp_9100.db.dao.ConfigDao;
-import com.dignsys.dsdsp.dsdsp_9100.db.dao.DspFormatDao;
-import com.dignsys.dsdsp.dsdsp_9100.db.dao.DspPlayListDao;
+import com.dignsys.dsdsp.dsdsp_9100.db.dao.ContentDao;
+import com.dignsys.dsdsp.dsdsp_9100.db.dao.PaneDao;
+import com.dignsys.dsdsp.dsdsp_9100.db.dao.SceneDao;
+import com.dignsys.dsdsp.dsdsp_9100.db.dao.ScheduleDao;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.DspFormatEntity;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.DspPlayListEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ScheduleEntity;
 
 
-@Database(entities = {ConfigEntity.class, DspFormatEntity.class, DspPlayListEntity.class}, version = 1)
+@Database(entities = {ConfigEntity.class, ScheduleEntity.class, SceneEntity.class, PaneEntity.class, ContentEntity.class}, version = 1)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -25,7 +29,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ConfigDao configDao();
 
-    public abstract DspPlayListDao dspPlayListDao();
+    public abstract ScheduleDao scheduleDao();
 
-    public abstract DspFormatDao dspFormatDao();
+    public abstract SceneDao sceneDao();
+
+    public abstract PaneDao paneDao();
+
+    public abstract ContentDao contentDao();
 }

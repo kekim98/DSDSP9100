@@ -1,4 +1,4 @@
-package com.dignsys.dsdsp.dsdsp_9100.ui;
+package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
 import android.net.Uri;
 import android.os.Bundle;

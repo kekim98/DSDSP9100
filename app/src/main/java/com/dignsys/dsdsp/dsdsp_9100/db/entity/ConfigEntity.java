@@ -8,7 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
  * Created by bawoori on 17. 11. 16.
  */
 
-@Entity(tableName = "config")
+@Entity(tableName = "config_info")
 public class ConfigEntity  {
     @PrimaryKey(autoGenerate = true)
     private int id;

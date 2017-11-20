@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dignsys.dsdsp.dsdsp_9100.ui.ImageFragment">
+    tools:context="com.dignsys.dsdsp.dsdsp_9100.ui.main.ImageFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

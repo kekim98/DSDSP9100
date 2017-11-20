@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "db319cd7e369e5e31d21523b7e54f702",
+    "identityHash": "ea7e0834947cf11a7fece9af35b01672",
     "entities": [
       {
-        "tableName": "config",
+        "tableName": "config_info",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configVersion` TEXT, `firmwareVersion` TEXT, `deviceId` TEXT, `DSPMode` INTEGER NOT NULL, `backlight` INTEGER NOT NULL, `TVMode` INTEGER NOT NULL, `videoOutput` INTEGER NOT NULL, `audioMode` INTEGER NOT NULL, `audioVolume` INTEGER NOT NULL, `serverMode` INTEGER NOT NULL, `serverAddress` TEXT, `serverFolder` TEXT, `serverPort` INTEGER NOT NULL, `serverId` TEXT, `serverPwd` TEXT, `serverSyncInterval` INTEGER NOT NULL, `useLAN` INTEGER NOT NULL, `useLAN_DHCP` INTEGER NOT NULL, `LAN_AutoDNS` INTEGER NOT NULL, `LAN_IP` TEXT, `LAN_Subnet` TEXT, `LAN_Gateway` TEXT, `LAN_DNS` TEXT, `useWifi` INTEGER NOT NULL, `useWifi_DHCP` INTEGER NOT NULL, `Wifi_AutoDNS` INTEGER NOT NULL, `Wifi_AuthMode` INTEGER NOT NULL, `Wifi_IP` TEXT, `Wifi_Subnet` TEXT, `Wifi_Gateway` TEXT, `Wifi_DNS` TEXT, `Wifi_ESSID` TEXT, `Wifi_PWD` TEXT, `ImageChangeEffect` INTEGER NOT NULL, `ImageChangeInterval` INTEGER NOT NULL, `UseAutoResizeMovie` INTEGER NOT NULL, `UseAutoResizeImage` INTEGER NOT NULL, `CapMode` INTEGER NOT NULL, `CapPosition` INTEGER NOT NULL, `CapColor` INTEGER NOT NULL, `CapBackColor` INTEGER NOT NULL, `CapSpeed` INTEGER NOT NULL, `CapFont` INTEGER NOT NULL, `CapSize` INTEGER NOT NULL, `RSSMode` INTEGER NOT NULL, `RSSUpdateInterval` INTEGER NOT NULL, `RSSAddress` TEXT, `NTPServer` INTEGER NOT NULL, `Timezone` INTEGER NOT NULL, `TimeDisplayPosition` INTEGER NOT NULL, `TimeDisplayColor` INTEGER NOT NULL, `TimeDisplayBackColor` INTEGER NOT NULL, `TimeDisplayFont` INTEGER NOT NULL, `TimeDisplayFontSize` INTEGER NOT NULL, `AutoOnOffMode` INTEGER NOT NULL, `OnTime` TEXT, `OffTime` TEXT, `IA_Mode` INTEGER NOT NULL, `IA_ReqMeans` INTEGER NOT NULL, `IA_SerialBaud` INTEGER NOT NULL, `IA_SerialData` INTEGER NOT NULL, `IA_SerialParity` INTEGER NOT NULL, `IA_SerialStop` INTEGER NOT NULL, `IA_NetIP` TEXT, `IA_NetPort` INTEGER NOT NULL, `MS_Mode` INTEGER NOT NULL, `MS_ServerIP` TEXT, `MS_UserCount` INTEGER NOT NULL, `DTV_Modulation` INTEGER NOT NULL, `DTV_AutoSearchRange` INTEGER NOT NULL, `DTV_Channel` TEXT, `UseDefaultContents` INTEGER NOT NULL, `UseSDLogSave` INTEGER NOT NULL, `LogFileSaveDay` INTEGER NOT NULL, `EnableLiveUpload` INTEGER NOT NULL, `EnableLogUpload` INTEGER NOT NULL, `EnableCaptureUpload` INTEGER NOT NULL, `IntervalLive` INTEGER NOT NULL, `IntervalLog` INTEGER NOT NULL, `IntervalCapture` INTEGER NOT NULL, `CaptureScale` INTEGER NOT NULL, `Language` INTEGER NOT NULL)",
         "fields": [
           {
@@ -517,8 +517,8 @@
         "foreignKeys": []
       },
       {
-        "tableName": "dsp_format",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `format_num` INTEGER NOT NULL, `pane_number` INTEGER NOT NULL, `pane_type` INTEGER NOT NULL, `pane_startX` INTEGER NOT NULL, `pane_startY` INTEGER NOT NULL, `pane_width` INTEGER NOT NULL, `pane_height` INTEGER NOT NULL, `op_direction_mode` INTEGER NOT NULL, `op_direction` INTEGER NOT NULL, `op_font_size` INTEGER NOT NULL, `op_msg_speed` INTEGER NOT NULL, `op_modulation_type` INTEGER NOT NULL, `op_receive_type` INTEGER NOT NULL, `op_transparency` INTEGER NOT NULL, `op_font_color` INTEGER NOT NULL, `op_back_color` INTEGER NOT NULL, `op_time_format` TEXT, `op_align` TEXT, `op_channel_num` TEXT)",
+        "tableName": "schedule_info",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `point` INTEGER NOT NULL, `opS` INTEGER NOT NULL, `opW` TEXT, `opStartDate` TEXT, `opEndDate` TEXT, `opStartTime` TEXT, `opEndTime` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -527,116 +527,44 @@
             "notNull": true
           },
           {
-            "fieldPath": "format_num",
-            "columnName": "format_num",
+            "fieldPath": "point",
+            "columnName": "point",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "pane_number",
-            "columnName": "pane_number",
+            "fieldPath": "opS",
+            "columnName": "opS",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "pane_type",
-            "columnName": "pane_type",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "pane_startX",
-            "columnName": "pane_startX",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "pane_startY",
-            "columnName": "pane_startY",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "pane_width",
-            "columnName": "pane_width",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "pane_height",
-            "columnName": "pane_height",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_direction_mode",
-            "columnName": "op_direction_mode",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_direction",
-            "columnName": "op_direction",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_font_size",
-            "columnName": "op_font_size",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_msg_speed",
-            "columnName": "op_msg_speed",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_modulation_type",
-            "columnName": "op_modulation_type",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_receive_type",
-            "columnName": "op_receive_type",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_transparency",
-            "columnName": "op_transparency",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_font_color",
-            "columnName": "op_font_color",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_back_color",
-            "columnName": "op_back_color",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_time_format",
-            "columnName": "op_time_format",
+            "fieldPath": "opW",
+            "columnName": "opW",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "op_align",
-            "columnName": "op_align",
+            "fieldPath": "opStartDate",
+            "columnName": "opStartDate",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "op_channel_num",
-            "columnName": "op_channel_num",
+            "fieldPath": "opEndDate",
+            "columnName": "opEndDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "opStartTime",
+            "columnName": "opStartTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "opEndTime",
+            "columnName": "opEndTime",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -651,8 +579,199 @@
         "foreignKeys": []
       },
       {
-        "tableName": "dsp_play_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `scen_num` INTEGER NOT NULL, `format_num` INTEGER NOT NULL, `scen_duration` INTEGER NOT NULL, `scen_bgm_mode` INTEGER NOT NULL, `op_spec` TEXT, `op_week` TEXT, `op_start_date` TEXT, `op_end_date` TEXT, `op_start_time` TEXT, `op_end_time` TEXT, `file_path` TEXT, `type` TEXT, `op_duration` INTEGER NOT NULL, `op_not_play` INTEGER NOT NULL, `op_effect` INTEGER NOT NULL, `op_auto_resize` INTEGER NOT NULL, `op_pane_num` INTEGER NOT NULL, `op_msg_type` INTEGER NOT NULL, `op_msg_duration` INTEGER NOT NULL, `op_not_download` INTEGER NOT NULL, `op_start_dtime` TEXT, `op_end_dtime` TEXT, `op_bgm_file` TEXT, `op_msg_file` TEXT, `op_display_startX` INTEGER NOT NULL, `op_display_startY` INTEGER NOT NULL, `op_display_width` INTEGER NOT NULL, `op_display_height` INTEGER NOT NULL)",
+        "tableName": "scene_info",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`scene_num` INTEGER NOT NULL, `schedule_id` INTEGER NOT NULL, `formatNum` INTEGER NOT NULL, `opBGMMode` INTEGER NOT NULL, `opPlayTime` TEXT, `formatType` INTEGER, `foramtWidth` INTEGER, `formatHeight` INTEGER, PRIMARY KEY(`scene_num`))",
+        "fields": [
+          {
+            "fieldPath": "scene_num",
+            "columnName": "scene_num",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "schedule_id",
+            "columnName": "schedule_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "formatNum",
+            "columnName": "formatNum",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opBGMMode",
+            "columnName": "opBGMMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opPlayTime",
+            "columnName": "opPlayTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "format.formatType",
+            "columnName": "formatType",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "format.foramtWidth",
+            "columnName": "foramtWidth",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "format.formatHeight",
+            "columnName": "formatHeight",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "scene_num"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "pane_info",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`scene_num` INTEGER NOT NULL, `pane_num` INTEGER NOT NULL, `paneType` TEXT, `paneX` INTEGER NOT NULL, `paneY` INTEGER NOT NULL, `paneWidth` INTEGER NOT NULL, `paneHeight` INTEGER NOT NULL, `opDirectionMode` INTEGER NOT NULL, `opDirection` INTEGER NOT NULL, `opFontSize` INTEGER NOT NULL, `opMsgSpeed` INTEGER NOT NULL, `opModulationType` INTEGER NOT NULL, `opReceiveType` INTEGER NOT NULL, `opTransparency` INTEGER NOT NULL, `opFontColor` INTEGER NOT NULL, `opBackColor` INTEGER NOT NULL, `opTimeFormat` TEXT, `opAlign` TEXT, `opChannelNum` TEXT, PRIMARY KEY(`scene_num`, `pane_num`))",
+        "fields": [
+          {
+            "fieldPath": "scene_num",
+            "columnName": "scene_num",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pane_num",
+            "columnName": "pane_num",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paneType",
+            "columnName": "paneType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "paneX",
+            "columnName": "paneX",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paneY",
+            "columnName": "paneY",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paneWidth",
+            "columnName": "paneWidth",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paneHeight",
+            "columnName": "paneHeight",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opDirectionMode",
+            "columnName": "opDirectionMode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opDirection",
+            "columnName": "opDirection",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opFontSize",
+            "columnName": "opFontSize",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opMsgSpeed",
+            "columnName": "opMsgSpeed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opModulationType",
+            "columnName": "opModulationType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opReceiveType",
+            "columnName": "opReceiveType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opTransparency",
+            "columnName": "opTransparency",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opFontColor",
+            "columnName": "opFontColor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opBackColor",
+            "columnName": "opBackColor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "opTimeFormat",
+            "columnName": "opTimeFormat",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "opAlign",
+            "columnName": "opAlign",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "opChannelNum",
+            "columnName": "opChannelNum",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "scene_num",
+            "pane_num"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "content_info",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `scen_num` INTEGER NOT NULL, `pane_num` INTEGER NOT NULL, `filePaht` TEXT, `fileType` INTEGER NOT NULL, `opRunTime` INTEGER NOT NULL, `opNotPlay` INTEGER NOT NULL, `opEffect` INTEGER NOT NULL, `opAutoResize` INTEGER NOT NULL, `opMSGType` INTEGER NOT NULL, `opMSGPlayTime` INTEGER NOT NULL, `opNotDownload` INTEGER NOT NULL, `opStartD` TEXT, `opEndDT` TEXT, `opBGMFile` TEXT, `opMSGFile` TEXT, `opStartX` INTEGER NOT NULL, `opStartY` INTEGER NOT NULL, `opWidth` INTEGER NOT NULL, `opHeight` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -667,164 +786,110 @@
             "notNull": true
           },
           {
-            "fieldPath": "format_num",
-            "columnName": "format_num",
+            "fieldPath": "pane_num",
+            "columnName": "pane_num",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "scen_duration",
-            "columnName": "scen_duration",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "scen_bgm_mode",
-            "columnName": "scen_bgm_mode",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "op_spec",
-            "columnName": "op_spec",
+            "fieldPath": "filePaht",
+            "columnName": "filePaht",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "op_week",
-            "columnName": "op_week",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "op_start_date",
-            "columnName": "op_start_date",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "op_end_date",
-            "columnName": "op_end_date",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "op_start_time",
-            "columnName": "op_start_time",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "op_end_time",
-            "columnName": "op_end_time",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "file_path",
-            "columnName": "file_path",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "type",
-            "columnName": "type",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "op_duration",
-            "columnName": "op_duration",
+            "fieldPath": "fileType",
+            "columnName": "fileType",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_not_play",
-            "columnName": "op_not_play",
+            "fieldPath": "opRunTime",
+            "columnName": "opRunTime",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_effect",
-            "columnName": "op_effect",
+            "fieldPath": "opNotPlay",
+            "columnName": "opNotPlay",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_auto_resize",
-            "columnName": "op_auto_resize",
+            "fieldPath": "opEffect",
+            "columnName": "opEffect",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_pane_num",
-            "columnName": "op_pane_num",
+            "fieldPath": "opAutoResize",
+            "columnName": "opAutoResize",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_msg_type",
-            "columnName": "op_msg_type",
+            "fieldPath": "opMSGType",
+            "columnName": "opMSGType",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_msg_duration",
-            "columnName": "op_msg_duration",
+            "fieldPath": "opMSGPlayTime",
+            "columnName": "opMSGPlayTime",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_not_download",
-            "columnName": "op_not_download",
+            "fieldPath": "opNotDownload",
+            "columnName": "opNotDownload",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_start_dtime",
-            "columnName": "op_start_dtime",
+            "fieldPath": "opStartD",
+            "columnName": "opStartD",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "op_end_dtime",
-            "columnName": "op_end_dtime",
+            "fieldPath": "opEndDT",
+            "columnName": "opEndDT",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "op_bgm_file",
-            "columnName": "op_bgm_file",
+            "fieldPath": "opBGMFile",
+            "columnName": "opBGMFile",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "op_msg_file",
-            "columnName": "op_msg_file",
+            "fieldPath": "opMSGFile",
+            "columnName": "opMSGFile",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "op_display_startX",
-            "columnName": "op_display_startX",
+            "fieldPath": "opStartX",
+            "columnName": "opStartX",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_display_startY",
-            "columnName": "op_display_startY",
+            "fieldPath": "opStartY",
+            "columnName": "opStartY",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_display_width",
-            "columnName": "op_display_width",
+            "fieldPath": "opWidth",
+            "columnName": "opWidth",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "op_display_height",
-            "columnName": "op_display_height",
+            "fieldPath": "opHeight",
+            "columnName": "opHeight",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -841,7 +906,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"db319cd7e369e5e31d21523b7e54f702\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ea7e0834947cf11a7fece9af35b01672\")"
     ]
   }
 }

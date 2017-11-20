@@ -1,6 +1,6 @@
-package com.dignsys.dsdsp.dsdsp_9100.ui;
+package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,19 +8,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.VideoView;
+import android.widget.TextClock;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link VideoFragment.OnFragmentInteractionListener} interface
+ * {@link ClockFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link VideoFragment#newInstance} factory method to
+ * Use the {@link ClockFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class VideoFragment extends Fragment {
+public class ClockFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,9 +31,9 @@ public class VideoFragment extends Fragment {
     private int mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private VideoView mVideoView;
+    private TextClock mClockView;
 
-    public VideoFragment() {
+    public ClockFragment() {
         // Required empty public constructor
     }
 
@@ -41,13 +41,13 @@ public class VideoFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter test.
+     * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment VideoFragment.
+     * @return A new instance of fragment ClockFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static VideoFragment newInstance(int param1, int param2) {
-        VideoFragment fragment = new VideoFragment();
+    public static ClockFragment newInstance(int param1, int param2) {
+        ClockFragment fragment = new ClockFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, param1);
         args.putInt(ARG_PARAM2, param2);
@@ -68,26 +68,31 @@ public class VideoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_video, container, false);
+        return inflater.inflate(R.layout.fragment_clock, container, false);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.width = 960;
-        layoutParams.height = 1080;
+//        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+//        layoutParams.width = 100;
+//        layoutParams.height = 100;
+//
+//        view.setLayoutParams(layoutParams);
+//        view.setX(mParam1);
+//        view.setY(mParam2);
+        view.setBackgroundColor(android.R.color.white);
 
-        view.setLayoutParams(layoutParams);
-        view.setX(mParam1);
-        view.setY(mParam2);
+        mClockView = view.findViewById(R.id.textClock);
+        mClockView.setFormat12Hour(null);
+        //textClock.setFormat24Hour("dd/MM/yyyy hh:mm:ss a");
+        mClockView.setFormat24Hour("hh:mm:ss a  EEE MMM d");
+        mClockView.setBackgroundColor(android.R.color.white);
 
-        mVideoView = view.findViewById(R.id.videoView);
-        String UrlPath="android.resource://"+getActivity().getPackageName()+"/"+R.raw.kkk;
-        mVideoView.setVideoURI(Uri.parse(UrlPath));
-        mVideoView.start();
     }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

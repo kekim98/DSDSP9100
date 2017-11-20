@@ -17,8 +17,13 @@ import java.util.List;
 @Dao
 public interface ConfigDao {
 
-    @Query("SELECT * FROM config LIMIT 1")
+    @Query("SELECT * FROM config_info LIMIT 1")
     LiveData<ConfigEntity> loadConfig();
+
+
+    @Query("SELECT count(*) from config_info")
+    LiveData<Integer> cofigCount();
+
 
     /**
      * Update the cheese. The cheese is identified by the row ID.

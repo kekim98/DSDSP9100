@@ -24,9 +24,11 @@ public class ConfigViewModel extends AndroidViewModel {
     }
 
     private final LiveData<ConfigEntity> mObservableConfig;
+    private final LiveData<Integer> mObservableInt;
 
-    public ConfigViewModel(@NonNull Application application) {
+    public ConfigViewModel(@NonNull Application application, LiveData<Integer> mObservableInt) {
         super(application);
+        this.mObservableInt = mObservableInt;
 
         final DatabaseCreator databaseCreator = DatabaseCreator.getInstance(this.getApplication());
         mObservableConfig = Transformations.switchMap(databaseCreator.isDatabaseCreated(), new Function<Boolean, LiveData<ConfigEntity>>() {
