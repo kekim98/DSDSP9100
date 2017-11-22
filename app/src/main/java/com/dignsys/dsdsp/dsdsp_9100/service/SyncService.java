@@ -12,7 +12,7 @@ import android.util.Log;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class CMService extends IntentService {
+public class SyncService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     private static final String ACTION_DOWNLOAD = "com.dignsys.dsdsp.service.action.DOWNLOAD";
@@ -21,10 +21,10 @@ public class CMService extends IntentService {
     // TODO: Rename parameters
     private static final String EXTRA_PARAM1 = "com.dignsys.dsdsp.service.extra.PARAM1";
     private static final String EXTRA_PARAM2 = "com.dignsys.dsdsp.service.extra.PARAM2";
-    private static final String TAG = CMService.class.getSimpleName();
+    private static final String TAG = SyncService.class.getSimpleName();
 
-    public CMService() {
-        super("CMService");
+    public SyncService() {
+        super("SyncService");
     }
 
     /**
@@ -35,7 +35,7 @@ public class CMService extends IntentService {
      */
     public static void startDownload(Context context, String param1, String param2) {
         Log.d(TAG, "startDownload: ..............................");
-        Intent intent = new Intent(context, CMService.class);
+        Intent intent = new Intent(context, SyncService.class);
         intent.setAction(ACTION_DOWNLOAD);
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
@@ -50,7 +50,7 @@ public class CMService extends IntentService {
      */
     // TODO: Customize helper method
     public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, CMService.class);
+        Intent intent = new Intent(context, SyncService.class);
         intent.setAction(ACTION_BAZ);
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);

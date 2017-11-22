@@ -10,11 +10,11 @@ import android.arch.persistence.room.PrimaryKey;
 import android.transition.Scene;
 
 
-@Entity(tableName = "pane_info", primaryKeys = {"scene_num", "pane_num"})
+@Entity(tableName = "pane_info", primaryKeys = {"scene_id", "pane_id"})
 public class PaneEntity { //AreaInfo
 
-    private int scene_num; //foreign key
-    private int pane_num; //m_nAreaNum
+    private int scene_id; //foreign key
+    private int pane_id; //m_nAreaNum
 
     //V:video/picture, P:picture, M:message, C:clock, B:background color
     //D:DTV, W:webview(picture), T:webview(text), S:screen size
@@ -38,20 +38,20 @@ public class PaneEntity { //AreaInfo
     private String opAlign="";
     private String opChannelNum=""; //ex, DTV:11-1
 
-    public int getScene_num() {
-        return scene_num;
+    public int getScene_id() {
+        return scene_id;
     }
 
-    public void setScene_num(int scene_num) {
-        this.scene_num = scene_num;
+    public void setScene_id(int scene_id) {
+        this.scene_id = scene_id;
     }
 
-    public int getPane_num() {
-        return pane_num;
+    public int getPane_id() {
+        return pane_id;
     }
 
-    public void setPane_num(int pane_num) {
-        this.pane_num = pane_num;
+    public void setPane_id(int pane_id) {
+        this.pane_id = pane_id;
     }
 
     public String getPaneType() {

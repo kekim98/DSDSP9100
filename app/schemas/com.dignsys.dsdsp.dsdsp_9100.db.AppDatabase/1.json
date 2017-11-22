@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ea7e0834947cf11a7fece9af35b01672",
+    "identityHash": "9fbd99076a5c59cd977580fa085be649",
     "entities": [
       {
         "tableName": "config_info",
@@ -518,7 +518,7 @@
       },
       {
         "tableName": "schedule_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `point` INTEGER NOT NULL, `opS` INTEGER NOT NULL, `opW` TEXT, `opStartDate` TEXT, `opEndDate` TEXT, `opStartTime` TEXT, `opEndTime` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `point` INTEGER NOT NULL, `opS` INTEGER NOT NULL, `opW` TEXT, `opStartDate` TEXT, `opEndDate` TEXT, `opStartTime` TEXT, `opEndTime` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -573,30 +573,24 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "scene_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`scene_num` INTEGER NOT NULL, `schedule_id` INTEGER NOT NULL, `formatNum` INTEGER NOT NULL, `opBGMMode` INTEGER NOT NULL, `opPlayTime` TEXT, `formatType` INTEGER, `foramtWidth` INTEGER, `formatHeight` INTEGER, PRIMARY KEY(`scene_num`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `schedule_id` INTEGER NOT NULL, `opBGMMode` INTEGER NOT NULL, `opPlayTime` TEXT, `scene_id` INTEGER, `sceneType` INTEGER, `sceneWidth` INTEGER, `sceneHeight` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
-            "fieldPath": "scene_num",
-            "columnName": "scene_num",
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "schedule_id",
             "columnName": "schedule_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "formatNum",
-            "columnName": "formatNum",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -613,27 +607,33 @@
             "notNull": false
           },
           {
-            "fieldPath": "format.formatType",
-            "columnName": "formatType",
+            "fieldPath": "format.scene_id",
+            "columnName": "scene_id",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "format.foramtWidth",
-            "columnName": "foramtWidth",
+            "fieldPath": "format.sceneType",
+            "columnName": "sceneType",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "format.formatHeight",
-            "columnName": "formatHeight",
+            "fieldPath": "format.sceneWidth",
+            "columnName": "sceneWidth",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "format.sceneHeight",
+            "columnName": "sceneHeight",
             "affinity": "INTEGER",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "scene_num"
+            "id"
           ],
           "autoGenerate": false
         },
@@ -642,17 +642,17 @@
       },
       {
         "tableName": "pane_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`scene_num` INTEGER NOT NULL, `pane_num` INTEGER NOT NULL, `paneType` TEXT, `paneX` INTEGER NOT NULL, `paneY` INTEGER NOT NULL, `paneWidth` INTEGER NOT NULL, `paneHeight` INTEGER NOT NULL, `opDirectionMode` INTEGER NOT NULL, `opDirection` INTEGER NOT NULL, `opFontSize` INTEGER NOT NULL, `opMsgSpeed` INTEGER NOT NULL, `opModulationType` INTEGER NOT NULL, `opReceiveType` INTEGER NOT NULL, `opTransparency` INTEGER NOT NULL, `opFontColor` INTEGER NOT NULL, `opBackColor` INTEGER NOT NULL, `opTimeFormat` TEXT, `opAlign` TEXT, `opChannelNum` TEXT, PRIMARY KEY(`scene_num`, `pane_num`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`scene_id` INTEGER NOT NULL, `pane_id` INTEGER NOT NULL, `paneType` TEXT, `paneX` INTEGER NOT NULL, `paneY` INTEGER NOT NULL, `paneWidth` INTEGER NOT NULL, `paneHeight` INTEGER NOT NULL, `opDirectionMode` INTEGER NOT NULL, `opDirection` INTEGER NOT NULL, `opFontSize` INTEGER NOT NULL, `opMsgSpeed` INTEGER NOT NULL, `opModulationType` INTEGER NOT NULL, `opReceiveType` INTEGER NOT NULL, `opTransparency` INTEGER NOT NULL, `opFontColor` INTEGER NOT NULL, `opBackColor` INTEGER NOT NULL, `opTimeFormat` TEXT, `opAlign` TEXT, `opChannelNum` TEXT, PRIMARY KEY(`scene_id`, `pane_id`))",
         "fields": [
           {
-            "fieldPath": "scene_num",
-            "columnName": "scene_num",
+            "fieldPath": "scene_id",
+            "columnName": "scene_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "pane_num",
-            "columnName": "pane_num",
+            "fieldPath": "pane_id",
+            "columnName": "pane_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -761,8 +761,8 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "scene_num",
-            "pane_num"
+            "scene_id",
+            "pane_id"
           ],
           "autoGenerate": false
         },
@@ -771,7 +771,7 @@
       },
       {
         "tableName": "content_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `scen_num` INTEGER NOT NULL, `pane_num` INTEGER NOT NULL, `filePaht` TEXT, `fileType` INTEGER NOT NULL, `opRunTime` INTEGER NOT NULL, `opNotPlay` INTEGER NOT NULL, `opEffect` INTEGER NOT NULL, `opAutoResize` INTEGER NOT NULL, `opMSGType` INTEGER NOT NULL, `opMSGPlayTime` INTEGER NOT NULL, `opNotDownload` INTEGER NOT NULL, `opStartD` TEXT, `opEndDT` TEXT, `opBGMFile` TEXT, `opMSGFile` TEXT, `opStartX` INTEGER NOT NULL, `opStartY` INTEGER NOT NULL, `opWidth` INTEGER NOT NULL, `opHeight` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `scen_id` INTEGER NOT NULL, `pane_id` INTEGER NOT NULL, `filePaht` TEXT, `fileType` INTEGER NOT NULL, `opRunTime` INTEGER NOT NULL, `opNotPlay` INTEGER NOT NULL, `opEffect` INTEGER NOT NULL, `opAutoResize` INTEGER NOT NULL, `opMSGType` INTEGER NOT NULL, `opMSGPlayTime` INTEGER NOT NULL, `opNotDownload` INTEGER NOT NULL, `opStartDT` TEXT, `opEndDT` TEXT, `opBGMFile` TEXT, `opMSGFile` TEXT, `opStartX` INTEGER NOT NULL, `opStartY` INTEGER NOT NULL, `opWidth` INTEGER NOT NULL, `opHeight` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -780,14 +780,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "scen_num",
-            "columnName": "scen_num",
+            "fieldPath": "scen_id",
+            "columnName": "scen_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "pane_num",
-            "columnName": "pane_num",
+            "fieldPath": "pane_id",
+            "columnName": "pane_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -846,8 +846,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "opStartD",
-            "columnName": "opStartD",
+            "fieldPath": "opStartDT",
+            "columnName": "opStartDT",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -906,7 +906,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ea7e0834947cf11a7fece9af35b01672\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9fbd99076a5c59cd977580fa085be649\")"
     ]
   }
 }

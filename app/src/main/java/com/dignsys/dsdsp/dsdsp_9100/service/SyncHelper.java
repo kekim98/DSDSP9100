@@ -22,7 +22,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.util.ConnectivityUtils;
+import com.dignsys.dsdsp.dsdsp_9100.util.SyncUtils;
 import com.turbomanage.httpclient.BasicHttpClient;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.RequestLogger;
@@ -44,11 +46,12 @@ public class SyncHelper {
 
     private Context mContext;
 
-    private ConferenceDataHandler mConferenceDataHandler;
+    private PlayDataHandler mPlayDataHandler;
 
-    private RemoteConferenceDataFetcher mRemoteDataFetcher;
+    private RemotePlayDataFetcher mRemoteDataFetcher;
 
     private BasicHttpClient mHttpClient;
+
 
     /**
      *
@@ -56,61 +59,96 @@ public class SyncHelper {
      */
     public SyncHelper(Context context) {
         mContext = context;
-        mConferenceDataHandler = new ConferenceDataHandler(mContext);
-        mRemoteDataFetcher = new RemoteConferenceDataFetcher(mContext);
+        mPlayDataHandler = new PlayDataHandler(mContext);
+        mRemoteDataFetcher = new RemotePlayDataFetcher(mContext);
         mHttpClient = new BasicHttpClient();
+
     }
 
    
 
     /**
-     * Attempts to perform data synchronization. There are 3 types of data: conference, user
-     * schedule and user feedback.
+     * Attempts to perform data synchronization. There are 4 types of data: play, control,
+     * config and RSS.
      * <p />
-     * The conference data sync is handled by {@link RemoteConferenceDataFetcher}. For more details
-     * about conference data, refer to the documentation at
-     * https://github.com/google/iosched/blob/master/doc/SYNC.md. The user schedule data sync is
-     * handled by AbstractUserDataSyncHelper.
-     *
-     *
+     * The Play data sync is handled by {@link RemotePlayDataFetcher}.
+     *     *
      * @param syncResult The sync result object to update with statistics.
-     * @param extras Specifies additional information about the sync. This must contain key
-     *               {@code SyncAdapter.EXTRA_SYNC_USER_DATA_ONLY} with boolean value
+     * @param extras Specifies additional information about the sync.
      * @return true if the sync changed the data.
      */
     public boolean performSync(@Nullable SyncResult syncResult, Bundle extras) {
 
         boolean dataChanged = false;
 
-      //  SettingsUtils.markSyncAttemptedNow(mContext);
+        SyncUtils.markSyncAttemptedNow(mContext);
         long opStart;
         long syncDuration, choresDuration;
 
         opStart = System.currentTimeMillis();
 
+        final int syncType = extras
+                .getInt(Definer.EXTRA_SYNC_TYPE);
         // Sync consists of 1 or more of these operations. We try them one by one and tolerate
         // individual failures on each.
-        final int OP_CONFERENCE_DATA_SYNC = 0;
-        final int OP_USER_SCHEDULE_DATA_SYNC = 1;
-        final int OP_USER_FEEDBACK_DATA_SYNC = 2;
 
-        int[] opsToPerform = 
-                new int[]{OP_CONFERENCE_DATA_SYNC, OP_USER_SCHEDULE_DATA_SYNC,
-                        OP_USER_FEEDBACK_DATA_SYNC};
+        final int OP_DSP_PLAY_DATA_SYNC = 0;
+      /*  final int OP_DSP_CONTROL_DATA_SYNC = 1;
+        final int OP_DSP_CONFIG_DATA_SYNC = 2;
+        final int OP_DSP_RSS_DATA_SYNC = 3;*/
+        final int OP_DSP_UPLOAD_LOG = 4;
+        final int OP_DSP_UPLOAD_LIVE_SCREEN = 5;
+
+
+        int[] opsToPerform;
+        switch (syncType) {
+           /* case Definer.SYNC_ALL:
+                opsToPerform = new int[]{OP_DSP_PLAY_DATA_SYNC, OP_DSP_CONTROL_DATA_SYNC,
+                        OP_DSP_CONFIG_DATA_SYNC, OP_DSP_RSS_DATA_SYNC};
+                break;
+            case Definer.SYNC_CONFIG_ONLY:
+                opsToPerform = new int[]{OP_DSP_CONFIG_DATA_SYNC};
+                break;
+            case Definer.SYNC_CONTROL_ONLY:
+                opsToPerform = new int[]{OP_DSP_CONTROL_DATA_SYNC};
+                break;*/
+            case Definer.SYNC_PLAY_ONLY:
+                opsToPerform = new int[]{OP_DSP_PLAY_DATA_SYNC};
+                break;
+            case Definer.UPLOAD_LIVE_SCREEN:
+                opsToPerform = new int[]{OP_DSP_UPLOAD_LIVE_SCREEN};
+                break;
+            case Definer.UPLOAD_LOG:
+                opsToPerform = new int[]{OP_DSP_UPLOAD_LOG};
+                break;
+            default:
+                opsToPerform = new int[]{OP_DSP_PLAY_DATA_SYNC};
+
+        }
+
 
         for (int op : opsToPerform) {
             try {
                 switch (op) {
-                    case OP_CONFERENCE_DATA_SYNC:
-                        dataChanged |= doConferenceDataSync();
+                    case OP_DSP_PLAY_DATA_SYNC:
+                        dataChanged = doPlayDataSync();
                         break;
-                    case OP_USER_SCHEDULE_DATA_SYNC:
-                        dataChanged |= doUserDataSync(syncResult);
+                    /*case OP_DSP_CONTROL_DATA_SYNC:
+                        doControlDataSync(syncResult);
                         break;
-                    case OP_USER_FEEDBACK_DATA_SYNC:
-                        // User feedback data sync is an outgoing sync only so not affecting
-                        // {@code dataChanged} value.
-                        doUserFeedbackDataSync();
+                    case OP_DSP_CONFIG_DATA_SYNC:
+                        doConfigDataSync();
+                        break;
+                    case OP_DSP_RSS_DATA_SYNC:
+                        doRSSDataSync();
+                        break;*/
+
+                    //upload function
+                    case OP_DSP_UPLOAD_LIVE_SCREEN:
+                        doUploadLiveScreen();
+                        break;
+                    case OP_DSP_UPLOAD_LOG:
+                        doUploadLog();
                         break;
                 }
 
@@ -134,7 +172,7 @@ public class SyncHelper {
         }
         choresDuration = System.currentTimeMillis() - opStart;
 
-        int operations = mConferenceDataHandler.getContentProviderOperationsDone();
+        int operations = mPlayDataHandler.getContentProviderOperationsDone();
         if (syncResult != null && syncResult.stats != null) {
             syncResult.stats.numEntries += operations;
             syncResult.stats.numUpdates += operations;
@@ -159,47 +197,53 @@ public class SyncHelper {
         return dataChanged;
     }
 
+    private void doUploadLog() {
+
+    }
+
+    private void doUploadLiveScreen() {
+
+    }
+
+    private void doRSSDataSync() {
+    }
+
     public static void performPostSyncChores(final Context context) {
         // Update search index.
 
     }
 
-    private static void syncCalendar(Context context) {
-       /* Intent intent = new Intent(SessionCalendarService.ACTION_UPDATE_ALL_SESSIONS_CALENDAR);
-        intent.setClass(context, SessionCalendarService.class);
-        context.startService(intent);*/
-    }
 
-    private void doUserFeedbackDataSync() {
+    private void doConfigDataSync() {
        /* Log.d(TAG, "Syncing feedback");
         new FeedbackSyncHelper(mContext, new FeedbackApiHelper(mHttpClient,
                 BuildConfig.FEEDBACK_API_ENDPOINT)).sync();*/
     }
 
     /**
-     * Checks if the remote server has new conference data that we need to import. If so, download
+     * Checks if the remote server has new play data that we need to import. If so, download
      * the new data and import it into the database.
      *
      * @return Whether or not data was changed.
      * @throws IOException if there is a problem downloading or importing the data.
      */
-    private boolean doConferenceDataSync() throws IOException {
+    private boolean doPlayDataSync() throws IOException {
         if (!ConnectivityUtils.isConnected(mContext)) {
             Log.d(TAG, "Not attempting remote sync because device is OFFLINE");
             return false;
         }
 
         Log.d(TAG, "Starting remote sync.");
+        String[] dataFiles = mRemoteDataFetcher.processManifest();
 
-        // Fetch the remote data files via RemoteConferenceDataFetcher.
-        String[] dataFiles = mRemoteDataFetcher.fetchConferenceDataIfNewer(
-                mConferenceDataHandler.getDataTimestamp());
+       /* // Fetch the remote data files via RemotePlayDataFetcher.
+        String[] dataFiles = mRemoteDataFetcher.fetchPlayDataIfNewer(
+                mPlayDataHandler.getPlayTimestamp());*/
 
         if (dataFiles != null) {
             Log.i(TAG, "Applying remote data.");
             // Save the remote data to the database.
-            mConferenceDataHandler.applyConferenceData(dataFiles,
-                    mRemoteDataFetcher.getServerDataTimestamp(), true);
+            mPlayDataHandler.applyPlayData(dataFiles, true);
             Log.i(TAG, "Done applying remote data.");
 
             // Mark that conference data sync has succeeded.
@@ -219,7 +263,7 @@ public class SyncHelper {
      * @return Whether or not data was changed.
      * @throws IOException if there is a problem uploading the data.
      */
-    private boolean doUserDataSync(SyncResult syncResult) throws IOException {
+    private boolean doControlDataSync(SyncResult syncResult) throws IOException {
         if (!ConnectivityUtils.isConnected(mContext)) {
             Log.d(TAG, "Not attempting userdata sync because device is OFFLINE");
             return false;

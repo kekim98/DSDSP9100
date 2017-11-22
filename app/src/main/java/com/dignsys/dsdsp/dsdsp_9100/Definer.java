@@ -230,4 +230,27 @@ public class Definer {
 	public static final int DEF_CLOCK_POS_RIGHT_TOP			= 2;
 	public static final int DEF_CLOCK_POS_LEFT_BOTTOM		= 3;
 	public static final int DEF_CLOCK_POS_RIGHT_BOTTOM		= 4;
+
+
+	public static final String EXTRA_SYNC_TYPE = "com.dignsys.dsdsp.EXTRA_SYNC_TYPE";
+	public static final int SYNC_ALL					= 0;
+	public static final int SYNC_PLAY_ONLY				= 1;
+	public static final int SYNC_CONTROL_ONLY			= 2;
+	public static final int SYNC_CONFIG_ONLY			= 3;
+	public static final int SYNC_RSS_ONLY				= 4;
+
+	public static final int UPLOAD_LOG					= 5;
+	public static final int UPLOAD_LIVE_SCREEN			= 6;
+
+
+	public static final String TEST_PLAYLIST_URL = "http://192.168.1.132/site/bawooriTest/test/playlist.txt" ;
+	public static final String TEST_FORMAT_URL = "http://192.168.1.132/site/bawooriTest/test/format.txt";
+	public static final String TEST_CONFIG_URL = "http://192.168.1.132/site/bawooriTest/test/dspconfig.txt";
+	public static final String TEST_CONTROL_URL = "http://192.168.1.132/site/bawooriTest/test/control.txt";
+	public static final int ORDER_PLAYLIST_DOWNLOAD = 0;
+	public static final int ORDER_FORMAT_DOWNLOAD = 1;
+	public static final int ORDER_CONFIG_DOWNLOAD = 2;
+	public static final int ORDER_CONTROL_DOWNLOAD = 3;
+
+	public static final int MANIFEST_LENGTH = 4;
 }

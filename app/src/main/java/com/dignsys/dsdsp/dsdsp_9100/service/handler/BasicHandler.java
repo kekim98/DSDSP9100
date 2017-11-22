@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.dignsys.dsdsp.dsdsp_9100.service;
+package com.dignsys.dsdsp.dsdsp_9100.service.handler;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
@@ -32,17 +32,17 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
-public abstract class JSONHandler {
+public abstract class BasicHandler {
 
     protected Context mContext;
 
-    public JSONHandler(Context context) {
+    public BasicHandler(Context context) {
         mContext = context;
     }
 
     public abstract void makeContentProviderOperations(ArrayList<ContentProviderOperation> list);
 
-  //  public abstract void process(@NonNull Gson gson, @NonNull JsonElement element);
+    public abstract void process(String body);
 
     /**
      * Loads a raw resource and returns its content as a String.

@@ -1,19 +1,3 @@
-/*
- * Copyright 2014 Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.dignsys.dsdsp.dsdsp_9100.service;
 
 import android.content.Context;
@@ -21,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
+import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.util.HashUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.TimeUtils;
@@ -40,22 +25,13 @@ import java.util.List;
 /**
  * Helper class that fetches conference data from the remote server.
  */
-public class RemoteConferenceDataFetcher {
-    private static final String TAG = RemoteConferenceDataFetcher.class.getSimpleName();
+public class RemotePlayDataFetcher {
+    private static final String TAG = RemotePlayDataFetcher.class.getSimpleName();
 
     // The directory under which we cache our downloaded files
     private static String CACHE_DIR = "data_cache";
 
     private Context mContext = null;
-
-    // name of URL override file used for debug purposes
-    private static final String URL_OVERRIDE_FILE_NAME = "iosched_manifest_url_override.txt";
-
-    // URL of the remote manifest file
-    private String mManifestUrl = null;
-
-    // timestamp of the manifest file on the server
-    private String mServerTimestamp = null;
 
     // the set of cache files we have used -- we use this for cache cleanup.
     private HashSet<String> mCacheFilesToKeep = new HashSet<>();
@@ -66,22 +42,40 @@ public class RemoteConferenceDataFetcher {
     // total # of bytes read from cache hits (approximate)
     private long mBytesReadFromCache = 0;
 
-    public RemoteConferenceDataFetcher(Context context) {
+   
+    public  String[] mManifestUrl=new String[Definer.MANIFEST_LENGTH];
+    public  String[] mManifestLTimeStamp =new String[Definer.MANIFEST_LENGTH];
+    public  String[] mManifestSTimeStamp = new String[Definer.MANIFEST_LENGTH];
+        
+
+    public RemotePlayDataFetcher(Context context) {
         mContext = context;
-        mManifestUrl = getManifestUrl();
+        
+        mManifestUrl[Definer.ORDER_PLAYLIST_DOWNLOAD] = Definer.TEST_PLAYLIST_URL;
+        mManifestUrl[Definer.ORDER_FORMAT_DOWNLOAD] = Definer.TEST_FORMAT_URL;
+        mManifestUrl[Definer.ORDER_CONFIG_DOWNLOAD] = Definer.TEST_CONFIG_URL;
+        mManifestUrl[Definer.ORDER_CONTROL_DOWNLOAD] = Definer.TEST_CONTROL_URL;
+
+        mManifestLTimeStamp[Definer.ORDER_PLAYLIST_DOWNLOAD] =
+                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_PLAYLIST_DOWNLOAD );
+        mManifestLTimeStamp[Definer.ORDER_FORMAT_DOWNLOAD] =
+                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_FORMAT_DOWNLOAD );
+        mManifestLTimeStamp[Definer.ORDER_CONFIG_DOWNLOAD] =
+                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_CONFIG_DOWNLOAD );
+        mManifestLTimeStamp[Definer.ORDER_CONTROL_DOWNLOAD] =
+                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_CONTROL_DOWNLOAD );
+
     }
 
     /**
      * Fetches data from the remote server.
      *
-     * @param refTimestamp The timestamp of the data to use as a reference; if the remote data is
-     *                     not newer than this timestamp, no data will be downloaded and this method
-     *                     will return null.
+     * @param idx model index for in this function.
      * @return The data downloaded, or null if there is no data to download
      * @throws IOException if an error occurred during download.
      */
-    public String[] fetchConferenceDataIfNewer(String refTimestamp) throws IOException {
-        if (TextUtils.isEmpty(mManifestUrl)) {
+    public String fetchPlayDataIfNewer(int idx) throws IOException {
+        if (TextUtils.isEmpty(mManifestUrl[idx])) {
             Log.w(TAG, "Manifest URL is empty (remote sync disabled!).");
             return null;
         }
@@ -91,22 +85,22 @@ public class RemoteConferenceDataFetcher {
 
        // IOUtils.authorizeHttpClient(mContext, httpClient);
 
-        // Only download if data is newer than refTimestamp
+        // Only download if data is newer than localTimestamp
         // Cloud Storage is very picky with the If-Modified-Since format. If it's in a wrong
         // format, it refuses to serve the file, returning 400 HTTP error. So, if the
-        // refTimestamp is in a wrong format, we simply ignore it. But pay attention to this
+        // localTimestamp is in a wrong format, we simply ignore it. But pay attention to this
         // warning in the log, because it might mean unnecessary data is being downloaded.
-        if (!TextUtils.isEmpty(refTimestamp)) {
-            if (TimeUtils.isValidFormatForIfModifiedSinceHeader(refTimestamp)) {
-                httpClient.addHeader("If-Modified-Since", refTimestamp);
+        if (!TextUtils.isEmpty(mManifestLTimeStamp[idx])) {
+            if (TimeUtils.isValidFormatForIfModifiedSinceHeader(mManifestLTimeStamp[idx])) {
+                httpClient.addHeader("If-Modified-Since", mManifestLTimeStamp[idx]);
             } else {
                 Log.w(TAG, "Could not set If-Modified-Since HTTP header. Potentially downloading " +
-                        "unnecessary data. Invalid format of refTimestamp argument: " +
-                        refTimestamp);
+                        "unnecessary data. Invalid format of localTimestamp argument: " +
+                        mManifestLTimeStamp[idx]);
             }
         }
 
-        HttpResponse response = httpClient.get(mManifestUrl, null);
+        HttpResponse response = httpClient.get(mManifestUrl[idx], null);
         if (response == null) {
             Log.e(TAG, "Request for manifest returned null response.");
             throw new IOException("Request for data manifest returned null response.");
@@ -115,57 +109,33 @@ public class RemoteConferenceDataFetcher {
         int status = response.getStatus();
         if (status == HttpURLConnection.HTTP_OK) {
             Log.d(TAG, "Server returned HTTP_OK, so new data is available.");
-            mServerTimestamp = getLastModified(response);
-            Log.d(TAG, "Server timestamp for new data is: " + mServerTimestamp);
+            mManifestSTimeStamp[idx] = getLastModified(response);
+            Log.d(TAG, "Server timestamp for new data is: " +  mManifestSTimeStamp[idx]);
             String body = response.getBodyAsString();
             if (TextUtils.isEmpty(body)) {
                 Log.e(TAG, "Request for manifest returned empty data.");
                 throw new IOException("Error fetching conference data manifest: no data.");
             }
-            Log.d(TAG, "Manifest " + mManifestUrl + " read, contents: " + body);
+            Log.d(TAG, "Manifest " + mManifestUrl[idx] + " read, contents: " + body);
             mBytesDownloaded += body.getBytes().length;
-            return processManifest(body);
+            return body;
         } else if (status == HttpURLConnection.HTTP_NOT_MODIFIED) {
             // data on the server is not newer than our data
-            Log.d(TAG, "HTTP_NOT_MODIFIED: data has not changed since " + refTimestamp);
+            Log.d(TAG, "HTTP_NOT_MODIFIED: data has not changed since " + mManifestLTimeStamp[idx]);
             return null;
         } else {
-            Log.e(TAG, "Error fetching conference data: HTTP status " + status + " and manifest " +
-                    mManifestUrl);
+            Log.e(TAG, "Error fetching play data: HTTP status " + status + " and manifest " +
+                    mManifestUrl[idx]);
             throw new IOException("Error fetching conference data: HTTP status " + status);
         }
     }
 
     // Returns the timestamp of the data downloaded from the server
-    public String getServerDataTimestamp() {
-        return mServerTimestamp;
+    public String getServerDataTimestamp(int idx) {
+        return mManifestSTimeStamp[idx];
     }
 
-    /**
-     * Returns the remote manifest file's URL. This is stored as a resource in the app, but can be
-     * overriden by a file in the filesystem for debug purposes.
-     *
-     * @return The URL of the remote manifest file.
-     */
-    private String getManifestUrl() {
 
-       // String manifestUrl = BuildConfig.SERVER_MANIFEST_ENDPOINT;
-        String manifestUrl = "";
-
-        // check for an override file
-        File urlOverrideFile = new File(mContext.getFilesDir(), URL_OVERRIDE_FILE_NAME);
-        if (urlOverrideFile.exists()) {
-            try {
-                String overrideUrl = IOUtils.readFileAsString(urlOverrideFile).trim();
-                Log.w(TAG, "Debug URL override active: " + overrideUrl);
-                return overrideUrl;
-            } catch (IOException ex) {
-                return manifestUrl;
-            }
-        } else {
-            return manifestUrl;
-        }
-    }
 
     /**
      * Fetches a file from the cache/network, from an absolute or relative URL. If the file is
@@ -180,12 +150,12 @@ public class RemoteConferenceDataFetcher {
     private String fetchFile(String url) throws IOException {
         // If this is a relative url, consider it relative to the manifest URL
         if (!url.contains("://")) {
-            if (TextUtils.isEmpty(mManifestUrl) || !mManifestUrl.contains("/")) {
+            if (TextUtils.isEmpty(url) || !url.contains("/")) {
                 Log.e(TAG, "Could not build relative URL based on manifest URL.");
                 return null;
             }
-            int i = mManifestUrl.lastIndexOf('/');
-            url = mManifestUrl.substring(0, i) + "/" + url;
+            int i = url.lastIndexOf('/');
+            url = url.substring(0, i) + "/" + url;
         }
 
         Log.d(TAG, "Attempting to fetch: " + sanitizeUrl(url));
@@ -321,42 +291,29 @@ public class RemoteConferenceDataFetcher {
     /**
      * Process the data manifest and download data files referenced from it.
      *
-     * @param manifestJson The JSON of the manifest file.
      * @return The contents of the set of files referenced from the manifest, or null if none could
      * be retrieved.
      * @throws IOException If an error occurs while retrieving information.
      */
-    private String[] processManifest(String manifestJson) throws IOException {
-       /* Log.d(TAG, "Processing data manifest, length " + manifestJson.length());
+    public String[] processManifest() throws IOException {
 
-        DataManifest manifest = new Gson().fromJson(manifestJson, DataManifest.class);
-        if (manifest.format == null || !manifest.format.equals(MANIFEST_FORMAT)) {
-            Log.e(TAG, "Manifest has invalid format spec: " + manifest.format);
-            throw new IOException("Invalid format spec on manifest:" + manifest.format);
-        }
-
-        if (manifest.data_files == null || manifest.data_files.length == 0) {
-            Log.w(TAG, "Manifest does not list any files. Nothing done.");
-            return null;
-        }
-
-        Log.d(TAG, "Manifest lists " + manifest.data_files.length + " data files.");
-        String[] jsons = new String[manifest.data_files.length];
-        for (int i = 0; i < manifest.data_files.length; i++) {
-            String url = manifest.data_files[i];
+        Log.d(TAG, "Manifest lists " + mManifestUrl.length + " data files.");
+        String[] bodys = new String[mManifestUrl.length];
+        for (int i = 0; i < mManifestUrl.length; i++) {
+            String url = mManifestUrl[i];
             Log.d(TAG, "Processing data file: " + sanitizeUrl(url));
-            jsons[i] = fetchFile(url);
-            if (TextUtils.isEmpty(jsons[i])) {
+          //  bodys[i] = fetchFile(url);
+            bodys[i] = fetchPlayDataIfNewer(i);
+            if (TextUtils.isEmpty(bodys[i])) {
                 Log.e(TAG, "Failed to fetch data file: " + sanitizeUrl(url));
                 throw new IOException("Failed to fetch data file " + sanitizeUrl(url));
             }
         }
 
-        Log.d(TAG, "Got " + jsons.length + " data files.");
-        cleanUpCache();
-        return jsons;*/
-       String[] ret = {""};
-       return ret;
+        Log.d(TAG, "Got " + bodys.length + " data files.");
+        //cleanUpCache();
+        return bodys;
+
     }
 
     // Delete unnecessary files from our cache

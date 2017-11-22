@@ -17,9 +17,9 @@ public class ContentEntity {
     /*
     // content info
     */
-    private int scen_num; //foreign key
+    private int scen_id; //foreign key
     //private int format_num;
-    private int pane_num; //foreign key
+    private int pane_id; //foreign key
 
     private String filePaht="";
     private int fileType =0;      //fm_nType
@@ -31,7 +31,7 @@ public class ContentEntity {
     private int opMSGType=0;    //011, m_nOpMSGType
     private int opMSGPlayTime=0;    //012, m_nOpMSGPlayTime
     private int opNotDownload=0;    //030, m_nOpNotDownload
-    private String opStartD="";  //001, m_strOpStartDT
+    private String opStartDT="";  //001, m_strOpStartDT
     private String opEndDT="";    //002, m_strOpEndDT
     private String opBGMFile="";     //004, m_strOpBGMFile
     private String opMSGFile="";     //009, m_strOpMSGFile
@@ -48,20 +48,20 @@ public class ContentEntity {
         this.id = id;
     }
 
-    public int getScen_num() {
-        return scen_num;
+    public int getScen_id() {
+        return scen_id;
     }
 
-    public void setScen_num(int scen_num) {
-        this.scen_num = scen_num;
+    public void setScen_id(int scen_id) {
+        this.scen_id = scen_id;
     }
 
-    public int getPane_num() {
-        return pane_num;
+    public int getPane_id() {
+        return pane_id;
     }
 
-    public void setPane_num(int pane_num) {
-        this.pane_num = pane_num;
+    public void setPane_id(int pane_id) {
+        this.pane_id = pane_id;
     }
 
     public String getFilePaht() {
@@ -136,12 +136,12 @@ public class ContentEntity {
         this.opNotDownload = opNotDownload;
     }
 
-    public String getOpStartD() {
-        return opStartD;
+    public String getOpStartDT() {
+        return opStartDT;
     }
 
-    public void setOpStartD(String opStartD) {
-        this.opStartD = opStartD;
+    public void setOpStartDT(String opStartDT) {
+        this.opStartDT = opStartDT;
     }
 
     public String getOpEndDT() {

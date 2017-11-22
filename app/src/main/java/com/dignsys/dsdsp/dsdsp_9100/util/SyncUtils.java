@@ -28,6 +28,15 @@ public class SyncUtils {
     private static final String PREF_SERVER_TIME_OFFSET_SET_AT =
             "pref_server_time_offset_set_at";
 
+    /**
+     * Long indicating when a sync was last ATTEMPTED (not necessarily succeeded).
+     */
+    private static final String PREF_LAST_SYNC_ATTEMPTED = "pref_last_sync_attempted";
+    /**
+     * Long indicating when a sync last SUCCEEDED.
+     */
+    private static final String PREF_LAST_SYNC_SUCCEEDED = "pref_last_sync_succeeded";
+
     private static final long NEVER_SET = -1L;
 
     /**
@@ -76,5 +85,25 @@ public class SyncUtils {
      */
     public static boolean serverTimeOffsetNeverSet(final Context context) {
         return getServerTimeOffsetSetAt(context) == NEVER_SET;
+    }
+
+    /**
+     * Mark that a sync succeeded (stores current time as 'last sync succeeded' preference).
+     *
+     * @param context Context to be used to edit the {@link android.content.SharedPreferences}.
+     */
+    public static void markSyncSucceededNow(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putLong(PREF_LAST_SYNC_SUCCEEDED, TimeUtils.getCurrentTime(context)).apply();
+    }
+
+    /**
+     * Mark a sync was attempted (stores current time as 'last sync attempted' preference).
+     *
+     * @param context Context to be used to edit the {@link android.content.SharedPreferences}.
+     */
+    public static void markSyncAttemptedNow(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putLong(PREF_LAST_SYNC_ATTEMPTED, TimeUtils.getCurrentTime(context)).apply();
     }
 }

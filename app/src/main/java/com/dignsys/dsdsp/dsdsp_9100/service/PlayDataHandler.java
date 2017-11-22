@@ -22,6 +22,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 
+import com.dignsys.dsdsp.dsdsp_9100.Definer;
+import com.dignsys.dsdsp.dsdsp_9100.service.handler.BasicHandler;
+import com.dignsys.dsdsp.dsdsp_9100.service.handler.FormatHandler;
+import com.dignsys.dsdsp.dsdsp_9100.service.handler.PlayListHandler;
 import com.turbomanage.httpclient.ConsoleRequestLogger;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.RequestLogger;
@@ -37,8 +41,8 @@ import java.util.HashMap;
  * Helper class that parses conference data and imports them into the app's
  * Content Provider.
  */
-public class ConferenceDataHandler {
-    private static final String TAG = ConferenceDataHandler.class.getSimpleName();
+public class PlayDataHandler {
+    private static final String TAG = PlayDataHandler.class.getSimpleName();
 
     // Shared settings_prefs key under which we store the timestamp that corresponds to
     // the data we currently have in our content provider.
@@ -48,56 +52,45 @@ public class ConferenceDataHandler {
     // really old or nonexistent)
     private static final String DEFAULT_TIMESTAMP = "Sat, 1 Jan 2000 00:00:00 GMT";
 
-    private static final String DATA_KEY_ROOMS = "rooms";
-    private static final String DATA_KEY_BLOCKS = "blocks";
-    private static final String DATA_KEY_CARDS = "cards";
-    private static final String DATA_KEY_TAGS = "tags";
-    private static final String DATA_KEY_SPEAKERS = "speakers";
-    private static final String DATA_KEY_SESSIONS = "sessions";
-    private static final String DATA_KEY_SEARCH_SUGGESTIONS = "search_suggestions";
-    private static final String DATA_KEY_MAP = "map";
-    private static final String DATA_KEY_HASHTAGS = "hashtags";
-    private static final String DATA_KEY_VIDEOS = "video_library";
+    private static final String DATA_KEY_PLAYLIST = "play_list";
+    private static final String DATA_KEY_FORMAT = "format";
+    private static final String DATA_KEY_CONFIG = "config";
+    private static final String DATA_KEY_CONTROL = "control";
+    
+    private static final String DATA_KEY_RSS= "rss";
+
 
     private static final String[] DATA_KEYS_IN_ORDER = {
-           /* DATA_KEY_ROOMS,
-            DATA_KEY_BLOCKS,
-            DATA_KEY_CARDS,
-            DATA_KEY_TAGS,
-            DATA_KEY_SPEAKERS,
-            DATA_KEY_SESSIONS,
-            DATA_KEY_SEARCH_SUGGESTIONS,
-            DATA_KEY_MAP,
-            DATA_KEY_HASHTAGS,
-            DATA_KEY_VIDEOS*/
-            DATA_KEY_SESSIONS
+            DATA_KEY_PLAYLIST,
+            DATA_KEY_FORMAT,
+            DATA_KEY_CONFIG,
+            DATA_KEY_CONTROL,
+            
+         //   DATA_KEY_RSS,
     };
 
     private final Context mContext;
    // private final Gson mGson = new Gson();
 
     // Handlers for each entity type:
-  /*  private RoomsHandler mRoomsHandler;
-    private BlocksHandler mBlocksHandler;
-    private CardHandler mCardHandler;
-    private TagsHandler mTagsHandler;
-    private SpeakersHandler mSpeakersHandler;
+    private PlayListHandler mPlayListHandler;
+    private FormatHandler mFormatHandler;
 
-    private SearchSuggestHandler mSearchSuggestHandler;
-    private MapPropertyHandler mMapPropertyHandler;
-    private HashtagsHandler mHashtagsHandler;
-    private VideosHandler mVideosHandler;*/
+    /*
+    private ConfigHandler mConfigHandler;
+    private ControlHandler mControlHandler;
+    private RssHandler mRssHandler;*/
 
-    private SessionsHandler mSessionsHandler;
 
     // Convenience map that maps the key name to its corresponding handler (e.g.
-    // "blocks" to mBlocksHandler (to avoid very tedious if-elses)
-    private final HashMap<String, JSONHandler> mHandlerForKey = new HashMap<>();
+    // "blocks" to mFormatHandler (to avoid very tedious if-elses)
+    private final HashMap<String, BasicHandler> mHandlerForKey = new HashMap<>();
 
     // Tally of total content provider operations we carried out (for statistical purposes)
     private int mContentProviderOperationsDone = 0;
 
-    public ConferenceDataHandler(Context ctx) {
+
+    public PlayDataHandler(Context ctx) {
         mContext = ctx;
     }
 
@@ -106,41 +99,32 @@ public class ConferenceDataHandler {
      * content provider. The format of the data is documented at https://code.google.com/p/iosched.
      *
      * @param dataBodies       The collection of JSON objects to parse and import.
-     * @param dataTimestamp    The timestamp of the data. This should be in RFC1123 format.
      * @param downloadsAllowed Whether or not we are supposed to download data from the internet if
      *                         needed.
      * @throws IOException If there is a problem parsing the data.
      */
-    public void applyConferenceData(String[] dataBodies, String dataTimestamp,
-                                    boolean downloadsAllowed) throws IOException {
-        Log.d(TAG, "Applying data from " + dataBodies.length + " files, timestamp " + dataTimestamp);
+    public void applyPlayData(String[] dataBodies, boolean downloadsAllowed) throws IOException {
+        Log.d(TAG, "Applying data from " + dataBodies.length + " files");
 
         // create handlers for each data type
-       /* mHandlerForKey.put(DATA_KEY_ROOMS, mRoomsHandler = new RoomsHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_BLOCKS, mBlocksHandler = new BlocksHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_TAGS, mTagsHandler = new TagsHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_SPEAKERS, mSpeakersHandler = new SpeakersHandler(mContext));
+        mHandlerForKey.put(DATA_KEY_PLAYLIST, mPlayListHandler = new PlayListHandler(mContext));
+        mHandlerForKey.put(DATA_KEY_FORMAT, mFormatHandler = new FormatHandler(mContext));
+       /* mHandlerForKey.put(DATA_KEY_CONFIG, mControlHandler = new ConfigHandler(mContext));
+        mHandlerForKey.put(DATA_KEY_CONTROL, mRssHandler = new CorntrolHandler(mContext));
+        mHandlerForKey.put(DATA_KEY_CONTROL, mRssHandler = new RssHandler(mContext));*/
 
-        mHandlerForKey.put(DATA_KEY_SEARCH_SUGGESTIONS, mSearchSuggestHandler =
-                new SearchSuggestHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_MAP, mMapPropertyHandler = new MapPropertyHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_HASHTAGS, mHashtagsHandler = new HashtagsHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_VIDEOS, mVideosHandler = new VideosHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_CARDS, mCardHandler = new CardHandler(mContext));*/
 
-      //  mHandlerForKey.put(DATA_KEY_SESSIONS, mSessionsHandler = new SessionsHandler(mContext));
-
-        // process the jsons. This will call each of the handlers when appropriate to deal
+        // process the playlist.txt and format.txt. This will call each of the handlers when appropriate to deal
         // with the objects we see in the data.
-        Log.d(TAG, "Processing " + dataBodies.length + " JSON objects.");
+        Log.d(TAG, "Processing " + dataBodies.length + " Operation Object.");
         for (int i = 0; i < dataBodies.length; i++) {
             Log.d(TAG, "Processing json object #" + (i + 1) + " of " + dataBodies.length);
-            processDataBody(dataBodies[i]);
+            processDataBody(dataBodies[i], DATA_KEYS_IN_ORDER[i]);
         }
 
         // the sessions handler needs to know the tag and speaker maps to process sessions
-        /*mSessionsHandler.setTagMap(mTagsHandler.getTagMap());
-        mSessionsHandler.setSpeakerMap(mSpeakersHandler.getSpeakerMap());*/
+        /*mSessionsHandler.setTagMap(mControlHandler.getTagMap());
+        mSessionsHandler.setSpeakerMap(mRssHandler.getSpeakerMap());*/
 
         // produce the necessary content provider operations
         ArrayList<ContentProviderOperation> batch = new ArrayList<>();
@@ -181,7 +165,7 @@ public class ConferenceDataHandler {
         }*/
 
         // update our data timestamp
-        setDataTimestamp(dataTimestamp);
+      //  setDataTimestamp(dataTimestamp);
         Log.d(TAG, "Done applying conference data.");
     }
 
@@ -196,32 +180,13 @@ public class ConferenceDataHandler {
      * @param dataBody The body of data to process
      * @throws IOException If there is an error parsing the data.
      */
-    private void processDataBody(String dataBody) throws IOException {
-       /* JsonReader reader = new JsonReader(new StringReader(dataBody));
-        JsonParser parser = new JsonParser();
-        try {
-            reader.setLenient(true); // To err is human
+    private void processDataBody(String dataBody, String key) throws IOException {
+        if (dataBody == null) {
+            return;
+        }
+        final BasicHandler handler = mHandlerForKey.get(key);
+        handler.process(dataBody);
 
-            // the whole file is a single JSON object
-            reader.beginObject();
-
-            while (reader.hasNext()) {
-                // the key is "rooms", "speakers", "tracks", etc.
-                final String key = reader.nextName();
-                final JSONHandler handler = mHandlerForKey.get(key);
-                if (handler != null) {
-                    Log.d(TAG, "Processing key in conference data json: " + key);
-                    // pass the value to the corresponding handler
-                    handler.process(mGson, parser.parse(reader));
-                } else {
-                    Log.w(TAG, "Skipping unknown key in conference data json: " + key);
-                    reader.skipValue();
-                }
-            }
-            reader.endObject();
-        } finally {
-            reader.close();
-        }*/
     }
 
     /**
@@ -284,16 +249,34 @@ public class ConferenceDataHandler {
     }*/
 
     // Returns the timestamp of the data we have in the content provider.
-    public String getDataTimestamp() {
-        return PreferenceManager.getDefaultSharedPreferences(mContext).getString(
-                SP_KEY_DATA_TIMESTAMP, DEFAULT_TIMESTAMP);
+    public static String getPlayTimestamp(Context ctx, int idx) {
+
+
+        String key="";
+
+        if(idx == Definer.ORDER_PLAYLIST_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_PLAY";
+        if(idx == Definer.ORDER_FORMAT_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_FORMAT";
+        if(idx == Definer.ORDER_CONFIG_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_CONFIG";
+        if(idx == Definer.ORDER_CONTROL_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_CONTROL";
+
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getString(
+                SP_KEY_DATA_TIMESTAMP+ key , DEFAULT_TIMESTAMP);
     }
 
+
     // Sets the timestamp of the data we have in the content provider.
-    public void setDataTimestamp(String timestamp) {
+    public static void setDataTimestamp(Context ctx, String timestamp, int idx) {
+
+        String key="";
+
+        if(idx == Definer.ORDER_PLAYLIST_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_PLAY";
+        if(idx == Definer.ORDER_FORMAT_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_FORMAT";
+        if(idx == Definer.ORDER_CONFIG_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_CONFIG";
+        if(idx == Definer.ORDER_CONTROL_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_CONTROL";
+
         Log.d(TAG, "Setting data timestamp to: " + timestamp);
-        PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString(
-                SP_KEY_DATA_TIMESTAMP, timestamp).apply();
+        PreferenceManager.getDefaultSharedPreferences(ctx).edit().putString(
+                SP_KEY_DATA_TIMESTAMP+ key, timestamp).apply();
     }
 
     // Reset the timestamp of the data we have in the content provider

@@ -10,13 +10,12 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "schedule_info")
 public class ScheduleEntity {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int id; //m_nSceneIndex
 
     /*
     // schedule info
     */
-
 
    // private int format_num=0;
     private int point=0; //m_nPoint
@@ -27,6 +26,26 @@ public class ScheduleEntity {
     private String opStartTime=""; //m_strOpStartTime
     private String opEndTime=""; //m_strOpEndTime
 
+
+    public void setOpW(String opW) {
+        this.opW = opW;
+        this.point +=30;
+    }
+
+    public void setOpDate(String str)
+    {
+        this.opStartDate = str.substring(0, str.indexOf("-"));
+        this.opEndDate = str.substring(str.indexOf("-") + 1);
+        this.point += 10;
+
+    }
+    public void setOpTime(String str)
+    {
+        this.opStartTime = str.substring(0, str.indexOf("-")).replace(":", "");
+
+        this.opEndTime		= str.substring(str.indexOf("-") + 1).replace(":", "");
+        this.point += 6;
+    }
 
     public int getId() {
         return id;
@@ -50,15 +69,14 @@ public class ScheduleEntity {
 
     public void setOpS(int opS) {
         this.opS = opS;
+        this.point +=30;
     }
 
     public String getOpW() {
         return opW;
     }
 
-    public void setOpW(String opW) {
-        this.opW = opW;
-    }
+
 
     public String getOpStartDate() {
         return opStartDate;

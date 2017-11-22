@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
 
-      <service android:name=".service.CMService"/>
+      <service android:name=".service.SyncService"/>
     </application>
 
 </manifest>

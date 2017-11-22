@@ -21,6 +21,6 @@ public interface PaneDao {
     @Insert
     void insertAll(List<PaneEntity> panes);
 
-    @Query("select * from pane_info where scene_num = :scene_num AND pane_num = :pane_num")
-    LiveData<PaneEntity> loadSceneById(int scene_num, int pane_num );
+    @Query("select * from pane_info where scene_id = :scene_id AND pane_id = :pane_id")
+    LiveData<PaneEntity> loadSceneById(int scene_id, int pane_id );
 }

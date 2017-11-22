@@ -23,8 +23,8 @@ public interface SceneDao {
     @Insert
     void insertAll(List<SceneEntity> scenes);
 
-    @Query("select * from scene_info where scene_num = :sceneId")
-    LiveData<SceneEntity> loadSceneById(int sceneId);
+    @Query("select * from scene_info where id = :id")
+    LiveData<SceneEntity> loadSceneById(int id);
 
 
 }

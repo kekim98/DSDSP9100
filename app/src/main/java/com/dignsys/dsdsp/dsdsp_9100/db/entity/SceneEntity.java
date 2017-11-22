@@ -7,10 +7,10 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "scene_info")
 public class SceneEntity {
     @PrimaryKey
-    private int scene_num=0;
+    private int id;
 
     private int schedule_id; //foreign key
-    private int formatNum=0;
+    //private int formatNum=0; //not use
     private boolean opBGMMode = false;
     private String opPlayTime="";
 
@@ -18,12 +18,12 @@ public class SceneEntity {
     Format format;
 
 
-    public int getScene_num() {
-        return scene_num;
+    public int getId() {
+        return id;
     }
 
-    public void setScene_num(int scene_num) {
-        this.scene_num = scene_num;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getSchedule_id() {
@@ -34,14 +34,14 @@ public class SceneEntity {
         this.schedule_id = schedule_id;
     }
 
-    public int getFormatNum() {
+  /*  public int getFormatNum() {
         return formatNum;
     }
 
     public void setFormatNum(int formatNum) {
         this.formatNum = formatNum;
     }
-
+*/
     public boolean isOpBGMMode() {
         return opBGMMode;
     }

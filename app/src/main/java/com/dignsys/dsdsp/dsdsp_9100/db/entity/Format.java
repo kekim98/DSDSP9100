@@ -5,33 +5,42 @@ package com.dignsys.dsdsp.dsdsp_9100.db.entity;
  */
 
 public class Format {
-   // private int format_num; //foreign key
+    private int scene_id; //for mapping with SceneEntity
 
-    private int formatType; //m_nPanelType
-    private int foramtWidth; //m_nResolutionW
-    private int formatHeight; //m_nResolutionH
+    private int sceneType; // scene format type
+    private int sceneWidth; //scene width resolution
+    private int sceneHeight; //scene height resolution
 
-    public int getFormatType() {
-        return formatType;
+
+    public int getScene_id() {
+        return scene_id;
     }
 
-    public void setFormatType(int formatType) {
-        this.formatType = formatType;
+    public void setScene_id(int scene_id) {
+        this.scene_id = scene_id;
     }
 
-    public int getForamtWidth() {
-        return foramtWidth;
+    public int getSceneType() {
+        return sceneType;
     }
 
-    public void setForamtWidth(int foramtWidth) {
-        this.foramtWidth = foramtWidth;
+    public void setSceneType(int sceneType) {
+        this.sceneType = sceneType;
     }
 
-    public int getFormatHeight() {
-        return formatHeight;
+    public int getSceneWidth() {
+        return sceneWidth;
     }
 
-    public void setFormatHeight(int formatHeight) {
-        this.formatHeight = formatHeight;
+    public void setSceneWidth(int sceneWidth) {
+        this.sceneWidth = sceneWidth;
+    }
+
+    public int getSceneHeight() {
+        return sceneHeight;
+    }
+
+    public void setSceneHeight(int sceneHeight) {
+        this.sceneHeight = sceneHeight;
     }
 }
