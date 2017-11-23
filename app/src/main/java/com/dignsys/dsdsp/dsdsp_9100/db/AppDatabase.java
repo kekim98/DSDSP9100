@@ -6,6 +6,7 @@ package com.dignsys.dsdsp.dsdsp_9100.db;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.TypeConverters;
 
 import com.dignsys.dsdsp.dsdsp_9100.db.converter.DateConverter;
@@ -19,6 +20,8 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ScheduleEntity;
+
+import java.util.List;
 
 
 @Database(entities = {ConfigEntity.class, ScheduleEntity.class, SceneEntity.class, PaneEntity.class, ContentEntity.class}, version = 1)
@@ -36,4 +39,23 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PaneDao paneDao();
 
     public abstract ContentDao contentDao();
+
+    @Transaction
+    public void updatePlayDataTransaction(List<ScheduleEntity> scheduls,
+                                          List<SceneEntity> scenes,
+                                          List<PaneEntity> panes,
+                                          List<ContentEntity> contents)
+    {
+        // Anything inside this method runs in a single transaction.
+        scheduleDao().deleteAllSchedule();
+        sceneDao().deleteAllScene();
+        paneDao().deleteAllPane();
+        contentDao().deleteAllContent();
+
+        scheduleDao().insertAll(scheduls);
+        sceneDao().insertAll(scenes);
+        paneDao().insertAll(panes);
+        contentDao().insertAll(contents);
+    }
+
 }

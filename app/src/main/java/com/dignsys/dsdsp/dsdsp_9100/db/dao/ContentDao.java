@@ -23,4 +23,7 @@ public interface ContentDao {
 
     @Query("select * from content_info where id = :contentId")
     LiveData<ContentEntity> loadContentById(int contentId);
+
+    @Query("DELETE FROM content_info")
+    void deleteAllContent();
 }

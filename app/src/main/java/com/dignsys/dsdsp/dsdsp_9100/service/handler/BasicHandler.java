@@ -16,6 +16,7 @@
 
 package com.dignsys.dsdsp.dsdsp_9100.service.handler;
 
+import android.arch.persistence.room.Dao;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 
@@ -40,7 +41,6 @@ public abstract class BasicHandler {
         mContext = context;
     }
 
-    public abstract void makeContentProviderOperations(ArrayList<ContentProviderOperation> list);
 
     public abstract void process(String body);
 

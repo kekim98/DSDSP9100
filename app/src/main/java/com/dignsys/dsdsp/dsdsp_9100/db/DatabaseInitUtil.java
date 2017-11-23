@@ -15,7 +15,7 @@ import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_CONFIG_VERSION;
 import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_MODEL_ID;
 import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_VERSION;
 
-/** Generates dummy data and inserts them into the database */
+/** Generates init data and inserts them into the database */
 class DatabaseInitUtil {
 
 

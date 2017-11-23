@@ -1,18 +1,3 @@
-/*
- * Copyright 2014 Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.dignsys.dsdsp.dsdsp_9100.util;
 
@@ -21,17 +6,22 @@ import android.content.Context;
 
 import com.turbomanage.httpclient.BasicHttpClient;
 
+import org.mozilla.universalchardet.UniversalDetector;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 /**
  * Utility methods and constants used for writing and reading to from streams and files.
@@ -83,7 +73,7 @@ public class IOUtils {
      * Note: This method closes the given OutputStream.
      *
      * @param content The String content to write to the OutputStream.
-     * @param os The OutputStream to which the content should be written.
+     * @param os      The OutputStream to which the content should be written.
      * @throws IOException
      */
     public static void writeToStream(String content, OutputStream os) throws IOException {
@@ -113,7 +103,6 @@ public class IOUtils {
      * Reads an {@link InputStream} into a String using the UTF-8 encoding.
      * Note that this method closes the InputStream passed to it.
      *
-     *
      * @param is The InputStream to be read.
      * @return The contents of the InputStream as a String.
      * @throws IOException
@@ -135,12 +124,52 @@ public class IOUtils {
         return sb.toString();
     }
 
+    public static String getFilename(String path) {
+
+        return new File(path).getName();
+    }
+
+    public static File getContentFile(Context context, String filename) {
+        File folder = new File(context.getFilesDir(), getContentFilePath());
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        return new File(folder, filename);
+    }
+
+    public static String getContentFilePath() {
+
+        return "test-content";
+    }
+
+
+    public static void removeUnusedContents(Context mContext, final ArrayList<String> usedContents) {
+        // remove all files are stored in the content path but are not used
+        File folder = new File(mContext.getFilesDir(), getContentFilePath());
+        File[] unused = folder.listFiles(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String filename) {
+                return !usedContents.contains(filename);
+            }
+        });
+
+        if (unused != null) {
+            for (File f : unused) {
+                f.delete();
+            }
+        }
+    }
+
+    public static boolean hasContent(Context mContext, String filename) {
+        return getContentFile(mContext, filename).exists();
+    }
+
     /**
      * If {@code AUTHORIZATION_TO_BACKEND_REQUIRED} is true add an authentication header to the
      * given request. The currently signed in user is used to retrieve the auth token.
-     * Allows pre-release builds to use a Google Cloud storage bucket with non-public data.
      *
-     * @param context Context used to retrieve auth token from SharedPreferences.
+     * @param context         Context used to retrieve auth token from SharedPreferences.
      * @param basicHttpClient HTTP client to which the authorization header will be added.
      */
     public static void authorizeHttpClient(Context context, BasicHttpClient basicHttpClient) {
@@ -152,4 +181,40 @@ public class IOUtils {
                     BEARER_PREFIX + AccountUtils.getAuthToken(context));
         }*/
     }
+
+    public static String getHostAddress(Context mContext) {
+        //TODO : for only testing address
+        String addr = "http://192.168.1.132";
+        return addr;
+    }
+
+
+
+    public static String universalDetector(final byte[] args) {
+
+        String result = null;
+        UniversalDetector detector = new UniversalDetector(null);
+
+        detector.handleData(args, 0, args.length);
+        detector.dataEnd();
+
+        String encoding = detector.getDetectedCharset();
+
+        detector.reset();
+
+        if (encoding != null) {
+            System.out.println("Detected encoding = " + encoding);
+            try {
+                result = new String(args, encoding);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("No encoding detected.");
+            result = new String(args);
+        }
+
+        return result;
+    }
+
 }

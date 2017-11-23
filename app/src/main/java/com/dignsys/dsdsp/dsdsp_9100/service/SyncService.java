@@ -3,7 +3,10 @@ package com.dignsys.dsdsp.dsdsp_9100.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
+
+import com.dignsys.dsdsp.dsdsp_9100.Definer;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -85,9 +88,8 @@ public class SyncService extends IntentService {
         // TODO: Handle action Download
         Log.d(TAG, "handleActionDownload: KKKKKKKKKKKKKKKKKKKk");
 
-       // String dlRootPath 		= DSLibIF.getRootPath();
-       // String dlPath	= dlRootPath + File.separator + "dowlnoad";
-
+        SyncHelper syncHelper = new SyncHelper(this);
+        syncHelper.performSync(null,Definer.SYNC_PLAY_ONLY);
 
     }
 

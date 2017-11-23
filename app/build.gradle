@@ -51,4 +51,5 @@ dependencies {
     annotationProcessor 'android.arch.persistence.room:compiler:1.0.0'
     implementation 'android.arch.lifecycle:extensions:1.0.0'
     implementation 'com.turbomanage.basic-http-client:http-client-android:0.89'
+    implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
 }

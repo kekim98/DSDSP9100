@@ -74,10 +74,10 @@ public class SyncHelper {
      * The Play data sync is handled by {@link RemotePlayDataFetcher}.
      *     *
      * @param syncResult The sync result object to update with statistics.
-     * @param extras Specifies additional information about the sync.
+     * @param syncType Specifies additional information about the sync.
      * @return true if the sync changed the data.
      */
-    public boolean performSync(@Nullable SyncResult syncResult, Bundle extras) {
+    public boolean performSync(@Nullable SyncResult syncResult, int syncType) {
 
         boolean dataChanged = false;
 
@@ -87,8 +87,7 @@ public class SyncHelper {
 
         opStart = System.currentTimeMillis();
 
-        final int syncType = extras
-                .getInt(Definer.EXTRA_SYNC_TYPE);
+
         // Sync consists of 1 or more of these operations. We try them one by one and tolerate
         // individual failures on each.
 
@@ -244,10 +243,12 @@ public class SyncHelper {
             Log.i(TAG, "Applying remote data.");
             // Save the remote data to the database.
             mPlayDataHandler.applyPlayData(dataFiles, true);
+            mRemoteDataFetcher.updatePlayDataTimestamp();
             Log.i(TAG, "Done applying remote data.");
 
             // Mark that conference data sync has succeeded.
           //  SettingsUtils.markSyncSucceededNow(mContext);
+
             return true;
         } else {
             // No data to process (everything is up to date).

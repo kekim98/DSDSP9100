@@ -34,6 +34,7 @@
         </activity>
 
       <service android:name=".service.SyncService"/>
+        <service android:name=".service.LocalService"/>
     </application>
 
 </manifest>

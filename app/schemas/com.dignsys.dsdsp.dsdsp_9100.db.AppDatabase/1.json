@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9fbd99076a5c59cd977580fa085be649",
+    "identityHash": "2302b46cb126cb3e84431482485e9fb8",
     "entities": [
       {
         "tableName": "config_info",
@@ -771,7 +771,7 @@
       },
       {
         "tableName": "content_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `scen_id` INTEGER NOT NULL, `pane_id` INTEGER NOT NULL, `filePaht` TEXT, `fileType` INTEGER NOT NULL, `opRunTime` INTEGER NOT NULL, `opNotPlay` INTEGER NOT NULL, `opEffect` INTEGER NOT NULL, `opAutoResize` INTEGER NOT NULL, `opMSGType` INTEGER NOT NULL, `opMSGPlayTime` INTEGER NOT NULL, `opNotDownload` INTEGER NOT NULL, `opStartDT` TEXT, `opEndDT` TEXT, `opBGMFile` TEXT, `opMSGFile` TEXT, `opStartX` INTEGER NOT NULL, `opStartY` INTEGER NOT NULL, `opWidth` INTEGER NOT NULL, `opHeight` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `scene_id` INTEGER NOT NULL, `pane_id` INTEGER NOT NULL, `filePath` TEXT, `fileType` INTEGER NOT NULL, `opRunTime` INTEGER NOT NULL, `opNotPlay` INTEGER NOT NULL, `opEffect` INTEGER NOT NULL, `opAutoResize` INTEGER NOT NULL, `opMSGType` INTEGER NOT NULL, `opMSGPlayTime` INTEGER NOT NULL, `opNotDownload` INTEGER NOT NULL, `opStartDT` TEXT, `opEndDT` TEXT, `opBGMFile` TEXT, `opMSGFile` TEXT, `opStartX` INTEGER NOT NULL, `opStartY` INTEGER NOT NULL, `opWidth` INTEGER NOT NULL, `opHeight` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -780,8 +780,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "scen_id",
-            "columnName": "scen_id",
+            "fieldPath": "scene_id",
+            "columnName": "scene_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -792,8 +792,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "filePaht",
-            "columnName": "filePaht",
+            "fieldPath": "filePath",
+            "columnName": "filePath",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -906,7 +906,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9fbd99076a5c59cd977580fa085be649\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2302b46cb126cb3e84431482485e9fb8\")"
     ]
   }
 }

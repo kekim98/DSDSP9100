@@ -16,25 +16,34 @@
 
 package com.dignsys.dsdsp.dsdsp_9100.service;
 
-import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
+import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
+import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
+import com.dignsys.dsdsp.dsdsp_9100.model.PlayContent;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.BasicHandler;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.FormatHandler;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.PlayListHandler;
+import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
+import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
+import com.turbomanage.httpclient.BasicHttpClient;
 import com.turbomanage.httpclient.ConsoleRequestLogger;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.RequestLogger;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 
 
 /**
@@ -55,7 +64,7 @@ public class PlayDataHandler {
     private static final String DATA_KEY_PLAYLIST = "play_list";
     private static final String DATA_KEY_FORMAT = "format";
     private static final String DATA_KEY_CONFIG = "config";
-    private static final String DATA_KEY_CONTROL = "control";
+    private static final String DATA_KEY_COMMAND = "control";
     
     private static final String DATA_KEY_RSS= "rss";
 
@@ -64,7 +73,7 @@ public class PlayDataHandler {
             DATA_KEY_PLAYLIST,
             DATA_KEY_FORMAT,
             DATA_KEY_CONFIG,
-            DATA_KEY_CONTROL,
+            DATA_KEY_COMMAND,
             
          //   DATA_KEY_RSS,
     };
@@ -75,6 +84,7 @@ public class PlayDataHandler {
     // Handlers for each entity type:
     private PlayListHandler mPlayListHandler;
     private FormatHandler mFormatHandler;
+
 
     /*
     private ConfigHandler mConfigHandler;
@@ -110,8 +120,7 @@ public class PlayDataHandler {
         mHandlerForKey.put(DATA_KEY_PLAYLIST, mPlayListHandler = new PlayListHandler(mContext));
         mHandlerForKey.put(DATA_KEY_FORMAT, mFormatHandler = new FormatHandler(mContext));
        /* mHandlerForKey.put(DATA_KEY_CONFIG, mControlHandler = new ConfigHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_CONTROL, mRssHandler = new CorntrolHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_CONTROL, mRssHandler = new RssHandler(mContext));*/
+        mHandlerForKey.put(DATA_KEY_COMMAND, mRssHandler = new RssHandler(mContext));*/
 
 
         // process the playlist.txt and format.txt. This will call each of the handlers when appropriate to deal
@@ -122,51 +131,37 @@ public class PlayDataHandler {
             processDataBody(dataBodies[i], DATA_KEYS_IN_ORDER[i]);
         }
 
-        // the sessions handler needs to know the tag and speaker maps to process sessions
-        /*mSessionsHandler.setTagMap(mControlHandler.getTagMap());
-        mSessionsHandler.setSpeakerMap(mRssHandler.getSpeakerMap());*/
+        // the playListHandler needs to know the formatHandler to map scene with format
+        mPlayListHandler.setFormat(mFormatHandler.getFormatList());
 
-        // produce the necessary content provider operations
-        ArrayList<ContentProviderOperation> batch = new ArrayList<>();
-        for (String key : DATA_KEYS_IN_ORDER) {
-            Log.i(TAG, "Building content provider operations for: " + key);
-            mHandlerForKey.get(key).makeContentProviderOperations(batch);
-            Log.i(TAG, "Content provider operations so far: " + batch.size());
-        }
-        Log.d(TAG, "Total content provider operations: " + batch.size());
+      // download content files (media files)
+        Log.d(TAG, "Processing content files");
+        processPlayContentFiles(mPlayListHandler.getContentFiles(), downloadsAllowed);
 
-        /*// download or process local map tile overlay files (SVG files)
-        Log.d(TAG, "Processing map overlay files");
-        processMapOverlayFiles(mMapPropertyHandler.getTileOverlays(), downloadsAllowed);*/
+        // update db
+        notifyDisableDB();
+        // finally, push the changes into the ROOM
+        applyPlayDataToDB();
+        notifyEnableDB();
 
-        // finally, push the changes into the Content Provider
-        Log.i(TAG, "Applying " + batch.size() + " content provider operations.");
-        /*try {
-            int operations = batch.size();
-            if (operations > 0) {
-                mContext.getContentResolver().applyBatch(ScheduleContract.CONTENT_AUTHORITY, batch);
-            }
-            Log.d(TAG, "Successfully applied " + operations + " content provider operations.");
-            mContentProviderOperationsDone += operations;
-        } catch (RemoteException ex) {
-            Log.e(TAG, "RemoteException while applying content provider operations.");
-            throw new RuntimeException("Error executing content provider batch operation", ex);
-        } catch (OperationApplicationException ex) {
-            Log.e(TAG, "OperationApplicationException while applying content provider operations.");
-            throw new RuntimeException("Error executing content provider batch operation", ex);
-        }
 
-        // notify all top-level paths
-        Log.d(TAG, "Notifying changes on all top-level paths on Content Resolver.");
-        ContentResolver resolver = mContext.getContentResolver();
-        for (String path : ScheduleContract.TOP_LEVEL_PATHS) {
-            Uri uri = ScheduleContract.BASE_CONTENT_URI.buildUpon().appendPath(path).build();
-            resolver.notifyChange(uri, null);
-        }*/
-
-        // update our data timestamp
-      //  setDataTimestamp(dataTimestamp);
         Log.d(TAG, "Done applying conference data.");
+    }
+
+    private void notifyEnableDB() {
+
+    }
+
+    private void notifyDisableDB() {
+
+    }
+
+    private void applyPlayDataToDB() {
+        AppDatabase db = DatabaseCreator.getInstance(mContext).getDatabase();
+        db.updatePlayDataTransaction(mPlayListHandler.getScheduleList(),
+                mPlayListHandler.getSceneList(),
+                mFormatHandler.getPaneList(),
+                mPlayListHandler.getContentList());
     }
 
     public int getContentProviderOperationsDone() {
@@ -190,63 +185,54 @@ public class PlayDataHandler {
     }
 
     /**
-     * Synchronise the map overlay files either from the local assets (if available) or from a
+     * Synchronise the content files either from the local assets (if available) or from a
      * remote url.
      *
-     * collection Set of tiles containing a local filename and remote url.
+     * collection Set of contents containing a local filename and remote url.
      */
-  /*  private void processMapOverlayFiles(Collection<Tile> collection, boolean downloadAllowed)
-            throws IOException, SVGParseException {
-        // clear the tile cache on disk if any tiles have been updated
-        boolean shouldClearCache = false;
+    private void processPlayContentFiles(ArrayList<PlayContent> contents, boolean downloadAllowed)
+            throws IOException{
+        // clear the content cache on disk if any contents have been updated
+       // boolean shouldClearCache = false;
         // keep track of used files, unused files are removed
-        ArrayList<String> usedTiles = new ArrayList<>();
-        for (Tile tile : collection) {
-            final String filename = tile.filename;
-            final String url = tile.url;
+        ArrayList<String> usedContents = new ArrayList<>();
+        for (PlayContent content : contents) {
+            final String filename = content.filename;
+            final String url = content.url;
 
-            usedTiles.add(filename);
+            usedContents.add(filename);
 
-            if (!MapUtils.hasTile(mContext, filename)) {
-                shouldClearCache = true;
-                // copy or download the tile if it is not stored yet
-                if (MapUtils.hasTileAsset(mContext, filename)) {
-                    // file already exists as an asset, copy it
-                    MapUtils.copyTileAsset(mContext, filename);
-                } else if (downloadAllowed && !TextUtils.isEmpty(url)) {
+            if (!IOUtils.hasContent(mContext, filename)) {
+         //       shouldClearCache = true;
+                // copy or download the content if it is not stored yet
+              if (downloadAllowed && !TextUtils.isEmpty(url)) {
                     try {
                         // download the file only if downloads are allowed and url is not empty
-                        File tileFile = MapUtils.getTileFile(mContext, filename);
+                        File contentFile = IOUtils.getContentFile(mContext, filename);
                         BasicHttpClient httpClient = new BasicHttpClient();
                         httpClient.setRequestLogger(mQuietLogger);
-                        IOUtils.authorizeHttpClient(mContext, httpClient);
-                        HttpResponse httpResponse = httpClient.get(url, null);
-                        IOUtils.writeToFile(httpResponse.getBody(), tileFile);
+                      //  IOUtils.authorizeHttpClient(mContext, httpClient);
+                        String encURL = DaulUtils.encodeURL(url);
+                        HttpResponse httpResponse = httpClient.get(encURL, null);
+                        IOUtils.writeToFile(httpResponse.getBody(), contentFile);
 
-                        // ensure the file is valid SVG
-                        InputStream is = new FileInputStream(tileFile);
-                        SVG svg = new SVGBuilder().readFromInputStream(is).build();
-                        is.close();
                     } catch (IOException ex) {
-                        Log.e(TAG, "FAILED downloading map overlay tile " + url +
+                        Log.e(TAG, "FAILED downloading map overlay content " + url +
                                 ": " + ex.getMessage(), ex);
-                    } catch (SVGParseException ex) {
-                        Log.e(TAG, "FAILED parsing map overlay tile " + url +
-                                ": " + ex.getMessage(), ex);
-                    }
+                    } 
                 } else {
-                    Log.d(TAG, "Skipping download of map overlay tile" +
+                    Log.d(TAG, "Skipping download of map overlay content" +
                             " (since downloadsAllowed=false)");
                 }
             }
         }
 
-        if (shouldClearCache) {
-            MapUtils.clearDiskCache(mContext);
-        }
+        /*if (shouldClearCache) {
+            IOUtils.clearDiskCache(mContext);
+        }*/
 
-        MapUtils.removeUnusedTiles(mContext, usedTiles);
-    }*/
+        IOUtils.removeUnusedContents(mContext, usedContents);
+    }
 
     // Returns the timestamp of the data we have in the content provider.
     public static String getPlayTimestamp(Context ctx, int idx) {
@@ -254,10 +240,10 @@ public class PlayDataHandler {
 
         String key="";
 
-        if(idx == Definer.ORDER_PLAYLIST_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_PLAY";
-        if(idx == Definer.ORDER_FORMAT_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_FORMAT";
-        if(idx == Definer.ORDER_CONFIG_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_CONFIG";
-        if(idx == Definer.ORDER_CONTROL_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_CONTROL";
+        if(idx == Definer.ORDER_PLAYLIST_DOWNLOAD) key = "_PLAY";
+        if(idx == Definer.ORDER_FORMAT_DOWNLOAD) key = "_FORMAT";
+        if(idx == Definer.ORDER_CONFIG_DOWNLOAD) key = "_CONFIG";
+        if(idx == Definer.ORDER_COMMAND_DOWNLOAD) key = "_COMMAND";
 
         return PreferenceManager.getDefaultSharedPreferences(ctx).getString(
                 SP_KEY_DATA_TIMESTAMP+ key , DEFAULT_TIMESTAMP);
@@ -269,10 +255,10 @@ public class PlayDataHandler {
 
         String key="";
 
-        if(idx == Definer.ORDER_PLAYLIST_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_PLAY";
-        if(idx == Definer.ORDER_FORMAT_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_FORMAT";
-        if(idx == Definer.ORDER_CONFIG_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_CONFIG";
-        if(idx == Definer.ORDER_CONTROL_DOWNLOAD) key = SP_KEY_DATA_TIMESTAMP+"_CONTROL";
+        if(idx == Definer.ORDER_PLAYLIST_DOWNLOAD) key = "_PLAY";
+        if(idx == Definer.ORDER_FORMAT_DOWNLOAD) key = "_FORMAT";
+        if(idx == Definer.ORDER_CONFIG_DOWNLOAD) key = "_CONFIG";
+        if(idx == Definer.ORDER_COMMAND_DOWNLOAD) key = "_COMMAND";
 
         Log.d(TAG, "Setting data timestamp to: " + timestamp);
         PreferenceManager.getDefaultSharedPreferences(ctx).edit().putString(

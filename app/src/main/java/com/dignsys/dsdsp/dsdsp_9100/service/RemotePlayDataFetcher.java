@@ -53,17 +53,17 @@ public class RemotePlayDataFetcher {
         
         mManifestUrl[Definer.ORDER_PLAYLIST_DOWNLOAD] = Definer.TEST_PLAYLIST_URL;
         mManifestUrl[Definer.ORDER_FORMAT_DOWNLOAD] = Definer.TEST_FORMAT_URL;
-        mManifestUrl[Definer.ORDER_CONFIG_DOWNLOAD] = Definer.TEST_CONFIG_URL;
-        mManifestUrl[Definer.ORDER_CONTROL_DOWNLOAD] = Definer.TEST_CONTROL_URL;
+       /* mManifestUrl[Definer.ORDER_CONFIG_DOWNLOAD] = Definer.TEST_CONFIG_URL;
+        mManifestUrl[Definer.ORDER_COMMAND_DOWNLOAD] = Definer.TEST_COMMAND_URL;*/
 
         mManifestLTimeStamp[Definer.ORDER_PLAYLIST_DOWNLOAD] =
                 PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_PLAYLIST_DOWNLOAD );
         mManifestLTimeStamp[Definer.ORDER_FORMAT_DOWNLOAD] =
                 PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_FORMAT_DOWNLOAD );
-        mManifestLTimeStamp[Definer.ORDER_CONFIG_DOWNLOAD] =
+     /*   mManifestLTimeStamp[Definer.ORDER_CONFIG_DOWNLOAD] =
                 PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_CONFIG_DOWNLOAD );
-        mManifestLTimeStamp[Definer.ORDER_CONTROL_DOWNLOAD] =
-                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_CONTROL_DOWNLOAD );
+        mManifestLTimeStamp[Definer.ORDER_COMMAND_DOWNLOAD] =
+                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_COMMAND_DOWNLOAD);*/
 
     }
 
@@ -86,8 +86,8 @@ public class RemotePlayDataFetcher {
        // IOUtils.authorizeHttpClient(mContext, httpClient);
 
         // Only download if data is newer than localTimestamp
-        // Cloud Storage is very picky with the If-Modified-Since format. If it's in a wrong
-        // format, it refuses to serve the file, returning 400 HTTP error. So, if the
+        // WE Server is very picky with the If-Modified-Since format. If it's in a wrong
+        // format, it refuses to serve the file, returning 304 HTTP error. So, if the
         // localTimestamp is in a wrong format, we simply ignore it. But pay attention to this
         // warning in the log, because it might mean unnecessary data is being downloaded.
         if (!TextUtils.isEmpty(mManifestLTimeStamp[idx])) {
@@ -111,14 +111,17 @@ public class RemotePlayDataFetcher {
             Log.d(TAG, "Server returned HTTP_OK, so new data is available.");
             mManifestSTimeStamp[idx] = getLastModified(response);
             Log.d(TAG, "Server timestamp for new data is: " +  mManifestSTimeStamp[idx]);
-            String body = response.getBodyAsString();
-            if (TextUtils.isEmpty(body)) {
+            //String body = response.getBodyAsString();
+            byte[] body = response.getBody();
+            String encodeBody = IOUtils.universalDetector(body);
+         //   String encodeBody = new String(body, "EUC-KR");
+            if (TextUtils.isEmpty(encodeBody)) {
                 Log.e(TAG, "Request for manifest returned empty data.");
                 throw new IOException("Error fetching conference data manifest: no data.");
             }
             Log.d(TAG, "Manifest " + mManifestUrl[idx] + " read, contents: " + body);
-            mBytesDownloaded += body.getBytes().length;
-            return body;
+            mBytesDownloaded += encodeBody.getBytes().length;
+            return encodeBody;
         } else if (status == HttpURLConnection.HTTP_NOT_MODIFIED) {
             // data on the server is not newer than our data
             Log.d(TAG, "HTTP_NOT_MODIFIED: data has not changed since " + mManifestLTimeStamp[idx]);
@@ -312,8 +315,20 @@ public class RemotePlayDataFetcher {
 
         Log.d(TAG, "Got " + bodys.length + " data files.");
         //cleanUpCache();
+      //  IOUtils.convertToUTF8(bodys);
         return bodys;
 
+    }
+
+    public boolean downloadContents() throws IOException{
+
+
+        return true;
+    }
+
+    public boolean moveContents() throws  IOException{
+
+        return true;
     }
 
     // Delete unnecessary files from our cache
@@ -369,4 +384,13 @@ public class RemotePlayDataFetcher {
     };
 
 
+    public void updatePlayDataTimestamp() {
+        String ts;
+
+        ts = getServerDataTimestamp(Definer.ORDER_PLAYLIST_DOWNLOAD);
+        PlayDataHandler.setDataTimestamp(mContext, ts, Definer.ORDER_PLAYLIST_DOWNLOAD);
+
+        ts = getServerDataTimestamp(Definer.ORDER_FORMAT_DOWNLOAD);
+        PlayDataHandler.setDataTimestamp(mContext, ts, Definer.ORDER_FORMAT_DOWNLOAD);
+    }
 }

@@ -23,4 +23,7 @@ public interface PaneDao {
 
     @Query("select * from pane_info where scene_id = :scene_id AND pane_id = :pane_id")
     LiveData<PaneEntity> loadSceneById(int scene_id, int pane_id );
+
+    @Query("DELETE FROM pane_info")
+    void deleteAllPane();
 }

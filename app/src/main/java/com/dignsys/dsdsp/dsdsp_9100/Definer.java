@@ -246,11 +246,13 @@ public class Definer {
 	public static final String TEST_PLAYLIST_URL = "http://192.168.1.132/site/bawooriTest/test/playlist.txt" ;
 	public static final String TEST_FORMAT_URL = "http://192.168.1.132/site/bawooriTest/test/format.txt";
 	public static final String TEST_CONFIG_URL = "http://192.168.1.132/site/bawooriTest/test/dspconfig.txt";
-	public static final String TEST_CONTROL_URL = "http://192.168.1.132/site/bawooriTest/test/control.txt";
+	public static final String TEST_COMMAND_URL = "http://192.168.1.132/site/bawooriTest/test/comand.txt";
 	public static final int ORDER_PLAYLIST_DOWNLOAD = 0;
 	public static final int ORDER_FORMAT_DOWNLOAD = 1;
 	public static final int ORDER_CONFIG_DOWNLOAD = 2;
-	public static final int ORDER_CONTROL_DOWNLOAD = 3;
+	public static final int ORDER_COMMAND_DOWNLOAD = 3;
 
-	public static final int MANIFEST_LENGTH = 4;
+	public static final int MANIFEST_LENGTH = 2;
+
+
 }

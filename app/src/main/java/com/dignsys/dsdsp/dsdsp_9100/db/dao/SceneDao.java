@@ -27,4 +27,6 @@ public interface SceneDao {
     LiveData<SceneEntity> loadSceneById(int id);
 
 
+    @Query("DELETE FROM scene_info")
+    void deleteAllScene();
 }

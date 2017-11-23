@@ -17,11 +17,11 @@ public class ContentEntity {
     /*
     // content info
     */
-    private int scen_id; //foreign key
+    private int scene_id; //foreign key
     //private int format_num;
     private int pane_id; //foreign key
 
-    private String filePaht="";
+    private String filePath="";
     private int fileType =0;      //fm_nType
     private int opRunTime=0;    //003, m_nOpRunTime
     private int opNotPlay=0;    //005, m_nOpNotPlay
@@ -40,6 +40,22 @@ public class ContentEntity {
     private int opWidth=0;
     private int opHeight=0;
 
+    public int getScene_id() {
+        return scene_id;
+    }
+
+    public void setScene_id(int scene_id) {
+        this.scene_id = scene_id;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
     public int getId() {
         return id;
     }
@@ -48,13 +64,7 @@ public class ContentEntity {
         this.id = id;
     }
 
-    public int getScen_id() {
-        return scen_id;
-    }
 
-    public void setScen_id(int scen_id) {
-        this.scen_id = scen_id;
-    }
 
     public int getPane_id() {
         return pane_id;
@@ -64,13 +74,7 @@ public class ContentEntity {
         this.pane_id = pane_id;
     }
 
-    public String getFilePaht() {
-        return filePaht;
-    }
 
-    public void setFilePaht(String filePaht) {
-        this.filePaht = filePaht;
-    }
 
     public int getFileType() {
         return fileType;
