@@ -6,13 +6,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
@@ -46,15 +45,27 @@ public class MainActivity extends AppCompatActivity {
 
         subscribe(viewModel);
 
+    }
 
-/*
-        final ConfigViewModel viewModel =
-                ViewModelProviders.of(this).get(ConfigViewModel.class);
+    private void subscribe(ScheduleViewModel viewModel) {
+        // Update the list when the data changes
+        viewModel.getCurrentScheduleId().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer scheduleId) {
 
-        subscribe2(viewModel);
-*/
+                Log.d(TAG, "onChanged: schedule id =" + Integer.valueOf(scheduleId));
+
+                if (scheduleId == 0) {
+                    stopPlay();
+
+                } else {
+                    runPlay(scheduleId);
+                }
+            }
+        });
 
     }
+
 
     @Override
     protected void onDestroy() {
@@ -84,58 +95,15 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-/* private void subscribe2(ConfigViewModel viewModel) {
-        viewModel.getConfig().observe(this, new Observer<ConfigEntity>() {
-            @Override
-            public void onChanged(@Nullable ConfigEntity configEntity) {
-                if (configEntity != null) {
-                    run_test(configEntity);
-                }
-            }
-        });
-    }*/
 
-    private void run_test(ScheduleViewModel configEntity) {
 
-        return;
+    private void runPlay(Integer scheduleId) {
+
     }
 
-    private void subscribe(ScheduleViewModel viewModel) {
-        // Update the list when the data changes
-        viewModel.getFormatList().observe(this, new Observer<List<PaneEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<PaneEntity> formatList) {
-                if (formatList != null) {
-                    mFormatList = formatList;
-                 //   runSchedule();
+    private void stopPlay() {
 
-                    Log.d(TAG, "onChanged: PaneEntity loaded!!!!");
-
-                } else {
-                    Log.d(TAG, "onChanged: PaneEntity NOT loaded!!!!");
-
-                }
-
-            }
-        });
-
-        viewModel.getPlayList().observe(this, new Observer<List<ContentEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<ContentEntity> playList) {
-                if (playList != null) {
-                    mPlayList = playList;
-                 //   runSchedule();
-                    Log.d(TAG, "onChanged: ContentEntity loaded!!!!");
-
-                } else {
-                    Log.d(TAG, "onChanged: ContentEntity NOT loaded!!!!");
-
-                }
-
-            }
-        });
     }
-
 
 
     private void init() {

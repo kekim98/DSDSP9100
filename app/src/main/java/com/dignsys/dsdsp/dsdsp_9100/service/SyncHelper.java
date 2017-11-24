@@ -18,7 +18,6 @@ package com.dignsys.dsdsp.dsdsp_9100.service;
 
 import android.content.Context;
 import android.content.SyncResult;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -153,7 +152,7 @@ public class SyncHelper {
 
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
-                Log.e(TAG, "Error performing remote sync.");
+                Log.w(TAG, "Error performing remote sync.");
                 increaseIoExceptions(syncResult);
             }
         }

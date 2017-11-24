@@ -27,9 +27,10 @@ public class ScheduleEntity {
     private String opEndTime=""; //m_strOpEndTime
 
 
+
     public void setOpW(String opW) {
         this.opW = opW;
-        this.point +=30;
+        this.point +=8;
     }
 
     public void setOpDate(String str)
@@ -42,9 +43,12 @@ public class ScheduleEntity {
     public void setOpTime(String str)
     {
         this.opStartTime = str.substring(0, str.indexOf("-")).replace(":", "");
-
         this.opEndTime		= str.substring(str.indexOf("-") + 1).replace(":", "");
         this.point += 6;
+    }
+    public void setOpS(int opS) {
+        this.opS = opS;
+        this.point +=30;
     }
 
     public int getId() {
@@ -67,10 +71,7 @@ public class ScheduleEntity {
         return opS;
     }
 
-    public void setOpS(int opS) {
-        this.opS = opS;
-        this.point +=30;
-    }
+
 
     public String getOpW() {
         return opW;

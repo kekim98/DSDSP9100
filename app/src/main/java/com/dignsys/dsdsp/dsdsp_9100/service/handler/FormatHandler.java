@@ -16,16 +16,11 @@
 
 package com.dignsys.dsdsp.dsdsp_9100.service.handler;
 
-import android.content.ContentProviderOperation;
 import android.content.Context;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.Format;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ScheduleEntity;
-import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -33,8 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class FormatHandler extends BasicHandler {

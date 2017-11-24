@@ -5,9 +5,6 @@
 package com.dignsys.dsdsp.dsdsp_9100.db.entity;
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.PrimaryKey;
-import android.transition.Scene;
 
 
 @Entity(tableName = "pane_info", primaryKeys = {"scene_id", "pane_id"})

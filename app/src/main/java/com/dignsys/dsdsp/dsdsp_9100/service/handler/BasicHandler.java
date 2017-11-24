@@ -16,10 +16,7 @@
 
 package com.dignsys.dsdsp.dsdsp_9100.service.handler;
 
-import android.arch.persistence.room.Dao;
-import android.content.ContentProviderOperation;
 import android.content.Context;
-
 
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 
@@ -31,7 +28,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 
 public abstract class BasicHandler {
 

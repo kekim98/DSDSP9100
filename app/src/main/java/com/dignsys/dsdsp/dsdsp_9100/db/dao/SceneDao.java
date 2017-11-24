@@ -9,7 +9,6 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
 
 import java.util.List;

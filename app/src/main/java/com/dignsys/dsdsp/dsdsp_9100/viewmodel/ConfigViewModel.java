@@ -1,15 +1,10 @@
 package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
 
 import android.app.Application;
-import android.arch.core.util.Function;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
-
-import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 
 
 /**
@@ -23,14 +18,14 @@ public class ConfigViewModel extends AndroidViewModel {
         ABSENT.setValue(null);
     }
 
-    private final LiveData<ConfigEntity> mObservableConfig;
+    //private final LiveData<ConfigEntity> mObservableConfig;
     private final LiveData<Integer> mObservableInt;
 
     public ConfigViewModel(@NonNull Application application, LiveData<Integer> mObservableInt) {
         super(application);
         this.mObservableInt = mObservableInt;
 
-        final DatabaseCreator databaseCreator = DatabaseCreator.getInstance(this.getApplication());
+       /* final DatabaseCreator databaseCreator = DatabaseCreator.getInstance(this.getApplication());
         mObservableConfig = Transformations.switchMap(databaseCreator.isDatabaseCreated(), new Function<Boolean, LiveData<ConfigEntity>>() {
             @Override
             public LiveData<ConfigEntity> apply(Boolean isDbCreated) {
@@ -44,13 +39,13 @@ public class ConfigViewModel extends AndroidViewModel {
             }
         });
 
-        databaseCreator.createDb(this.getApplication());
+        databaseCreator.createDb(this.getApplication());*/
     }
 
     /**
      * Expose the LiveData Products query so the UI can observe it.
      */
-    public LiveData<ConfigEntity> getConfig() {
+   /* public LiveData<ConfigEntity> getConfig() {
         return mObservableConfig;
-    }
+    }*/
 }

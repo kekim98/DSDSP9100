@@ -8,8 +8,6 @@ import android.arch.persistence.room.Update;
 
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 
-import java.util.List;
-
 /**
  * Created by bawoori on 17. 11. 16.
  */
@@ -22,7 +20,7 @@ public interface ConfigDao {
 
 
     @Query("SELECT count(*) from config_info")
-    LiveData<Integer> cofigCount();
+    int cofigCount();
 
 
     /**

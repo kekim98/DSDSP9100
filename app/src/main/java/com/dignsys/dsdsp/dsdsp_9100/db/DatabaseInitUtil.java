@@ -5,9 +5,7 @@
 package com.dignsys.dsdsp.dsdsp_9100.db;
 
 
-
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
-
 
 import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_BOARD_ID;
 import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_COMPANY_ID;
@@ -16,10 +14,10 @@ import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_MODEL_ID;
 import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_VERSION;
 
 /** Generates init data and inserts them into the database */
-class DatabaseInitUtil {
+public class DatabaseInitUtil {
 
 
-    static void initializeDb(AppDatabase db) {
+    public static void initializeDb(AppDatabase db) {
 
         ConfigEntity configEntity = new ConfigEntity();
 

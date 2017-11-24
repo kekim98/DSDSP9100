@@ -16,10 +16,7 @@
 
 package com.dignsys.dsdsp.dsdsp_9100.service.handler;
 
-import android.arch.persistence.room.Dao;
-import android.content.ContentProviderOperation;
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
@@ -37,9 +34,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 

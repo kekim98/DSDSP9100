@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.util.HashUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
@@ -308,7 +307,7 @@ public class RemotePlayDataFetcher {
           //  bodys[i] = fetchFile(url);
             bodys[i] = fetchPlayDataIfNewer(i);
             if (TextUtils.isEmpty(bodys[i])) {
-                Log.e(TAG, "Failed to fetch data file: " + sanitizeUrl(url));
+                Log.w(TAG, "Failed to fetch data file: " + sanitizeUrl(url));
                 throw new IOException("Failed to fetch data file " + sanitizeUrl(url));
             }
         }

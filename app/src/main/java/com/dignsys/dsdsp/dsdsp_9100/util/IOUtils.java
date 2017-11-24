@@ -3,7 +3,6 @@ package com.dignsys.dsdsp.dsdsp_9100.util;
 
 import android.content.Context;
 
-
 import com.turbomanage.httpclient.BasicHttpClient;
 
 import org.mozilla.universalchardet.UniversalDetector;

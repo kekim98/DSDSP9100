@@ -1,6 +1,7 @@
 package com.dignsys.dsdsp.dsdsp_9100.service;
 
 import android.app.Service;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -13,24 +14,31 @@ import java.util.TimerTask;
  */
 
 public class LocalService extends Service {
+    private  final int DSDSP_TICK = 1 * 1000;
     // Binder given to clients
    final IBinder mBinder = new LocalBinder();
 
     // PlayData Scheduler
     TimerTask mTimerTask;
-
     Timer mTimer;
+    int mTickCount =0;
+
+
+
+    private final MutableLiveData<Integer> mLiveTick = new MutableLiveData<>();
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         mTimer = new Timer();
-        runPlayDataDownScedule();
+        runDSPTimer();
+
+
 
     }
 
-    private void runPlayDataDownScedule() {
+    private void runDSPTimer() {
         if (mTimerTask != null) {
             mTimer.cancel();
         }
@@ -38,26 +46,36 @@ public class LocalService extends Service {
         mTimerTask = new TimerTask() {
             @Override
             public void run() {
-                SyncService.startDownload(LocalService.this, null, null);
+                mTickCount++;
+                mLiveTick.postValue(mTickCount);
+
+                //for play data download
+                if ((mTickCount*DSDSP_TICK % getPlayDataDownloadInterval()) == 0) {
+                    SyncService.startDownload(LocalService.this, null, null);
+                }
+
+                //for playlist schedule
+                ScheduleHelper.getInstance(LocalService.this.getApplicationContext()).updateScheduleTick();
             }
         };
 
-        mTimer.schedule(mTimerTask, 0, getPlayDataDownloadInterval());
+        mTimer.schedule(mTimerTask, 0, DSDSP_TICK);
     }
 
     private long getPlayDataDownloadInterval() {
 
+        //TODO : have to change
         return 6*1000;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopPlayDataDownSchedule();
+        stopDSPTimer();
 
     }
 
-    private void stopPlayDataDownSchedule() {
+    private void stopDSPTimer() {
         if (mTimerTask != null) {
             mTimerTask.cancel();
             mTimer.cancel();
@@ -93,5 +111,8 @@ public class LocalService extends Service {
     }
 
     /** method for clients */
+    public MutableLiveData<Integer> getLiveTick() {
+        return mLiveTick;
+    }
 
 }

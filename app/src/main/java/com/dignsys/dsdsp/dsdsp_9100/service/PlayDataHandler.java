@@ -21,7 +21,6 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
@@ -39,9 +38,6 @@ import com.turbomanage.httpclient.RequestLogger;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -157,7 +153,7 @@ public class PlayDataHandler {
     }
 
     private void applyPlayDataToDB() {
-        AppDatabase db = DatabaseCreator.getInstance(mContext).getDatabase();
+        AppDatabase db = DatabaseCreator.getInstance(mContext);
         db.updatePlayDataTransaction(mPlayListHandler.getScheduleList(),
                 mPlayListHandler.getSceneList(),
                 mFormatHandler.getPaneList(),
