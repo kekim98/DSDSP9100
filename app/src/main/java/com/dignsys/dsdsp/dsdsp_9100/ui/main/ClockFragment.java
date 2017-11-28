@@ -23,12 +23,16 @@ import com.dignsys.dsdsp.dsdsp_9100.R;
 public class ClockFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String START_X = "param1";
+    private static final String START_Y = "param2";
+    private static final String P_WIDTH = "param3";
+    private static final String P_HEIGHT = "param4";
 
     // TODO: Rename and change types of parameters
-    private int mParam1;
-    private int mParam2;
+    private int mStartX;
+    private int mStartY;
+    private int mPWidth;
+    private int mPHeight;
 
     private OnFragmentInteractionListener mListener;
     private TextClock mClockView;
@@ -46,11 +50,13 @@ public class ClockFragment extends Fragment {
      * @return A new instance of fragment ClockFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ClockFragment newInstance(int param1, int param2) {
+    public static ClockFragment newInstance(int param1, int param2, int param3, int param4) {
         ClockFragment fragment = new ClockFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, param1);
-        args.putInt(ARG_PARAM2, param2);
+        args.putInt(START_X, param1);
+        args.putInt(START_Y, param2);
+        args.putInt(P_WIDTH, param3);
+        args.putInt(P_HEIGHT, param4);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,8 +65,10 @@ public class ClockFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getInt(ARG_PARAM1);
-            mParam2 = getArguments().getInt(ARG_PARAM2);
+            mStartX = getArguments().getInt(START_X);
+            mStartY = getArguments().getInt(START_Y);
+            mPWidth = getArguments().getInt(P_WIDTH);
+            mPHeight = getArguments().getInt(P_HEIGHT);
         }
     }
 
@@ -76,13 +84,13 @@ public class ClockFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-//        layoutParams.width = 100;
-//        layoutParams.height = 100;
-//
-//        view.setLayoutParams(layoutParams);
-//        view.setX(mParam1);
-//        view.setY(mParam2);
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.width = mPWidth;
+        layoutParams.height = mPHeight;
+
+        view.setLayoutParams(layoutParams);
+        view.setX(mStartX);
+        view.setY(mStartY);
         view.setBackgroundColor(android.R.color.white);
 
         mClockView = view.findViewById(R.id.textClock);

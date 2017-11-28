@@ -5,17 +5,14 @@
 package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
 
 import android.app.Application;
-import android.arch.core.util.Function;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Transformations;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
-import com.dignsys.dsdsp.dsdsp_9100.service.ScheduleHelper;
 
 import java.util.List;
 
@@ -30,6 +27,7 @@ public class ScheduleViewModel extends AndroidViewModel {
 
     private final LiveData<List<PaneEntity>> mPaneList;
     private final LiveData<List<ContentEntity>> mContentList;
+    private final MutableLiveData<Integer> mScheduleDone;
 
     //private final LiveData<List<ContentEntity>> mContentList;
 
@@ -44,6 +42,8 @@ public class ScheduleViewModel extends AndroidViewModel {
 
         mContentList = ScheduleHelper.getInstance(application.getApplicationContext()).getContentList();
 
+        mScheduleDone = ScheduleHelper.getInstance(application.getApplicationContext()).getScheduleDone();
+
     }
     /**
      * Expose the LiveData Schedule ID so the UI can observe it.
@@ -57,9 +57,11 @@ public class ScheduleViewModel extends AndroidViewModel {
 
     public LiveData<List<ContentEntity>> getContentList() { return mContentList;}
 
+    public MutableLiveData<Integer> getScheduleDone() { return mScheduleDone;}
 
-
-
+    public ContentEntity getContent(int paneNum) {
+        return ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).getContent(paneNum);
+    }
 
 
     /**

@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.service.LocalService;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,10 +29,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private List<PaneEntity> mFormatList;
+    private List<Fragment> mFormatList;
     private List<ContentEntity> mPlayList;
     private boolean mBound;
     private LocalService mService;
+    private List<Fragment> mFragmentList = new ArrayList<Fragment>();
+    private int mMainPane;
 
 
     @Override
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<PaneEntity> paneEntities) {
                 Log.d(TAG, "onChanged: paneEntities id =" );
+                stopDSDSP();
+                playDSDSP(paneEntities);
             }
         });
 
@@ -74,10 +80,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
-
 
     @Override
     protected void onDestroy() {
@@ -109,29 +112,102 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void runPlay(Integer scheduleId) {
+    //V:video/picture, P:picture, M:message, C:clock, B:background color
+    //D:DTV, W:webview(picture), T:webview(text), S:screen size
 
-    }
+    private void playDSDSP(List<PaneEntity> panes) {
 
-    private void stopPlay() {
+        if(panes == null) return;
+        findMainPane(panes);
 
-    }
+        for (PaneEntity pe : panes) {
+            if (pe.getPaneType().equals("V")) {
+                VideoFragment videoFragment =
+                        VideoFragment.newInstance(pe.getPane_id());
+                mFragmentList.add(videoFragment);
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                View rootView = findViewById(R.id.main_layout);
+                fragmentTransaction
+                        //  .add(rootView.getId(), imageFragment1)
+                        .add(rootView.getId(), videoFragment);
+
+                fragmentTransaction.commit();
 
 
-    private void init() {
+            }
+            if (pe.getPaneType().equals("P")) {
+
+            }
+            if (pe.getPaneType().equals("M")) {
+
+            }
+            if (pe.getPaneType().equals("C")) {
+                ClockFragment clockFragment =
+                        ClockFragment.newInstance(pe.getPaneX(), pe.getPaneY(), pe.getPaneWidth(), pe.getPaneWidth());
+                mFragmentList.add(clockFragment);
+
+            }
+            if (pe.getPaneType().equals("B")) {
+
+            }
+            if (pe.getPaneType().equals("D")) {
+
+            }
+            if (pe.getPaneType().equals("W")) {
+
+            }
+            if (pe.getPaneType().equals("T")) {
+
+            }
+        }
+
         View rootView = findViewById(R.id.main_layout);
         //ImageFragment imageFragment1 = ImageFragment.newInstance(0, 0);
         //ImageFragment imageFragment2 = ImageFragment.newInstance(960, 0);
         //VideoFragment videoFragment = VideoFragment.newInstance(960, 0);
-        ClockFragment clockFragment = ClockFragment.newInstance(0, 0);
+      //  ClockFragment clockFragment = ClockFragment.newInstance(0, 0);
 
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction
+        /*fragmentTransaction
               //  .add(rootView.getId(), imageFragment1)
-                .add(rootView.getId(), clockFragment)
-                .commit();
+                .add(rootView.getId(), clockFragment);
+
+        fragmentTransaction.commit();*/
+
+    }
+
+    private void findMainPane(List<PaneEntity> panes) {
+
+        for (PaneEntity pe : panes) {
+            if(pe.getPaneType().equals("I") || pe.getPaneType().equals("D"))	{
+                mMainPane = pe.getPane_id();
+            }
+            else if(pe.getPaneType().equals("V")) {
+                mMainPane = pe.getPane_id();
+            }
+            else if(pe.getPaneType().equals("P")) {
+                mMainPane = pe.getPane_id();
+            }
+            else if(pe.getPaneType().equals("T")) {
+                mMainPane = pe.getPane_id();
+            }else{
+                mMainPane = 1;
+            }
+        }
+    }
+
+    private void stopDSDSP(){
+
+    }
+
+    public void paneScheduleDone(int paneNum) {
+
+        if (paneNum == mMainPane) {
+            //TODO : have to implement SCENE CHANGE
+        }
 
     }
 }

@@ -1,4 +1,4 @@
-package com.dignsys.dsdsp.dsdsp_9100.service;
+package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.arch.core.util.Function;
@@ -16,7 +16,9 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ScheduleEntity;
+import com.dignsys.dsdsp.dsdsp_9100.model.ContentSchedule;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -42,11 +44,12 @@ public class ScheduleHelper {
 
     private final MutableLiveData<Integer> mScheduleId = new MutableLiveData<>();
     private final MutableLiveData<Integer> mSceneId = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mScheduleDone = new MutableLiveData<>();
     //TODO : doing scene object control .....
     private final MutableLiveData<SceneEntity> mScene = new MutableLiveData<>();
     private final LiveData<List<ScheduleEntity>> mScheduleList;
     private LiveData<List<PaneEntity>> mPaneList;
-   // private final LiveData<List<ContentSchedule>> mContentSchedule;
+    private final List<ContentSchedule> mContentSchedule = new ArrayList<ContentSchedule>();
 
 
     private LiveData<List<SceneEntity>> mSceneList;
@@ -120,13 +123,13 @@ public class ScheduleHelper {
             @Override
             public void onChanged(@Nullable final Integer sceneId) {
                 if(sceneId > 0){
-                    SceneEntity se = mSceneList.getValue().get(sceneId);
+                    int sceneIdx = sceneId-1;
+                    SceneEntity se = mSceneList.getValue().get(sceneIdx);
                     mScene.setValue(se);
                 }
             }
         };
         mSceneId.observeForever(sceneIdObserver);
-
 
 
         //MainActivity will make observer
@@ -144,6 +147,22 @@ public class ScheduleHelper {
                         }
                     }
                 });
+        Observer<List<PaneEntity>> paneListObserver = new Observer<List<PaneEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<PaneEntity> paneEntityList) {
+                if(paneEntityList != null && paneEntityList.size() > 0){
+                   mContentSchedule.clear();
+                    for (PaneEntity pe : paneEntityList) {
+                        ContentSchedule cs = new ContentSchedule();
+                        cs.pane_num = pe.getPane_id();
+                        cs.idx = 0;
+                        mContentSchedule.add(cs);
+                    }
+                }
+            }
+        };
+        mPaneList.observeForever(paneListObserver);
+
 
         mContentList = Transformations.switchMap(mSceneId,
                 new Function<Integer, LiveData<List<ContentEntity>>>() {
@@ -205,6 +224,8 @@ public class ScheduleHelper {
 
         }*/
     }
+
+    public MutableLiveData<Integer> getScheduleDone() { return  mScheduleDone;}
 
     public LiveData<List<PaneEntity>> getPaneList() {
         return mPaneList;
@@ -330,5 +351,42 @@ public class ScheduleHelper {
     }
 
 
+    public ContentEntity  getContent(int paneNum) {
 
+        if (mContentList != null) {
+            /*ContentSchedule cs = CS_hasPaneNum(paneNum);
+            if (cs == null) {
+                cs = new ContentSchedule();
+                cs.pane_num = paneNum;
+                mContentSchedule.add(cs);
+            }*/
+
+            if(mContentSchedule.size() <= 0) return null;
+
+            int _idx = 0;
+            for (ContentSchedule cs : mContentSchedule) {
+                for (ContentEntity ce : mContentList.getValue()) {
+                    if (ce.getPane_id() == paneNum) {
+
+                        if (cs.idx == _idx) {
+                            cs.idx++;
+                            return ce;
+                        }
+                        _idx++;
+                    }
+
+                }
+
+            }
+        }
+        return null;
+    }
+
+    private ContentSchedule CS_hasPaneNum(int paneNum) {
+        for (ContentSchedule cs : mContentSchedule) {
+            if(cs.pane_num == paneNum) return cs;
+        }
+
+        return null;
+    }
 }

@@ -1,15 +1,23 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.VideoView;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,15 +30,16 @@ import com.dignsys.dsdsp.dsdsp_9100.R;
 public class VideoFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String PANE_NUM = "pane_num";
+    private static final String TAG = VideoFragment.class.getSimpleName();
 
     // TODO: Rename and change types of parameters
-    private int mParam1;
-    private int mParam2;
+    private int mPaneNum;
 
     private OnFragmentInteractionListener mListener;
     private VideoView mVideoView;
+    private ViewDataBinding mBinding;
+    private ContentEntity mContent;
 
     public VideoFragment() {
         // Required empty public constructor
@@ -40,16 +49,14 @@ public class VideoFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter test.
-     * @param param2 Parameter 2.
+     * @param pane_num Parameter test.
      * @return A new instance of fragment VideoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static VideoFragment newInstance(int param1, int param2) {
+    public static VideoFragment newInstance(int pane_num) {
         VideoFragment fragment = new VideoFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, param1);
-        args.putInt(ARG_PARAM2, param2);
+        args.putInt(PANE_NUM, pane_num);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,35 +65,79 @@ public class VideoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getInt(ARG_PARAM1);
-            mParam2 = getArguments().getInt(ARG_PARAM2);
+            mPaneNum = getArguments().getInt(PANE_NUM);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate this data binding layout
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_video, container, false);
+
+        // Create and set the adapter for the RecyclerView.
+     //   mCommentAdapter = new CommentAdapter(mCommentClickCallback);
+     //   mBinding.commentList.setAdapter(mCommentAdapter);
+        return mBinding.getRoot();
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_video, container, false);
+      //  return inflater.inflate(R.layout.fragment_video, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+       /* *//*ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.width = 960;
         layoutParams.height = 1080;
 
         view.setLayoutParams(layoutParams);
-        view.setX(mParam1);
-        view.setY(mParam2);
+        view.setX(mPaneNum);
+        view.setY(mIsMain);*//*
 
         mVideoView = view.findViewById(R.id.videoView);
         String UrlPath="android.resource://"+getActivity().getPackageName()+"/"+R.raw.kkk;
         mVideoView.setVideoURI(Uri.parse(UrlPath));
-        mVideoView.start();
+        mVideoView.start();*/
+
+
+       /* ProductViewModel.Factory factory = new ProductViewModel.Factory(
+                getActivity().getApplication(), getArguments().getInt(KEY_PRODUCT_ID));*/
+
+
+        final ScheduleViewModel viewModel =
+                ViewModelProviders.of(this).get(ScheduleViewModel.class);
+
+        subscribe(viewModel);
     }
+
+    private void subscribe(ScheduleViewModel viewModel) {
+        // Update the list when the data changes
+
+        mContent = viewModel.getContent(mPaneNum);
+
+        viewModel.getScheduleDone().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer pane_num) {
+                Log.d(TAG, "onChanged: getScheduleDone pane_num ="  + Integer.valueOf(pane_num));
+
+                if (pane_num == mPaneNum) {
+                    if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                        ((MainActivity) getActivity()).paneScheduleDone(mPaneNum);
+                    }
+                }
+            }
+        });
+
+    }
+
+
+
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
