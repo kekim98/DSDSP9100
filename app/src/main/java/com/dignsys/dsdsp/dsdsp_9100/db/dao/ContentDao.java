@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 
 import java.util.List;
 
@@ -26,4 +27,8 @@ public interface ContentDao {
 
     @Query("DELETE FROM content_info")
     void deleteAllContent();
+
+
+    @Query("SELECT * FROM content_info WHERE scene_id = :sceneId order by id")
+    LiveData<List<ContentEntity>> loadContentListById(Integer sceneId);
 }

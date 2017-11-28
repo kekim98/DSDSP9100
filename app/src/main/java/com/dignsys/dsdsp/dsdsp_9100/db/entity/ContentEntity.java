@@ -35,7 +35,7 @@ public class ContentEntity {
     private String opEndDT="";    //002, m_strOpEndDT
     private String opBGMFile="";     //004, m_strOpBGMFile
     private String opMSGFile="";     //009, m_strOpMSGFile
-    private int opStartX=0;  //010, mHashContnesPlaySize
+    private int opStartX=0;  //010, Content PlaySize
     private int opStartY=0;
     private int opWidth=0;
     private int opHeight=0;

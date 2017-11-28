@@ -16,6 +16,7 @@ import android.view.View;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.service.LocalService;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
@@ -49,20 +50,31 @@ public class MainActivity extends AppCompatActivity {
 
     private void subscribe(ScheduleViewModel viewModel) {
         // Update the list when the data changes
-        viewModel.getCurrentScheduleId().observe(this, new Observer<Integer>() {
+
+
+        viewModel.getScene().observe(this, new Observer<SceneEntity>() {
             @Override
-            public void onChanged(@Nullable Integer scheduleId) {
-
-                Log.d(TAG, "onChanged: schedule id =" + Integer.valueOf(scheduleId));
-
-                if (scheduleId == 0) {
-                    stopPlay();
-
-                } else {
-                    runPlay(scheduleId);
-                }
+            public void onChanged(@Nullable SceneEntity sceneEntitie) {
+                Log.d(TAG, "onChanged: SceneEntity id =" );
             }
         });
+
+        viewModel.getPaneList().observe(this, new Observer<List<PaneEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<PaneEntity> paneEntities) {
+                Log.d(TAG, "onChanged: paneEntities id =" );
+            }
+        });
+
+
+        viewModel.getContentList().observe(this, new Observer<List<ContentEntity>>() {
+            @Override
+            public void onChanged(@Nullable List<ContentEntity> contentEntities) {
+                Log.d(TAG, "onChanged: contentEntities id =" );
+            }
+        });
+
+
 
     }
 

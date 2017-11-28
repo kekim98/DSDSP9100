@@ -5,49 +5,70 @@
 package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
 
 import android.app.Application;
+import android.arch.core.util.Function;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
 
+import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.service.ScheduleHelper;
 
+import java.util.List;
+
 public class ScheduleViewModel extends AndroidViewModel {
+
+
 
     private static final String TAG = ScheduleViewModel.class.getSimpleName();
 
 
-    private final LiveData<Integer> mCurrScheduleId;
+    private final LiveData<SceneEntity> mScene;
+
+    private final LiveData<List<PaneEntity>> mPaneList;
+    private final LiveData<List<ContentEntity>> mContentList;
+
+    //private final LiveData<List<ContentEntity>> mContentList;
 
 
 
-
-    public ScheduleViewModel(@NonNull Application application){
+    public ScheduleViewModel(@NonNull final Application application){
         super(application);
 
-        /*final DatabaseCreator databaseCreator = DatabaseCreator.getInstance(this.getApplication());
-        databaseCreator.createDb(this.getApplication());
-*/
-        mCurrScheduleId = ScheduleHelper.getInstance(application.getApplicationContext()).getCurrSchduleId();
 
+        mScene = ScheduleHelper.getInstance(application.getApplicationContext()).getScene();
+        mPaneList = ScheduleHelper.getInstance(application.getApplicationContext()).getPaneList();
 
+        mContentList = ScheduleHelper.getInstance(application.getApplicationContext()).getContentList();
 
     }
     /**
      * Expose the LiveData Schedule ID so the UI can observe it.
      */
-    public LiveData<Integer> getCurrentScheduleId() {
-        return mCurrScheduleId;
-    }
+
+    public LiveData<List<PaneEntity>> getNextPaneList() { return mPaneList;}
+
+    public LiveData<SceneEntity> getScene(){ return  mScene;}
+
+    public LiveData<List<PaneEntity>> getPaneList() { return  mPaneList;}
+
+    public LiveData<List<ContentEntity>> getContentList() { return mContentList;}
 
 
 
 
-    /* *//**
+
+
+    /**
      * A creator is used to inject the dspFormat ID into the ViewModel
      * <p>
      * This creator is to showcase how to inject dependencies into ViewModels. It's not
      * actually necessary in this case, as the dspFormat ID can be passed in a public method.
-     *//*
+     */
+    /*
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 
         @NonNull

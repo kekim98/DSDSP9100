@@ -25,7 +25,7 @@ public class LocalService extends Service {
 
 
 
-    private final MutableLiveData<Integer> mLiveTick = new MutableLiveData<>();
+    //private final MutableLiveData<Integer> mLiveTick = new MutableLiveData<>();
 
 
     @Override
@@ -47,7 +47,7 @@ public class LocalService extends Service {
             @Override
             public void run() {
                 mTickCount++;
-                mLiveTick.postValue(mTickCount);
+             //   mLiveTick.postValue(mTickCount);
 
                 //for play data download
                 if ((mTickCount*DSDSP_TICK % getPlayDataDownloadInterval()) == 0) {
@@ -111,8 +111,8 @@ public class LocalService extends Service {
     }
 
     /** method for clients */
-    public MutableLiveData<Integer> getLiveTick() {
+ /*   public MutableLiveData<Integer> getLiveTick() {
         return mLiveTick;
-    }
+    }*/
 
 }

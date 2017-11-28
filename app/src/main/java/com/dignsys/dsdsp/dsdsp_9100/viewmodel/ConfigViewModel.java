@@ -38,8 +38,8 @@ public class ConfigViewModel extends AndroidViewModel {
                 }
             }
         });
+*/
 
-        databaseCreator.createDb(this.getApplication());*/
     }
 
     /**
