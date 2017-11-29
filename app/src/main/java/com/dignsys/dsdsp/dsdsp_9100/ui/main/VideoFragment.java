@@ -40,6 +40,7 @@ public class VideoFragment extends Fragment {
     private VideoView mVideoView;
     private ViewDataBinding mBinding;
     private ContentEntity mContent;
+    private ScheduleViewModel viewModel;
 
     public VideoFragment() {
         // Required empty public constructor
@@ -109,7 +110,7 @@ public class VideoFragment extends Fragment {
                 getActivity().getApplication(), getArguments().getInt(KEY_PRODUCT_ID));*/
 
 
-        final ScheduleViewModel viewModel =
+        /*final ScheduleViewModel */viewModel =
                 ViewModelProviders.of(this).get(ScheduleViewModel.class);
 
         subscribe(viewModel);
@@ -118,17 +119,19 @@ public class VideoFragment extends Fragment {
     private void subscribe(ScheduleViewModel viewModel) {
         // Update the list when the data changes
 
-        mContent = viewModel.getContent(mPaneNum);
+        mContent = viewModel.getContent(mPaneNum); //for first content
 
-        viewModel.getScheduleDone().observe(this, new Observer<Integer>() {
+        viewModel.getContentPlayDone().observe(getActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer pane_num) {
                 Log.d(TAG, "onChanged: getScheduleDone pane_num ="  + Integer.valueOf(pane_num));
 
                 if (pane_num == mPaneNum) {
-                    if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    mContent = VideoFragment.this.viewModel.getContent(mPaneNum);
+
+                    /*if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
                         ((MainActivity) getActivity()).paneScheduleDone(mPaneNum);
-                    }
+                    }*/
                 }
             }
         });

@@ -28,6 +28,7 @@ public class ScheduleViewModel extends AndroidViewModel {
     private final LiveData<List<PaneEntity>> mPaneList;
     private final LiveData<List<ContentEntity>> mContentList;
     private final MutableLiveData<Integer> mScheduleDone;
+    private final MutableLiveData<Integer> mContentPlayDone;
 
     //private final LiveData<List<ContentEntity>> mContentList;
 
@@ -43,6 +44,8 @@ public class ScheduleViewModel extends AndroidViewModel {
         mContentList = ScheduleHelper.getInstance(application.getApplicationContext()).getContentList();
 
         mScheduleDone = ScheduleHelper.getInstance(application.getApplicationContext()).getScheduleDone();
+
+        mContentPlayDone = ScheduleHelper.getInstance(application.getApplicationContext()).getContentPlayDone();
 
     }
     /**
@@ -62,6 +65,8 @@ public class ScheduleViewModel extends AndroidViewModel {
     public ContentEntity getContent(int paneNum) {
         return ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).getContent(paneNum);
     }
+
+    public LiveData<Integer> getContentPlayDone() { return mContentPlayDone; }
 
 
     /**

@@ -9,9 +9,11 @@ import android.arch.lifecycle.Transformations;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
@@ -34,8 +36,11 @@ public class ScheduleHelper {
 
     private static final MutableLiveData ABSENT = new MutableLiveData();
     private final LiveData<List<ContentEntity>> mContentList;
+    private final LiveData<ConfigEntity> mConfig;
     private int mScenePlayTime = 0;
     private long mTickCount = 0;
+    private static final String TAG = ScheduleHelper.class.getSimpleName();
+    private int _isDBEnable=1;
 
     {
         //noinspection unchecked
@@ -45,6 +50,7 @@ public class ScheduleHelper {
     private final MutableLiveData<Integer> mScheduleId = new MutableLiveData<>();
     private final MutableLiveData<Integer> mSceneId = new MutableLiveData<>();
     private final MutableLiveData<Integer> mScheduleDone = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mContentPlayDone = new MutableLiveData<>();
     //TODO : doing scene object control .....
     private final MutableLiveData<SceneEntity> mScene = new MutableLiveData<>();
     private final LiveData<List<ScheduleEntity>> mScheduleList;
@@ -63,31 +69,43 @@ public class ScheduleHelper {
     private ScheduleHelper(Context context) {
         _context = context;
 
-
-
         AppDatabase db = DatabaseCreator.getInstance(context);
+        mConfig = db.configDao().loadConfig();
         mScheduleList = db.scheduleDao().loadAllSchedule();
+
+
+        // Create the observer which updates the schedule list .
+        final Observer<ConfigEntity> configObserver = new Observer<ConfigEntity>() {
+            @Override
+            public void onChanged(@Nullable final ConfigEntity config) {
+                if(config != null){
+                    if (config.getIsDBEnable() == 0) {
+                        mScheduleId.setValue(0);
+                        mSceneId.setValue(0);
+                    }
+                }
+            }
+        };
+        mConfig.observeForever(configObserver);
 
 
         // Create the observer which updates the schedule list .
         final Observer<List<ScheduleEntity>> scheduleObserver = new Observer<List<ScheduleEntity>>() {
             @Override
             public void onChanged(@Nullable final List<ScheduleEntity> schedules) {
-                if(schedules.size() > 0){
-
-                    mScheduleId.setValue(1);
-
+                if(schedules.size() > 0 ){
+                    mScheduleId.setValue(0);
                 }
             }
         };
         mScheduleList.observeForever(scheduleObserver);
 
-        //getNextScheduleId() will change mScheduleId
-        /*Observer<Integer> scheduleIdObserver  = new Observer<Integer>() {
+        /*//getNextScheduleId() will change mScheduleId
+        Observer<Integer> scheduleIdObserver  = new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable final Integer scheduleId) {
-                if(scheduleId > 0){
-                  //  mSceneId.setValue(1);
+                if(scheduleId > 0 ){
+                    mSceneId.setValue(0);
                 }
             }
         };
@@ -98,20 +116,19 @@ public class ScheduleHelper {
 
                     @Override
                     public LiveData<List<SceneEntity>> apply(Integer mScheduleId) {
-                        if (mScheduleId < 0) {
-                            //noinspection unchecked
-                            return null;
-                        } else {
+                        if (mScheduleId > 0 ) {
                             //noinspection ConstantConditions
                             return DatabaseCreator.getInstance(_context).sceneDao().loadSceneByScheduleId(mScheduleId);
+
                         }
+                        return null;
                     }
                 });
 
         Observer<List<SceneEntity>> sceneListObserver = new Observer<List<SceneEntity>>() {
             @Override
             public void onChanged(@Nullable List<SceneEntity> sceneEntities) {
-                if(sceneEntities != null && sceneEntities.size() > 0){
+                if(sceneEntities != null  ){
                     mSceneId.setValue(1);
                 }
             }
@@ -122,9 +139,10 @@ public class ScheduleHelper {
         Observer<Integer> sceneIdObserver = new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable final Integer sceneId) {
-                if(sceneId > 0){
-                    int sceneIdx = sceneId-1;
-                    SceneEntity se = mSceneList.getValue().get(sceneIdx);
+                if(sceneId > 0 && mSceneList.getValue() !=null ){
+                    Log.d(TAG, "onChanged: mSceneId= " + mSceneId.getValue());
+                  //  int sceneIdx = sceneId-1;
+                    SceneEntity se = mSceneList.getValue().get(sceneId-1);
                     mScene.setValue(se);
                 }
             }
@@ -138,13 +156,13 @@ public class ScheduleHelper {
 
                     @Override
                     public LiveData<List<PaneEntity>> apply(Integer mSceneId) {
-                        if (mSceneId == 0) {
+                        if (mSceneId > 0 ) {
                             //noinspection unchecked
-                            return null;
-                        } else {
-                            //noinspection ConstantConditions
                             return DatabaseCreator.getInstance(_context).paneDao().loadPaneListById(mSceneId);
+
                         }
+                        //noinspection unchecked
+                        return null;
                     }
                 });
         Observer<List<PaneEntity>> paneListObserver = new Observer<List<PaneEntity>>() {
@@ -169,13 +187,12 @@ public class ScheduleHelper {
 
                     @Override
                     public LiveData<List<ContentEntity>> apply(Integer mSceneId) {
-                        if (mSceneId == 0) {
+                        if (mSceneId > 0 ) {
                             //noinspection unchecked
-                            return null;
-                        } else {
-                            //noinspection ConstantConditions
                             return DatabaseCreator.getInstance(_context).contentDao().loadContentListById(mSceneId);
                         }
+                        //noinspection unchecked
+                        return null;
                     }
                 });
 
@@ -184,8 +201,17 @@ public class ScheduleHelper {
             @Override
             public void onChanged(@Nullable List<ContentEntity> contentEntities) {
                 if(contentEntities != null && contentEntities.size() > 0){
-                    // mSceneList =  contentEntities;
-                    //mSceneId.setValue(1);
+
+                    if(mContentSchedule.size() <= 0) return;
+                    for (ContentSchedule cs : mContentSchedule) {
+                        for (ContentEntity ce : mContentList.getValue()) {
+                            if (ce.getPane_id() == ce.getPane_id()) {
+                                cs.count++; //to find total content count
+
+                            }
+                        }
+
+                    }
                 }
             }
         };
@@ -210,7 +236,7 @@ public class ScheduleHelper {
     }
 */
 
-    public void getNextScene() {
+    public void sceneScheduler() {
 
       /*  ////
         //for control scene play time
@@ -227,6 +253,8 @@ public class ScheduleHelper {
 
     public MutableLiveData<Integer> getScheduleDone() { return  mScheduleDone;}
 
+    public MutableLiveData<Integer> getContentPlayDone() { return  mContentPlayDone;}
+
     public LiveData<List<PaneEntity>> getPaneList() {
         return mPaneList;
     }
@@ -240,22 +268,66 @@ public class ScheduleHelper {
     }
 
 
+    public ContentEntity  getContent(int paneNum) {
 
+        if (mContentList != null) {
+            /*ContentSchedule cs = CS_hasPaneNum(paneNum);
+            if (cs == null) {
+                cs = new ContentSchedule();
+                cs.pane_num = paneNum;
+                mContentSchedule.add(cs);
+            }*/
+
+            if(mContentSchedule.size() <= 0) return null;
+
+            int _idx = 0;
+            for (ContentSchedule cs : mContentSchedule) {
+                for (ContentEntity ce : mContentList.getValue()) {
+                    if (ce.getPane_id() == paneNum) {
+
+                        if (cs.count == cs.idx) {
+                            cs.idx = 0;
+                            mContentPlayDone.setValue(cs.pane_num);
+                            return null;
+                        }
+
+                        if (cs.idx == _idx) {
+                            cs.idx++;
+
+                            return ce;
+                        }
+                        _idx++;
+                    }
+
+                }
+
+            }
+        }
+        return null;
+    }
+
+    // called per 1 second tick
     public void updateScheduleTick() {
         mTickCount++;
 
         if(mScheduleList.getValue() == null) return;
 
-        getNextSchedule();
-        getNextScene();
+        scheduleScheduler();
+        sceneScheduler();
+        contentScheduler();
 
         //for control schedule change
 
     }
 
+    private void contentScheduler() {
+        //TODO : not implemented
+    }
+
     @SuppressLint("StaticFieldLeak")
-    private void getNextSchedule() {
+    private void scheduleScheduler() {
         if(mScheduleList.getValue() == null) return;
+        if(mScheduleId.getValue() == null) return;
 
         new AsyncTask<Context, Void, Void>() {
 
@@ -351,42 +423,7 @@ public class ScheduleHelper {
     }
 
 
-    public ContentEntity  getContent(int paneNum) {
 
-        if (mContentList != null) {
-            /*ContentSchedule cs = CS_hasPaneNum(paneNum);
-            if (cs == null) {
-                cs = new ContentSchedule();
-                cs.pane_num = paneNum;
-                mContentSchedule.add(cs);
-            }*/
 
-            if(mContentSchedule.size() <= 0) return null;
 
-            int _idx = 0;
-            for (ContentSchedule cs : mContentSchedule) {
-                for (ContentEntity ce : mContentList.getValue()) {
-                    if (ce.getPane_id() == paneNum) {
-
-                        if (cs.idx == _idx) {
-                            cs.idx++;
-                            return ce;
-                        }
-                        _idx++;
-                    }
-
-                }
-
-            }
-        }
-        return null;
-    }
-
-    private ContentSchedule CS_hasPaneNum(int paneNum) {
-        for (ContentSchedule cs : mContentSchedule) {
-            if(cs.pane_num == paneNum) return cs;
-        }
-
-        return null;
-    }
 }

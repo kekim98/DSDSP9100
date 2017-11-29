@@ -24,6 +24,7 @@ import android.util.Log;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.model.PlayContent;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.BasicHandler;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.FormatHandler;
@@ -145,10 +146,16 @@ public class PlayDataHandler {
     }
 
     private void notifyEnableDB() {
+        ConfigEntity configEntity = DatabaseCreator.getInstance(mContext).configDao().loadConfigSync();
+        configEntity.setIsDBEnable(1);
+        DatabaseCreator.getInstance(mContext).configDao().update(configEntity);
 
     }
 
     private void notifyDisableDB() {
+        ConfigEntity configEntity = DatabaseCreator.getInstance(mContext).configDao().loadConfigSync();
+        configEntity.setIsDBEnable(0);
+        DatabaseCreator.getInstance(mContext).configDao().update(configEntity);
 
     }
 

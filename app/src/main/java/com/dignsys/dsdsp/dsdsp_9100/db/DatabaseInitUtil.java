@@ -126,6 +126,8 @@ public class DatabaseInitUtil {
         configEntity.setIntervalCapture(60);
 
         configEntity.setCaptureScale(30);
+
+        configEntity.setIsDBEnable(1); //1:enable, 0:disable
     }
 
 }

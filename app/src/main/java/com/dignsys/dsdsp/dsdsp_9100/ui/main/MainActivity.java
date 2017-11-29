@@ -1,5 +1,6 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
+import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
@@ -56,27 +57,44 @@ public class MainActivity extends AppCompatActivity {
         // Update the list when the data changes
 
 
-        viewModel.getScene().observe(this, new Observer<SceneEntity>() {
+      /*  viewModel.getScene().observe(this, new Observer<SceneEntity>() {
             @Override
             public void onChanged(@Nullable SceneEntity sceneEntitie) {
                 Log.d(TAG, "onChanged: SceneEntity id =" );
             }
-        });
+        });*/
+
+      viewModel.getScene().observe(this, new Observer<SceneEntity>() {
+          @Override
+          public void onChanged(@Nullable SceneEntity sceneEntity) {
+              Log.d(TAG, "onChanged: sceneEntity id =" + Integer.valueOf(sceneEntity.getId()) );
+          }
+      });
 
         viewModel.getPaneList().observe(this, new Observer<List<PaneEntity>>() {
             @Override
             public void onChanged(@Nullable List<PaneEntity> paneEntities) {
-                Log.d(TAG, "onChanged: paneEntities id =" );
+                Log.d(TAG, "onChanged: paneEntities size =" + Integer.valueOf(paneEntities.size()));
                 stopDSDSP();
                 playDSDSP(paneEntities);
             }
         });
 
 
-        viewModel.getContentList().observe(this, new Observer<List<ContentEntity>>() {
+      /*  viewModel.getContentList().observe(this, new Observer<List<ContentEntity>>() {
             @Override
             public void onChanged(@Nullable List<ContentEntity> contentEntities) {
                 Log.d(TAG, "onChanged: contentEntities id =" );
+            }
+        });*/
+
+        viewModel.getScheduleDone().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer pane_num) {
+
+                if (pane_num == mMainPane) {
+                    //TODO : have to implement SCENE CHANGE
+                }
             }
         });
 
@@ -203,11 +221,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void paneScheduleDone(int paneNum) {
 
-        if (paneNum == mMainPane) {
-            //TODO : have to implement SCENE CHANGE
-        }
-
-    }
 }

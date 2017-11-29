@@ -8,4 +8,6 @@ public class ContentSchedule {
   //  public ContentEntity contentEntity;
     public int idx=0;
 
+    public int count=0;
+
 }

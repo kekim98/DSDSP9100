@@ -18,6 +18,9 @@ public interface ConfigDao {
     @Query("SELECT * FROM config_info LIMIT 1")
     LiveData<ConfigEntity> loadConfig();
 
+    @Query("SELECT * FROM config_info LIMIT 1")
+    ConfigEntity loadConfigSync();
+
 
     @Query("SELECT count(*) from config_info")
     int cofigCount();

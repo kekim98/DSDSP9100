@@ -117,6 +117,15 @@ public class ConfigEntity  {
 
     private int Language;                // Language.
 
+    private int isDBEnable;
+
+    public int getIsDBEnable() {
+        return isDBEnable;
+    }
+
+    public void setIsDBEnable(int isDBEnable) {
+        this.isDBEnable = isDBEnable;
+    }
 
     public int getId() {
         return id;
