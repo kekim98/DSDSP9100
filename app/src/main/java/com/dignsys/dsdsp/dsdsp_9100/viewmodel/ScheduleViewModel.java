@@ -10,6 +10,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
@@ -29,6 +30,7 @@ public class ScheduleViewModel extends AndroidViewModel {
     private final LiveData<List<ContentEntity>> mContentList;
     private final MutableLiveData<Integer> mScheduleDone;
     private final MutableLiveData<Integer> mContentPlayDone;
+    private LiveData<ConfigEntity> mConfig;
 
     //private final LiveData<List<ContentEntity>> mContentList;
 
@@ -46,6 +48,7 @@ public class ScheduleViewModel extends AndroidViewModel {
         mScheduleDone = ScheduleHelper.getInstance(application.getApplicationContext()).getScheduleDone();
 
         mContentPlayDone = ScheduleHelper.getInstance(application.getApplicationContext()).getContentPlayDone();
+        mConfig = ScheduleHelper.getInstance(application.getApplicationContext()).getConfig();
 
     }
     /**
@@ -67,6 +70,12 @@ public class ScheduleViewModel extends AndroidViewModel {
     }
 
     public LiveData<Integer> getContentPlayDone() { return mContentPlayDone; }
+
+    public void requestNextScene() {
+        ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).requestNextScene();
+    }
+
+    public LiveData<ConfigEntity> getConfig() { return mConfig; }
 
 
     /**

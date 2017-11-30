@@ -1,37 +1,24 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:background="@color/black"
+    tools:context="com.dignsys.dsdsp.dsdsp_9100.ui.main.VideoFragment">
 
-    <data>
+    <!-- TODO: Update blank fragment layout -->
 
-        <import type="android.view.View" />
-
-        <!--<variable
-            name="isLoading"
-            type="boolean" />
-
-        <variable
-            name="productViewModel"
-            type="com.example.android.persistence.viewmodel.ProductViewModel" />-->
-    </data>
-
-    <FrameLayout
-        xmlns:tools="http://schemas.android.com/tools"
+    <VideoView
+        android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.dignsys.dsdsp.dsdsp_9100.ui.main.VideoFragment">
+        android:background="@color/black" />
 
-        <!-- TODO: Update blank fragment layout -->
+    <ImageSwitcher
+        android:id="@+id/imageSW"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-        <VideoView
-            android:id="@+id/videoView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@color/black" />
-    </FrameLayout>
-
-</layout>
+</FrameLayout>

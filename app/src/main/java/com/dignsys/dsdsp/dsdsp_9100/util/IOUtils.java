@@ -137,7 +137,7 @@ public class IOUtils {
     }
 
     public static String getContentFilePath() {
-
+        //TODO: have to change to SD Card path
         return "test-content";
     }
 

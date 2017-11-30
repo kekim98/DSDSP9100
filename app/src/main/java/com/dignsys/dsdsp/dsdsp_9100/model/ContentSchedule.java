@@ -10,4 +10,8 @@ public class ContentSchedule {
 
     public int count=0;
 
+    public long opRunTimeTick;
+
+    public long opMSGPlayTick;
+
 }

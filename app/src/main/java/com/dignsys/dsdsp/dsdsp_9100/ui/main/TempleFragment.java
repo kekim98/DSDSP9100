@@ -2,8 +2,6 @@ package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,22 +16,19 @@ import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
-import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
-
-import java.io.File;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link VideoFragment#newInstance} factory method to
+ * Use the {@link TempleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class VideoFragment extends Fragment {
+public class TempleFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
-    private static final String TAG = VideoFragment.class.getSimpleName();
+    private static final String TAG = TempleFragment.class.getSimpleName();
 
     private int mPaneNum = 0;
 
@@ -43,7 +38,7 @@ public class VideoFragment extends Fragment {
     private PaneEntity mPaneEntity;
     private View mImageSW;
 
-    public VideoFragment() {
+    public TempleFragment() {
         // Required empty public constructor
     }
 
@@ -54,8 +49,8 @@ public class VideoFragment extends Fragment {
      * @param pane_num Parameter test.
      * @return A new instance of fragment VideoFragment.
      */
-    public static VideoFragment newInstance(int pane_num) {
-        VideoFragment fragment = new VideoFragment();
+    public static TempleFragment newInstance(int pane_num) {
+        TempleFragment fragment = new TempleFragment();
         Bundle args = new Bundle();
         args.putInt(PANE_NUM, pane_num);
         fragment.setArguments(args);
@@ -93,34 +88,17 @@ public class VideoFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
         // TODO: Rename and change types and number of view
 
         mVideoView = view.findViewById(R.id.videoView);
         mImageSW = view.findViewById(R.id.imageSW);
-
-
         /*String UrlPath = "android.resource://" + getActivity().getPackageName() + "/" + R.raw.kkk;
         mVideoView.setVideoURI(Uri.parse(UrlPath));
         mVideoView.start();*/
 
+
         mViewModel = ViewModelProviders.of(getActivity()).get(ScheduleViewModel.class);
         subscribe();
-
-        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-               run();
-            }
-        });
-        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                run();
-                return true;
-            }
-        });
 
         run();
 
@@ -128,26 +106,16 @@ public class VideoFragment extends Fragment {
 
     private void stop() {
         //TODO:......
-        Log.d(TAG, "stop: .....");
     }
 
     private void run() {
         Log.d(TAG, "run:........");
-
         mContent = mViewModel.getContent(mPaneNum); //for first content
 
         if (mContent == null) return;
 
         if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_VIDEO) {
             mImageSW.setVisibility(View.GONE);
-
-            String fileName = IOUtils.getFilename(mContent.getFilePath());
-            File file = IOUtils.getContentFile(this.getContext(), fileName);
-            String UrlPath = file.getAbsolutePath();
-
-            mVideoView.setVideoURI(Uri.parse(UrlPath));
-            mVideoView.start();
-
 
         } else if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_IMAGE) {
             mVideoView.setVisibility(View.GONE);
@@ -169,6 +137,7 @@ public class VideoFragment extends Fragment {
                 if (pane_num == mPaneNum) {
                     stop();
                     run();
+
                 }
             }
         });
@@ -188,8 +157,6 @@ public class VideoFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
-        //TODO: release resource
     }
 
 }

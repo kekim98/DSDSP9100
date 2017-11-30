@@ -282,7 +282,12 @@ public class PlayListHandler extends BasicHandler {
             if(c.getOpNotDownload() ==1) continue;
 
             if (!c.getFilePath().isEmpty()) {
-                url = hostAddr + c.getFilePath();
+                if (c.getFilePath().startsWith("/")) {
+                    url = hostAddr + c.getFilePath();
+                }else{
+                    url =c.getFilePath();
+                }
+
                 filename = IOUtils.getFilename(url);
 
                 content.filename = filename;
@@ -291,7 +296,11 @@ public class PlayListHandler extends BasicHandler {
             }
 
             if (!c.getOpBGMFile().isEmpty()) {
-                url = hostAddr + c.getOpBGMFile();
+                if (c.getOpBGMFile().startsWith("/")) {
+                    url = hostAddr + c.getOpBGMFile();
+                }else{
+                    url =c.getFilePath();
+                }
                 filename = IOUtils.getFilename(url);
 
                 content.filename = filename;
@@ -300,7 +309,11 @@ public class PlayListHandler extends BasicHandler {
             }
 
             if (!c.getOpMSGFile().isEmpty()) {
-                url = hostAddr + c.getOpMSGFile();
+                if (c.getOpMSGFile().startsWith("/")) {
+                    url = hostAddr + c.getOpMSGFile();
+                }else{
+                    url =c.getFilePath();
+                }
                 filename = IOUtils.getFilename(url);
 
                 content.filename = filename;
