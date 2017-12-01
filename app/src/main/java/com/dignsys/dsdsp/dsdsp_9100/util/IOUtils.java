@@ -129,22 +129,33 @@ public class IOUtils {
     }
 
     public static File getContentFile(Context context, String filename) {
-        File folder = new File(context.getFilesDir(), getContentFilePath());
+        File folder = new File(context.getFilesDir(), getContentFileFolder());
         if (!folder.exists()) {
             folder.mkdirs();
         }
         return new File(folder, filename);
     }
 
-    public static String getContentFilePath() {
+    public static String getContentFileFolder() {
         //TODO: have to change to SD Card path
         return "test-content";
+    }
+
+    public static String getDspPlayContent(Context context, String filePath) {
+        if (!filePath.startsWith("/")) {
+            return filePath;
+        }
+
+        String fileName = getFilename(filePath);
+        File file = getContentFile(context, fileName);
+      //  return file.getPath();
+        return "file://" + file.getAbsolutePath();
     }
 
 
     public static void removeUnusedContents(Context mContext, final ArrayList<String> usedContents) {
         // remove all files are stored in the content path but are not used
-        File folder = new File(mContext.getFilesDir(), getContentFilePath());
+        File folder = new File(mContext.getFilesDir(), getContentFileFolder());
         File[] unused = folder.listFiles(new FilenameFilter() {
 
             @Override

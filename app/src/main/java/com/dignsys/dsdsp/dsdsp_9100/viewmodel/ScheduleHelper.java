@@ -43,11 +43,13 @@ public class ScheduleHelper {
     private int mPaneListSyncDone=0;
     private int mContentListSyncDone=0;
 
+
     {
         //noinspection unchecked
         ABSENT.setValue(null);
     }
 
+    private final MutableLiveData<Integer> mPlayStart = new MutableLiveData<>();
     private final MutableLiveData<Integer> mScheduleId = new MutableLiveData<>();
     private final MutableLiveData<Integer> mSceneId = new MutableLiveData<>();
     private final MutableLiveData<Integer> mScheduleDone = new MutableLiveData<>();
@@ -84,6 +86,7 @@ public class ScheduleHelper {
                     if (config.getIsDBEnable() == 0) {
                         mScheduleId.setValue(0);
                         mSceneId.setValue(0);
+                        mPlayStart.setValue(0);
                     }
                 }
             }
@@ -169,12 +172,11 @@ public class ScheduleHelper {
         Observer<List<PaneEntity>> paneListObserver = new Observer<List<PaneEntity>>() {
             @Override
             public void onChanged(@Nullable List<PaneEntity> paneEntityList) {
-                if (paneEntityList != null && paneEntityList.size() > 0) {
+                Log.d(TAG, "onChanged: paneListObserver");
                     mPaneListSyncDone = 1;
                     if (mContentListSyncDone == 1) {
                         makeContentSchedule();
                     }
-                }
             }
         };
         mPaneList.observeForever(paneListObserver);
@@ -196,13 +198,11 @@ public class ScheduleHelper {
         Observer<List<ContentEntity>> contentListObserver = new Observer<List<ContentEntity>>() {
             @Override
             public void onChanged(@Nullable List<ContentEntity> contentEntities) {
-                if (contentEntities != null && contentEntities.size() > 0) {
-
+                Log.d(TAG, "onChanged: contentListObserver");
                     mContentListSyncDone = 1;
                     if (mPaneListSyncDone == 1) {
                         makeContentSchedule();
                     }
-                }
             }
         };
         mContentList.observeForever(contentListObserver);
@@ -233,6 +233,7 @@ public class ScheduleHelper {
 
         }
         mPaneListSyncDone = mContentListSyncDone = 0;
+        mPlayStart.setValue(1);
     }
 
 
@@ -286,6 +287,7 @@ public class ScheduleHelper {
 
         if (mContentList.getValue() == null) return null;
 
+        Log.d(TAG, "onChanged- getContent(): paneNum="+ String.valueOf(paneNum));
         if (mContentList != null) {
 
             if (mContentSchedule.size() <= 0) return null;
@@ -491,4 +493,7 @@ public class ScheduleHelper {
     }
 
 
+    public MutableLiveData<Integer> getPlayStart() {
+        return mPlayStart;
+    }
 }

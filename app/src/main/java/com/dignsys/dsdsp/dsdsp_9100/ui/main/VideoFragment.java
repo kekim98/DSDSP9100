@@ -2,6 +2,8 @@ package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,8 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.VideoView;
+import android.widget.ImageSwitcher;
+import android.widget.ViewSwitcher;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
@@ -22,6 +32,8 @@ import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
 import java.io.File;
+import java.net.URL;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +53,7 @@ public class VideoFragment extends Fragment {
     private ContentEntity mContent;
     private ScheduleViewModel mViewModel;
     private PaneEntity mPaneEntity;
-    private View mImageSW;
+    private ImageView mImageSW;
 
     public VideoFragment() {
         // Required empty public constructor
@@ -122,35 +134,93 @@ public class VideoFragment extends Fragment {
             }
         });
 
+       /* mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
+
+            public View makeView() {
+                return new ImageView(VideoFragment.this.getContext());
+            }
+        });
+
+        // Set animations
+        // https://danielme.com/2013/08/18/diseno-android-transiciones-entre-activities/
+        Animation fadeIn = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), R.anim.fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), R.anim.fade_out);
+        mImageSW.setInAnimation(fadeIn);
+        mImageSW.setOutAnimation(fadeOut);*/
+
         run();
 
     }
 
     private void stop() {
         //TODO:......
-        Log.d(TAG, "stop: .....");
+      /*  Log.d(TAG, "stop: .....");
+        if (mVideoView.isPlaying()) {
+            mVideoView.stopPlayback();
+        }*/
     }
 
     private void run() {
         Log.d(TAG, "run:........");
 
         mContent = mViewModel.getContent(mPaneNum); //for first content
+        if (mContent == null){
+            Log.d(TAG, "mContent .....................................................................: ");
+            return;
+        }
+        Log.d(TAG, "run: mContent.path=" + mContent.getFilePath());
 
-        if (mContent == null) return;
 
         if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_VIDEO) {
             mImageSW.setVisibility(View.GONE);
+            mVideoView.setVisibility(View.VISIBLE);
 
-            String fileName = IOUtils.getFilename(mContent.getFilePath());
+          /*  String fileName = IOUtils.getFilename(mContent.getFilePath());
             File file = IOUtils.getContentFile(this.getContext(), fileName);
-            String UrlPath = file.getAbsolutePath();
+            String UrlPath = file.getAbsolutePath();*/
 
+            String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
+            Log.d(TAG, "video run: path=" + UrlPath);
             mVideoView.setVideoURI(Uri.parse(UrlPath));
             mVideoView.start();
 
 
         } else if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_IMAGE) {
+
             mVideoView.setVisibility(View.GONE);
+            mImageSW.setVisibility(View.VISIBLE);
+/*
+              String fileName = IOUtils.getFilename(mContent.getFilePath());
+            File file = IOUtils.getContentFile(this.getContext(), fileName);
+           // String UrlPath = file.getAbsolutePath();*/
+            String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
+
+           /* Glide.with(this)
+                    .load(UrlPath)
+                    .asBitmap()
+                    .listener(new RequestListener<String, Bitmap>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+
+                            mImageSW.setImageDrawable(new BitmapDrawable(getResources(), resource));
+                            return true;
+                        }
+                    }).into((ImageView) mImageSW.getCurrentView());*/
+            Log.d(TAG, "image run: path=" + UrlPath);
+            Glide.with(this)
+                    .load(Uri.parse("file:///data/user/0/com.dignsys.dsdsp.dsdsp_9100/files/test-content/라이트.jpg"))
+                    .override(mPaneEntity.getPaneWidth(), mPaneEntity.getPaneHeight())
+                    .into(mImageSW);
+/*
+            Glide.with(this)
+                    .load(Uri.parse(UrlPath))
+                    .override(mPaneEntity.getPaneWidth(), mPaneEntity.getPaneHeight())
+                    .into(mImageSW);*/
 
             //TODO:.....
         }
@@ -164,7 +234,8 @@ public class VideoFragment extends Fragment {
         mViewModel.getContentPlayDone().observe(getActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer pane_num) {
-                Log.d(TAG, "onChanged: getScheduleDone pane_num =" + Integer.valueOf(pane_num));
+                Log.d(TAG, "onChanged: getContentPlayDone pane_num =" + String.valueOf(pane_num));
+                if(pane_num <= 0) return;
 
                 if (pane_num == mPaneNum) {
                     stop();
@@ -176,7 +247,6 @@ public class VideoFragment extends Fragment {
         mViewModel.getConfig().observe(getActivity(), new Observer<ConfigEntity>() {
             @Override
             public void onChanged(@Nullable ConfigEntity pane_num) {
-                Log.d(TAG, "onChanged: getScheduleDone pane_num =");
                 //TODO:apply dsdsp config to each play content
 
             }
@@ -190,6 +260,7 @@ public class VideoFragment extends Fragment {
         super.onDetach();
 
         //TODO: release resource
+
     }
 
 }

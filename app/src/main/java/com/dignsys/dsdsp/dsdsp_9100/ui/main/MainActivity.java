@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private int m_nScreenHeight;
     private ScheduleViewModel mViewModel;
     private View mDefaultImageView;
+    private int mPaneDone=0;
+    private int mPlayStart=0;
 
 
     @Override
@@ -64,20 +66,46 @@ public class MainActivity extends AppCompatActivity {
     private void subscribe() {
         // Update the list when the data changes
 
-        mViewModel.getScene().observe(this, new Observer<SceneEntity>() {
+      /*  mViewModel.getScene().observe(this, new Observer<SceneEntity>() {
             @Override
             public void onChanged(@Nullable SceneEntity sceneEntity) {
-                Log.d(TAG, "onChanged: sceneEntity id =" + Integer.valueOf(sceneEntity.getId()));
+                Log.d(TAG, "onChanged: sceneEntity id =" + String.valueOf(sceneEntity.getId()));
             }
-        });
+        });*/
 
         mViewModel.getPaneList().observe(this, new Observer<List<PaneEntity>>() {
             @Override
             public void onChanged(@Nullable List<PaneEntity> paneEntities) {
-                Log.d(TAG, "onChanged: paneEntities size =" + Integer.valueOf(paneEntities.size()));
+                Log.d(TAG, "onChanged: paneEntities size =" + String.valueOf(paneEntities.size()));
                 mPaneEntityList = paneEntities;
-                stopDSDSP();
-                playDSDSP();
+                mPaneDone = 1;
+                if (mPlayStart == 1) {
+                    run();
+                }
+                /*stopDSDSP();
+                playDSDSP();*/
+            }
+        });
+
+        mViewModel.getPlayStart().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer command) {
+                Log.d(TAG, "onChanged: command=" + String.valueOf(command));
+                mPlayStart =1;
+
+               /* if (command == 1) {
+                    stopDSDSP();
+                    playDSDSP();
+                }
+*/
+                if (command == 0) {
+                    stopDSDSP();
+                }
+
+                if (mPaneDone == 1) {
+                    run();
+                }
+
             }
         });
 
@@ -88,6 +116,14 @@ public class MainActivity extends AppCompatActivity {
                 if (pane_num == mMainPane) mViewModel.requestNextScene();
             }
         });
+
+    }
+
+    private void run() {
+
+        mPaneDone = mPlayStart =0;
+        stopDSDSP();
+        playDSDSP();
 
     }
 
