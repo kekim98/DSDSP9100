@@ -26,10 +26,10 @@ public class ScheduleViewModel extends AndroidViewModel {
 
     private final LiveData<SceneEntity> mScene;
 
-    private final LiveData<List<PaneEntity>> mPaneList;
-    private final LiveData<List<ContentEntity>> mContentList;
-    private final MutableLiveData<Integer> mScheduleDone;
-    private final MutableLiveData<Integer> mContentPlayDone;
+   // private final LiveData<List<PaneEntity>> mPaneList;
+   // private final LiveData<List<ContentEntity>> mContentList;
+   // private final MutableLiveData<Integer> mScheduleDone;
+   // private final MutableLiveData<Integer> mContentPlayDone;
     private LiveData<ConfigEntity> mConfig;
     private MutableLiveData<Integer> mPlayStart;
 
@@ -42,13 +42,13 @@ public class ScheduleViewModel extends AndroidViewModel {
 
 
         mScene = ScheduleHelper.getInstance(application.getApplicationContext()).getScene();
-        mPaneList = ScheduleHelper.getInstance(application.getApplicationContext()).getPaneList();
+      //  mPaneList = ScheduleHelper.getInstance(application.getApplicationContext()).getPaneList();
 
-        mContentList = ScheduleHelper.getInstance(application.getApplicationContext()).getContentList();
+      //  mContentList = ScheduleHelper.getInstance(application.getApplicationContext()).getContentList();
 
-        mScheduleDone = ScheduleHelper.getInstance(application.getApplicationContext()).getScheduleDone();
+     //   mScheduleDone = ScheduleHelper.getInstance(application.getApplicationContext()).getScheduleDone();
 
-        mContentPlayDone = ScheduleHelper.getInstance(application.getApplicationContext()).getContentPlayDone();
+     //   mContentPlayDone = ScheduleHelper.getInstance(application.getApplicationContext()).getContentPlayDone();
         mConfig = ScheduleHelper.getInstance(application.getApplicationContext()).getConfig();
         mPlayStart = ScheduleHelper.getInstance(application.getApplicationContext()).getPlayStart();
 
@@ -57,27 +57,27 @@ public class ScheduleViewModel extends AndroidViewModel {
      * Expose the LiveData Schedule ID so the UI can observe it.
      */
 
-    public LiveData<List<PaneEntity>> getNextPaneList() { return mPaneList;}
+   // public LiveData<List<PaneEntity>> getNextPaneList() { return mPaneList;}
 
     public LiveData<SceneEntity> getScene(){ return  mScene;}
 
-    public LiveData<List<PaneEntity>> getPaneList() { return  mPaneList;}
+    public List<PaneEntity> getPaneList() { return  ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).getPaneList();}
 
     public LiveData<Integer> getPlayStart() { return  mPlayStart;}
 
-    public LiveData<List<ContentEntity>> getContentList() { return mContentList;}
+    //public LiveData<List<ContentEntity>> getContentList() { return mContentList;}
 
-    public MutableLiveData<Integer> getScheduleDone() { return mScheduleDone;}
+  //  public MutableLiveData<Integer> getScheduleDone() { return mScheduleDone;}
 
     public ContentEntity getContent(int paneNum) {
         return ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).getContent(paneNum);
     }
 
-    public LiveData<Integer> getContentPlayDone() { return mContentPlayDone; }
+   // public LiveData<Integer> getContentPlayDone() { return mContentPlayDone; }
 
-    public void requestNextScene() {
+  /*  public void requestNextScene() {
         ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).requestNextScene();
-    }
+    }*/
 
     public LiveData<ConfigEntity> getConfig() { return mConfig; }
 

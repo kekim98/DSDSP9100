@@ -29,6 +29,7 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
 import java.io.File;
@@ -105,17 +106,11 @@ public class VideoFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
         // TODO: Rename and change types and number of view
 
         mVideoView = view.findViewById(R.id.videoView);
         mImageSW = view.findViewById(R.id.imageSW);
 
-
-        /*String UrlPath = "android.resource://" + getActivity().getPackageName() + "/" + R.raw.kkk;
-        mVideoView.setVideoURI(Uri.parse(UrlPath));
-        mVideoView.start();*/
 
         mViewModel = ViewModelProviders.of(getActivity()).get(ScheduleViewModel.class);
         subscribe();
@@ -154,10 +149,10 @@ public class VideoFragment extends Fragment {
 
     private void stop() {
         //TODO:......
-      /*  Log.d(TAG, "stop: .....");
+        Log.d(TAG, "stop: .....");
         if (mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
-        }*/
+        }
     }
 
     private void run() {
@@ -165,19 +160,17 @@ public class VideoFragment extends Fragment {
 
         mContent = mViewModel.getContent(mPaneNum); //for first content
         if (mContent == null){
-            Log.d(TAG, "mContent .....................................................................: ");
+            Log.d(TAG, "mContent null");
             return;
         }
-        Log.d(TAG, "run: mContent.path=" + mContent.getFilePath());
+       // Log.d(TAG, "run: mContent.path=" + mContent.getFilePath());
 
 
         if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_VIDEO) {
             mImageSW.setVisibility(View.GONE);
             mVideoView.setVisibility(View.VISIBLE);
 
-          /*  String fileName = IOUtils.getFilename(mContent.getFilePath());
-            File file = IOUtils.getContentFile(this.getContext(), fileName);
-            String UrlPath = file.getAbsolutePath();*/
+
 
             String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
             Log.d(TAG, "video run: path=" + UrlPath);
@@ -194,9 +187,10 @@ public class VideoFragment extends Fragment {
             File file = IOUtils.getContentFile(this.getContext(), fileName);
            // String UrlPath = file.getAbsolutePath();*/
             String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
+            Log.d(TAG, "image run: path=" + UrlPath);
 
            /* Glide.with(this)
-                    .load(UrlPath)
+                    .load(new File(UrlPath))
                     .asBitmap()
                     .listener(new RequestListener<String, Bitmap>() {
                         @Override
@@ -211,18 +205,14 @@ public class VideoFragment extends Fragment {
                             return true;
                         }
                     }).into((ImageView) mImageSW.getCurrentView());*/
-            Log.d(TAG, "image run: path=" + UrlPath);
+
+
             Glide.with(this)
-                    .load(Uri.parse("file:///data/user/0/com.dignsys.dsdsp.dsdsp_9100/files/test-content/라이트.jpg"))
+                    .load(new File(UrlPath))
                     .override(mPaneEntity.getPaneWidth(), mPaneEntity.getPaneHeight())
                     .into(mImageSW);
-/*
-            Glide.with(this)
-                    .load(Uri.parse(UrlPath))
-                    .override(mPaneEntity.getPaneWidth(), mPaneEntity.getPaneHeight())
-                    .into(mImageSW);*/
 
-            //TODO:.....
+
         }
 
 
@@ -231,7 +221,7 @@ public class VideoFragment extends Fragment {
     private void subscribe() {
         // Update the list when the data changes
 
-        mViewModel.getContentPlayDone().observe(getActivity(), new Observer<Integer>() {
+        /*mViewModel.getContentPlayDone().observe(getActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer pane_num) {
                 Log.d(TAG, "onChanged: getContentPlayDone pane_num =" + String.valueOf(pane_num));
@@ -241,6 +231,20 @@ public class VideoFragment extends Fragment {
                     stop();
                     run();
                 }
+            }
+        });*/
+
+        ScheduleHelper.getInstance(getContext()).getContentPlayDone().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer pane_num) {
+                Log.d(TAG, "onChanged: bawoori getContentPlayDone pane_num =" + String.valueOf(pane_num));
+                if(pane_num <= 0) return;
+
+                if (pane_num == mPaneNum) {
+                    stop();
+                    run();
+                }
+
             }
         });
 

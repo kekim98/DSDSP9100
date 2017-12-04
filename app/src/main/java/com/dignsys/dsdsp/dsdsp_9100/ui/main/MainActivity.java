@@ -20,6 +20,7 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.service.LocalService;
 import com.dignsys.dsdsp.dsdsp_9100.ui.Resize;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private int m_nScreenHeight;
     private ScheduleViewModel mViewModel;
     private View mDefaultImageView;
-    private int mPaneDone=0;
-    private int mPlayStart=0;
+   // private int mPaneDone=0;
+   // private int mPlayStart=0;
 
 
     @Override
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-        mViewModel.getPaneList().observe(this, new Observer<List<PaneEntity>>() {
+        /*mViewModel.getPaneList().observe(this, new Observer<List<PaneEntity>>() {
             @Override
             public void onChanged(@Nullable List<PaneEntity> paneEntities) {
                 Log.d(TAG, "onChanged: paneEntities size =" + String.valueOf(paneEntities.size()));
@@ -82,50 +83,56 @@ public class MainActivity extends AppCompatActivity {
                 if (mPlayStart == 1) {
                     run();
                 }
-                /*stopDSDSP();
-                playDSDSP();*/
+                *//*stopDSDSP();
+                playDSDSP();*//*
             }
-        });
+        });*/
 
         mViewModel.getPlayStart().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer command) {
                 Log.d(TAG, "onChanged: command=" + String.valueOf(command));
-                mPlayStart =1;
+               // mPlayStart =1;
 
-               /* if (command == 1) {
+                if (command == 1) {
                     stopDSDSP();
                     playDSDSP();
                 }
-*/
                 if (command == 0) {
                     stopDSDSP();
                 }
 
-                if (mPaneDone == 1) {
+              /*  if (mPaneDone == 1) {
                     run();
                 }
-
+*/
             }
         });
 
 
-        mViewModel.getScheduleDone().observe(this, new Observer<Integer>() {
+       /* mViewModel.getScheduleDone().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer pane_num) {
                 if (pane_num == mMainPane) mViewModel.requestNextScene();
             }
-        });
+        });*/
+
+     /*   ScheduleHelper.getInstance(this).getScheduleDone().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer pane_num) {
+                if (pane_num == mMainPane) mViewModel.requestNextScene();
+            }
+        });*/
 
     }
 
-    private void run() {
+  /*  private void run() {
 
         mPaneDone = mPlayStart =0;
         stopDSDSP();
         playDSDSP();
 
-    }
+    }*/
 
     @Override
     protected void onDestroy() {
@@ -162,12 +169,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void playDSDSP() {
 
-        if(mPaneEntityList == null) return;
-        findMainPane(mPaneEntityList);
+        //if(mPaneEntityList == null) return;
+        mPaneEntityList = mViewModel.getPaneList();
+       // findMainPane(mPaneEntityList);
 
         mFragmentList.clear();
 
         for (PaneEntity pe : mPaneEntityList) {
+
+            if (pe.getPaneType().equals("B")) {
+
+            }
             if (pe.getPaneType().equals("D")) {
 
             }
@@ -192,9 +204,7 @@ public class MainActivity extends AppCompatActivity {
             if (pe.getPaneType().equals("M")) {
 
             }
-            if (pe.getPaneType().equals("B")) {
 
-            }
 
             if (pe.getPaneType().equals("T")) {
 
@@ -218,9 +228,13 @@ public class MainActivity extends AppCompatActivity {
 
             mDefaultImageView.setVisibility(View.VISIBLE);
         }
+
+        Log.d(TAG, "playDSDSP: bawoori");
     }
 
     private void stopDSDSP() {
+
+        Log.d(TAG, "stopDSDSP: bawoori");
         if (mFragmentList.size() > 0) {
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -232,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.commit();
         }
     }
-
+/*
     private void findMainPane(List<PaneEntity> panes) {
 
         for (PaneEntity pe : panes) {
@@ -251,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 mMainPane = 1;
             }
         }
-    }
+    }*/
 
 
 

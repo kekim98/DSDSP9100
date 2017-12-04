@@ -129,7 +129,7 @@ public class TempleFragment extends Fragment {
     private void subscribe() {
         // Update the list when the data changes
 
-        mViewModel.getContentPlayDone().observe(getActivity(), new Observer<Integer>() {
+       /* mViewModel.getContentPlayDone().observe(getActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer pane_num) {
                 Log.d(TAG, "onChanged: getScheduleDone pane_num =" + Integer.valueOf(pane_num));
@@ -140,7 +140,7 @@ public class TempleFragment extends Fragment {
 
                 }
             }
-        });
+        });*/
 
         mViewModel.getConfig().observe(getActivity(), new Observer<ConfigEntity>() {
             @Override

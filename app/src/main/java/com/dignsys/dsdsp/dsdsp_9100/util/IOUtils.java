@@ -148,8 +148,8 @@ public class IOUtils {
 
         String fileName = getFilename(filePath);
         File file = getContentFile(context, fileName);
-      //  return file.getPath();
-        return "file://" + file.getAbsolutePath();
+        return file.getAbsolutePath();
+      //  return "file://" + file.getAbsolutePath();
     }
 
 
