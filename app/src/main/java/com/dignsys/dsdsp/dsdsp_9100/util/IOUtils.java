@@ -141,7 +141,7 @@ public class IOUtils {
         return "test-content";
     }
 
-    public static String getDspPlayContent(Context context, String filePath) {
+    public static String getDspPlayContent(Context context, String filePath) throws NullPointerException{
         if (!filePath.startsWith("/")) {
             return filePath;
         }

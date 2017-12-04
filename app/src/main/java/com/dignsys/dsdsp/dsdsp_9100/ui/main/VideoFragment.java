@@ -22,6 +22,7 @@ import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
+//import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.target.Target;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
@@ -33,7 +34,6 @@ import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
 import java.io.File;
-import java.net.URL;
 
 
 /**
@@ -54,7 +54,8 @@ public class VideoFragment extends Fragment {
     private ContentEntity mContent;
     private ScheduleViewModel mViewModel;
     private PaneEntity mPaneEntity;
-    private ImageView mImageSW;
+ //   private ImageView mImageSW;
+    private ImageSwitcher mImageSW;
 
     public VideoFragment() {
         // Required empty public constructor
@@ -109,6 +110,7 @@ public class VideoFragment extends Fragment {
         // TODO: Rename and change types and number of view
 
         mVideoView = view.findViewById(R.id.videoView);
+        mVideoView.setZOrderOnTop(true);
         mImageSW = view.findViewById(R.id.imageSW);
 
 
@@ -129,16 +131,21 @@ public class VideoFragment extends Fragment {
             }
         });
 
-       /* mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
+        mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {
-                return new ImageView(VideoFragment.this.getContext());
+                ImageView iv = new ImageView(VideoFragment.this.getContext());
+                return iv;
             }
         });
 
         // Set animations
         // https://danielme.com/2013/08/18/diseno-android-transiciones-entre-activities/
-        Animation fadeIn = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), R.anim.fade_in);
+        Animation in = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), android.R.anim.slide_in_left);
+        Animation out = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), android.R.anim.slide_out_right);
+        mImageSW.setInAnimation(in);
+        mImageSW.setOutAnimation(out);
+       /* Animation fadeIn = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), R.anim.fade_in);
         Animation fadeOut = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), R.anim.fade_out);
         mImageSW.setInAnimation(fadeIn);
         mImageSW.setOutAnimation(fadeOut);*/
@@ -170,48 +177,49 @@ public class VideoFragment extends Fragment {
             mImageSW.setVisibility(View.GONE);
             mVideoView.setVisibility(View.VISIBLE);
 
+            try {
+                String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
+                Log.d(TAG, "video run: path=" + UrlPath);
+                mVideoView.setVideoURI(Uri.parse(UrlPath));
+                mVideoView.start();
 
+            } catch (NullPointerException e) {
 
-            String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
-            Log.d(TAG, "video run: path=" + UrlPath);
-            mVideoView.setVideoURI(Uri.parse(UrlPath));
-            mVideoView.start();
+            }
+
 
 
         } else if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_IMAGE) {
 
             mVideoView.setVisibility(View.GONE);
             mImageSW.setVisibility(View.VISIBLE);
-/*
-              String fileName = IOUtils.getFilename(mContent.getFilePath());
-            File file = IOUtils.getContentFile(this.getContext(), fileName);
-           // String UrlPath = file.getAbsolutePath();*/
-            String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
-            Log.d(TAG, "image run: path=" + UrlPath);
 
-           /* Glide.with(this)
-                    .load(new File(UrlPath))
-                    .asBitmap()
-                    .listener(new RequestListener<String, Bitmap>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                            return false;
-                        }
+            try {
+                String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
+                Log.d(TAG, "image run: path=" + UrlPath);
 
-                        @Override
-                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                Glide.with(this)
+                        .load(new File(UrlPath))
+                        .asBitmap()
+                        .listener(new RequestListener<File, Bitmap>() {
+                            @Override
+                            public boolean onException(Exception e, File model, Target<Bitmap> target, boolean isFirstResource) {
+                                Log.d(TAG, "onException: glide Exception...");
+                                return false;
+                            }
 
-                            mImageSW.setImageDrawable(new BitmapDrawable(getResources(), resource));
-                            return true;
-                        }
-                    }).into((ImageView) mImageSW.getCurrentView());*/
+                            @Override
+                            public boolean onResourceReady(Bitmap resource, File model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                Log.d(TAG, "onResourceReady: isFirstResource=" + isFirstResource);
+                                mImageSW.setImageDrawable(new BitmapDrawable(getResources(), resource));
+                                return true;
+                                //   return false;
+                            }
+                        }).into((ImageView) mImageSW.getCurrentView());
 
+            } catch (NullPointerException e) {
 
-            Glide.with(this)
-                    .load(new File(UrlPath))
-                    .override(mPaneEntity.getPaneWidth(), mPaneEntity.getPaneHeight())
-                    .into(mImageSW);
-
+            }
 
         }
 
@@ -234,7 +242,7 @@ public class VideoFragment extends Fragment {
             }
         });*/
 
-        ScheduleHelper.getInstance(getContext()).getContentPlayDone().observe(this, new Observer<Integer>() {
+        ScheduleHelper.getInstance(getContext()).getContentPlayDone().observe(getActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer pane_num) {
                 Log.d(TAG, "onChanged: bawoori getContentPlayDone pane_num =" + String.valueOf(pane_num));

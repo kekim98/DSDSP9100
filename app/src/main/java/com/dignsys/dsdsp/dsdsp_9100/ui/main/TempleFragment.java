@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageSwitcher;
 import android.widget.VideoView;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
@@ -16,6 +17,7 @@ import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
 /**
@@ -36,7 +38,8 @@ public class TempleFragment extends Fragment {
     private ContentEntity mContent;
     private ScheduleViewModel mViewModel;
     private PaneEntity mPaneEntity;
-    private View mImageSW;
+ //   private ImageView mImageSW;
+    private ImageSwitcher mImageSW;
 
     public TempleFragment() {
         // Required empty public constructor
@@ -111,8 +114,12 @@ public class TempleFragment extends Fragment {
     private void run() {
         Log.d(TAG, "run:........");
         mContent = mViewModel.getContent(mPaneNum); //for first content
+        if (mContent == null){
+            Log.d(TAG, "mContent null");
+            return;
+        }
+       // Log.d(TAG, "run: mContent.path=" + mContent.getFilePath());
 
-        if (mContent == null) return;
 
         if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_VIDEO) {
             mImageSW.setVisibility(View.GONE);
@@ -142,6 +149,20 @@ public class TempleFragment extends Fragment {
             }
         });*/
 
+        ScheduleHelper.getInstance(getContext()).getContentPlayDone().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer pane_num) {
+                Log.d(TAG, "onChanged: bawoori getContentPlayDone pane_num =" + String.valueOf(pane_num));
+                if(pane_num <= 0) return;
+
+                if (pane_num == mPaneNum) {
+                    stop();
+                    run();
+                }
+
+            }
+        });
+
         mViewModel.getConfig().observe(getActivity(), new Observer<ConfigEntity>() {
             @Override
             public void onChanged(@Nullable ConfigEntity pane_num) {
@@ -157,6 +178,9 @@ public class TempleFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        //TODO: release resource
+
     }
 
 }

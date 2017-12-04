@@ -189,6 +189,9 @@ public class MainActivity extends AppCompatActivity {
                 mFragmentList.add(videoFragment);
             }
             if (pe.getPaneType().equals("P")) {
+                ImageFragment imageFragment =
+                        ImageFragment.newInstance(pe.getPane_id());
+                mFragmentList.add(imageFragment);
 
             }
 

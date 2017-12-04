@@ -41,7 +41,6 @@ public class ScheduleHelper {
     private static final String TAG = ScheduleHelper.class.getSimpleName();
     private int mPaneListSyncDone = 0;
     private int mContentListSyncDone = 0;
-    private int mMainPane = 0;
 
 
     {
@@ -213,17 +212,24 @@ public class ScheduleHelper {
 
     }
 
-    private void requestNextScene() {
+    private boolean requestNextScene() {
 
-        if (mSceneList.getValue() == null) return;
+        if (mSceneList.getValue() == null) return false;
 
-        int nextScene = (mSceneSchedule.idx % mSceneSchedule.count) + 1;
+        final int nextScene = (mSceneSchedule.idx % mSceneSchedule.count) + 1;
+
+        if (nextScene == mSceneSchedule.scene_id) {
+            Log.d(TAG, "getContent: requestNextScene = false");
+
+            return false;
+        }
         mSceneSchedule.scene_id = nextScene;
         mSceneSchedule.idx++;
 
         //  mSceneId.setValue(nextScene);
-        Log.d(TAG, "requestNextScene: bawoori");
+        Log.d(TAG, "requestNextScene=true: bawoori");
         mSceneId.setValue(nextScene);
+        return true;
     }
 
 
@@ -234,7 +240,7 @@ public class ScheduleHelper {
             for (ContentSchedule cs : mContentSchedule) {
                 if (type.equals(cs.pane_type)) {
                     cs.isMain = 1;
-                    break;
+                    return;
                 }
             }
         }
@@ -260,7 +266,7 @@ public class ScheduleHelper {
 
         for (ContentSchedule cs : mContentSchedule) {
             for (ContentEntity ce : mContentList.getValue()) {
-                if (ce.getPane_id() == ce.getPane_id()) {
+                if (cs.pane_num == ce.getPane_id()) {
                     cs.count++; //to find total content count
                     cs.contents.add(ce);
                 }
@@ -328,12 +334,16 @@ public class ScheduleHelper {
                 if (cs.pane_num == paneNum) {
                     if (cs.count == cs.idx && cs.isMain == 1) {
                         cs.idx = 0;
-                        requestNextScene();
-                        return null;
+                        if (requestNextScene()) {
+                            return null;
+                        }
                     }
                     Log.d(TAG, "getContent:bawoori- paneNum=" + String.valueOf(paneNum));
 
                     ContentEntity ce = cs.contents.get(cs.idx % cs.count);
+
+                    cs.opRunTimeTick = 0;
+
                     if (ce.getOpRunTime() != 0) {
                         cs.opRunTimeTick += mTickCount;
                     } else {
@@ -414,12 +424,10 @@ public class ScheduleHelper {
             //  Log.d(TAG, "bawoori: runtimeTick=" + String.valueOf(cs.opRunTimeTick ));
 
             if (cs.opRunTimeTick > 0 && cs.opRunTimeTick <= mTickCount) {
-                Log.d(TAG, "contentScheduler bawoori: runtimeTick=" + String.valueOf(cs.opRunTimeTick));
-                cs.opRunTimeTick = 0;
+                Log.d(TAG, "contentScheduler bawoori: runtimeTick=" + String.valueOf(cs.opRunTimeTick) +"  pane_num=" + cs.pane_num);
                 mContentPlayDone.postValue(cs.pane_num);
             }
             if (cs.opMSGPlayTick > 0 && cs.opMSGPlayTick <= mTickCount) {
-                cs.opMSGPlayTick = 0;
                 mContentPlayDone.postValue(cs.pane_num);
             }
         }
