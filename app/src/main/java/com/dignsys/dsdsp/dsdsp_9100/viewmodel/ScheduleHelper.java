@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.content.Context;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -34,19 +35,27 @@ public class ScheduleHelper {
 
     private static ScheduleHelper sInstance;
 
-    private static final MutableLiveData ABSENT = new MutableLiveData();
+   // private static final MutableLiveData ABSENT = new MutableLiveData();
     private final LiveData<List<ContentEntity>> mContentList;
     private final LiveData<ConfigEntity> mConfig;
     private long mTickCount = 0;
     private static final String TAG = ScheduleHelper.class.getSimpleName();
     private int mPaneListSyncDone = 0;
     private int mContentListSyncDone = 0;
+    private boolean mIsBGMMode = false;
+    private final int[] mBgmType = {Definer.DEF_CONTENTS_TYPE_IMAGE, Definer.DEF_CONTENTS_TYPE_TEXT,
+            Definer.DEF_CONTENTS_TYPE_RSS, Definer.DEF_CONTENTS_TYPE_BGM};
+    private final int[] mNormalType = {Definer.DEF_CONTENTS_TYPE_IMAGE, Definer.DEF_CONTENTS_TYPE_TEXT,
+            Definer.DEF_CONTENTS_TYPE_RSS, Definer.DEF_CONTENTS_TYPE_BGM, Definer.DEF_CONTENTS_TYPE_VIDEO};
+    private PlayerBGM mBGMPlayer;
 
+/*
 
     {
         //noinspection unchecked
         ABSENT.setValue(null);
     }
+*/
 
     private final MutableLiveData<Integer> mPlayStart = new MutableLiveData<>();
     private final MutableLiveData<Integer> mScheduleId = new MutableLiveData<>();
@@ -62,12 +71,10 @@ public class ScheduleHelper {
 
 
     private LiveData<List<SceneEntity>> mSceneList;
-    //private int _scheduleId; //only to be used internally
     private Context _context;
 
     // For Singleton instantiation
     private static final Object LOCK = new Object();
-    //private int _scenePlayTime;
 
     private ScheduleHelper(Context context) {
         _context = context;
@@ -86,7 +93,6 @@ public class ScheduleHelper {
                         mScheduleId.setValue(0);
                         mSceneId.setValue(0);
                         mPlayStart.setValue(0);
-                        //mScheduleDone.setValue(0);
                         mContentPlayDone.setValue(0);
                     }
                 }
@@ -124,11 +130,12 @@ public class ScheduleHelper {
         Observer<List<SceneEntity>> sceneListObserver = new Observer<List<SceneEntity>>() {
             @Override
             public void onChanged(@Nullable List<SceneEntity> sceneEntities) {
-                if (sceneEntities != null) {
+                if (sceneEntities != null && sceneEntities.size() > 0) {
                     mSceneSchedule.idx = 0;
                     mSceneSchedule.count = sceneEntities.size();
-                    mSceneSchedule.scene_id =1;
-                    mSceneId.setValue(1);
+                    mSceneSchedule.scene = sceneEntities.get(0);
+                   // final int scene_id = sceneEntities.get(0).getId();
+                    mSceneId.setValue(mSceneSchedule.scene.getId());
                 }
             }
         };
@@ -139,8 +146,22 @@ public class ScheduleHelper {
             @Override
             public void onChanged(@Nullable final Integer sceneId) {
                 if (sceneId > 0 && mSceneList.getValue() != null) {
-                    Log.d(TAG, "onChanged: mSceneId= " + mSceneId.getValue());
-                    SceneEntity se = mSceneList.getValue().get(sceneId - 1);
+                  //  Log.d(TAG, "onChanged: mSceneId= " + mSceneId.getValue());
+                  //  SceneEntity se = mSceneList.getValue().get(sceneId - 1);
+
+                    //SceneEntity se = mSceneList.getValue().get(mSceneSchedule.idx % mSceneSchedule.count);
+                    SceneEntity se = mSceneSchedule.scene;
+
+                    /*if (mBGMPlayer != null) {
+                        mBGMPlayer.releasePlayer();
+                        mBGMPlayer = null;
+                    }
+
+                    if (se.isOpBGMMode()) {
+                        mIsBGMMode = true;
+                    } else {
+                        mIsBGMMode = false;
+                    }*/
 
                     if (se.getOpPlayTime().isEmpty()) {
                         mSceneSchedule.expire_time = 0;
@@ -154,9 +175,6 @@ public class ScheduleHelper {
         };
         mSceneId.observeForever(sceneIdObserver);
 
-
-
-
         //MainActivity will make observer
         mPaneList = Transformations.switchMap(mSceneId,
                 new Function<Integer, LiveData<List<PaneEntity>>>() {
@@ -165,6 +183,7 @@ public class ScheduleHelper {
                     public LiveData<List<PaneEntity>> apply(Integer mSceneId) {
                         if (mSceneId > 0) {
                             //noinspection unchecked
+
                             return DatabaseCreator.getInstance(_context).paneDao().loadPaneListById(mSceneId);
 
                         }
@@ -191,8 +210,10 @@ public class ScheduleHelper {
                     @Override
                     public LiveData<List<ContentEntity>> apply(Integer mSceneId) {
                         if (mSceneId > 0) {
+
+                            final int[] types = mIsBGMMode?mBgmType:mNormalType;
                             //noinspection unchecked
-                            return DatabaseCreator.getInstance(_context).contentDao().loadContentListById(mSceneId);
+                            return DatabaseCreator.getInstance(_context).contentDao().loadContentListById(mSceneId, types);
                         }
                         //noinspection unchecked
                         return null;
@@ -216,19 +237,31 @@ public class ScheduleHelper {
 
         if (mSceneList.getValue() == null) return false;
 
-        final int nextScene = (mSceneSchedule.idx % mSceneSchedule.count) + 1;
+        synchronized (LOCK) {
+            if (mSceneSchedule.count == 1) {
+                Log.d(TAG, "getContent:bawoori1 requestNextScene = false");
 
-        if (nextScene == mSceneSchedule.scene_id) {
-            Log.d(TAG, "getContent: requestNextScene = false");
+                return false;
+            }
 
-            return false;
+
+            mSceneSchedule.idx++;
+            mSceneSchedule.scene = mSceneList.getValue()
+                    .get(mSceneSchedule.idx % mSceneSchedule.count);
+
+            final int nextSceneId = mSceneSchedule.scene.getId();
+
+            Log.d(TAG, "requestNextScene: bawoori1- sceneId=" + nextSceneId);
+
+            if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+                mSceneId.setValue(nextSceneId);
+            } else {
+                mSceneId.postValue(nextSceneId);
+            }
+
         }
-        mSceneSchedule.scene_id = nextScene;
-        mSceneSchedule.idx++;
 
-        //  mSceneId.setValue(nextScene);
-        Log.d(TAG, "requestNextScene=true: bawoori");
-        mSceneId.setValue(nextScene);
+
         return true;
     }
 
@@ -267,16 +300,35 @@ public class ScheduleHelper {
         for (ContentSchedule cs : mContentSchedule) {
             for (ContentEntity ce : mContentList.getValue()) {
                 if (cs.pane_num == ce.getPane_id()) {
-                    cs.count++; //to find total content count
-                    cs.contents.add(ce);
+
+                    if (ce.getFileType() == Definer.DEF_CONTENTS_TYPE_BGM) {
+                        cs.bgm_count++;
+                        cs.bgms.add(ce);
+                    } else {
+                        cs.count++; //to find total content count
+                        cs.contents.add(ce);
+                    }
+
                 }
             }
         }
+
         findMainPane();
+
+        if (mIsBGMMode) {
+            for (ContentSchedule cs : mContentSchedule) {
+                if (cs.pane_type.equals("V") && cs.bgm_count > 0) {
+                    // cs.is_bgm_runnig = true;
+                    mBGMPlayer = new PlayerBGM(_context, cs.bgms, true);
+                    mBGMPlayer.playBGM();
+                    break;
+                }
+            }
+        }
 
         mPaneListSyncDone = mContentListSyncDone = 0;
 
-        Log.d(TAG, "makeContentSchedule: bawoori- make done");
+        Log.d(TAG, "makeContentSchedule: bawoori1- make done");
         mContentPlayDone.setValue(0);
         mPlayStart.setValue(1);
     }
@@ -340,21 +392,27 @@ public class ScheduleHelper {
                     }
                     Log.d(TAG, "getContent:bawoori- paneNum=" + String.valueOf(paneNum));
 
+                    if(cs.count == 0) return  null;
                     ContentEntity ce = cs.contents.get(cs.idx % cs.count);
 
                     cs.opRunTimeTick = 0;
+                    cs.opMSGPlayTick = 0;
 
                     if (ce.getOpRunTime() != 0) {
-                        cs.opRunTimeTick += mTickCount;
+                        cs.opRunTimeTick = ce.getOpRunTime() + mTickCount;
                     } else {
                         if (ce.getFileType() == Definer.DEF_CONTENTS_TYPE_IMAGE) {
-                             cs.opRunTimeTick = mConfig.getValue().getImageChangeInterval() + mTickCount;
+                            cs.opRunTimeTick = mConfig.getValue().getImageChangeInterval() + mTickCount;
                             Log.d(TAG, "getContent bawoori: content=" + ce.getFilePath());
                         }
                     }
                     if (ce.getOpMSGPlayTime() != 0) {
-                        cs.opMSGPlayTick += mTickCount;
+                        cs.opMSGPlayTick = ce.getOpMSGPlayTime() + mTickCount;
                     }
+                   /* if (!ce.getOpBGMFile().isEmpty() && !mIsBGMMode) {
+                        cs.is_bgm_runnig = true;
+                        playBackSound(ce);
+                    }*/
                     cs.idx++;
 
                     if (!checkDTime(ce)) {
@@ -367,6 +425,14 @@ public class ScheduleHelper {
         }
 
         return null;
+    }
+
+    private void playBackSound(ContentEntity ce) {
+        List<ContentEntity> bgms = new ArrayList<>();
+        bgms.add(ce);
+
+        mBGMPlayer = new PlayerBGM(_context, bgms, false);
+        mBGMPlayer.playBGM();
     }
 
     private boolean checkDTime(ContentEntity ce) {
@@ -411,7 +477,8 @@ public class ScheduleHelper {
 
         if (mSceneSchedule.expire_time != 0) {
             if (mTickCount > mSceneSchedule.expire_time) {
-               requestNextScene();
+                Log.d(TAG, "sceneScheduler: bawoori1......");
+                requestNextScene();
             }
         }
     }
@@ -424,7 +491,12 @@ public class ScheduleHelper {
             //  Log.d(TAG, "bawoori: runtimeTick=" + String.valueOf(cs.opRunTimeTick ));
 
             if (cs.opRunTimeTick > 0 && cs.opRunTimeTick <= mTickCount) {
-                Log.d(TAG, "contentScheduler bawoori: runtimeTick=" + String.valueOf(cs.opRunTimeTick) +"  pane_num=" + cs.pane_num);
+                Log.d(TAG, "contentScheduler bawoori1: runtimeTick=" + String.valueOf(cs.opRunTimeTick) +"  pane_num=" + cs.pane_num);
+                if (mBGMPlayer != null &&  cs.is_bgm_runnig) {
+                    mBGMPlayer.releasePlayer();
+                    mBGMPlayer = null;
+                    cs.is_bgm_runnig = false;
+                }
                 mContentPlayDone.postValue(cs.pane_num);
             }
             if (cs.opMSGPlayTick > 0 && cs.opMSGPlayTick <= mTickCount) {

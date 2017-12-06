@@ -200,7 +200,7 @@ public class IOUtils {
 
 
 
-    public static String universalDetector(final byte[] args) {
+    public static String universalDetector(final byte[] args) throws UnsupportedEncodingException {
 
         String result = null;
         UniversalDetector detector = new UniversalDetector(null);
@@ -212,7 +212,7 @@ public class IOUtils {
 
         detector.reset();
 
-        if (encoding != null) {
+        /*if (encoding != null) {
             System.out.println("Detected encoding = " + encoding);
             try {
                 result = new String(args, encoding);
@@ -222,6 +222,12 @@ public class IOUtils {
         } else {
             System.out.println("No encoding detected.");
             result = new String(args);
+        }*/
+
+        if (encoding != "UTF-8") {
+            result = new String(args, "MS949");
+        } else {
+            result = new String(args, "UTF-8");
         }
 
         return result;

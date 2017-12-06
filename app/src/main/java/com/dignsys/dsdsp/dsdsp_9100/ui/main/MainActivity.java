@@ -2,25 +2,15 @@ package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
-import com.dignsys.dsdsp.dsdsp_9100.service.LocalService;
-import com.dignsys.dsdsp.dsdsp_9100.ui.Resize;
-import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
 import java.util.ArrayList;
@@ -31,17 +21,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private boolean mBound;
-    private LocalService mService;
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
-    private int mMainPane;
     private List<PaneEntity> mPaneEntityList;
-    private int m_nScreenWidth;
-    private int m_nScreenHeight;
     private ScheduleViewModel mViewModel;
     private View mDefaultImageView;
-   // private int mPaneDone=0;
-   // private int mPlayStart=0;
+
 
 
     @Override
@@ -49,15 +33,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDefaultImageView = findViewById(R.id.imageView);
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
-
-        m_nScreenWidth = displayMetrics.widthPixels;
-        m_nScreenHeight = displayMetrics.heightPixels;
-
-        Intent intent = new Intent(this, LocalService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         mViewModel = ViewModelProviders.of(this).get(ScheduleViewModel.class);
 
@@ -74,24 +49,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-        /*mViewModel.getPaneList().observe(this, new Observer<List<PaneEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<PaneEntity> paneEntities) {
-                Log.d(TAG, "onChanged: paneEntities size =" + String.valueOf(paneEntities.size()));
-                mPaneEntityList = paneEntities;
-                mPaneDone = 1;
-                if (mPlayStart == 1) {
-                    run();
-                }
-                *//*stopDSDSP();
-                playDSDSP();*//*
-            }
-        });*/
 
         mViewModel.getPlayStart().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer command) {
-                Log.d(TAG, "onChanged: command=" + String.valueOf(command));
+                Log.d(TAG, "onChanged:bawoori1 command=" + String.valueOf(command));
                // mPlayStart =1;
 
                 if (command == 1) {
@@ -102,66 +64,16 @@ public class MainActivity extends AppCompatActivity {
                     stopDSDSP();
                 }
 
-              /*  if (mPaneDone == 1) {
-                    run();
-                }
-*/
             }
         });
 
-
-       /* mViewModel.getScheduleDone().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(@Nullable Integer pane_num) {
-                if (pane_num == mMainPane) mViewModel.requestNextScene();
-            }
-        });*/
-
-     /*   ScheduleHelper.getInstance(this).getScheduleDone().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(@Nullable Integer pane_num) {
-                if (pane_num == mMainPane) mViewModel.requestNextScene();
-            }
-        });*/
-
     }
 
-  /*  private void run() {
-
-        mPaneDone = mPlayStart =0;
-        stopDSDSP();
-        playDSDSP();
-
-    }*/
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Unbind from the service
-        if (mBound) {
-            unbindService(mConnection);
-            mBound = false;
-        }
     }
-
-    /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            LocalService.LocalBinder binder = (LocalService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
-
 
 
     //V:video/picture, P:picture, M:message, C:clock, B:background color
@@ -169,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void playDSDSP() {
 
-        //if(mPaneEntityList == null) return;
         mPaneEntityList = mViewModel.getPaneList();
-       // findMainPane(mPaneEntityList);
+
+        if(mPaneEntityList == null || mPaneEntityList.size() <= 0 ) return;
 
         mFragmentList.clear();
 
@@ -181,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
             if (pe.getPaneType().equals("D")) {
+                DTvFragment dTvFragment =
+                        DTvFragment.newInstance(pe.getPane_id());
+                mFragmentList.add(dTvFragment);
 
             }
             if (pe.getPaneType().equals("V")) {
@@ -199,15 +114,17 @@ public class MainActivity extends AppCompatActivity {
 
             }
             if (pe.getPaneType().equals("C")) {
-                /*ClockFragment clockFragment =
-                        ClockFragment.newInstance(pe.getPaneX(), pe.getPaneY(), pe.getPaneWidth(), pe.getPaneWidth());
-                mFragmentList.add(clockFragment);*/
+                ClockFragment clockFragment =
+                        ClockFragment.newInstance(pe.getPane_id());
+                mFragmentList.add(clockFragment);
 
             }
             if (pe.getPaneType().equals("M")) {
+                MessageFragment messageFragment =
+                        MessageFragment.newInstance(pe.getPane_id());
+                mFragmentList.add(messageFragment);
 
             }
-
 
             if (pe.getPaneType().equals("T")) {
 
@@ -249,28 +166,6 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.commit();
         }
     }
-/*
-    private void findMainPane(List<PaneEntity> panes) {
-
-        for (PaneEntity pe : panes) {
-            if(pe.getPaneType().equals("I") || pe.getPaneType().equals("D"))	{
-                mMainPane = pe.getPane_id();
-            }
-            else if(pe.getPaneType().equals("V")) {
-                mMainPane = pe.getPane_id();
-            }
-            else if(pe.getPaneType().equals("P")) {
-                mMainPane = pe.getPane_id();
-            }
-            else if(pe.getPaneType().equals("T")) {
-                mMainPane = pe.getPane_id();
-            }else{
-                mMainPane = 1;
-            }
-        }
-    }*/
-
-
 
     public PaneEntity getPaneEntity(int paneNum) {
 
@@ -284,13 +179,16 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-
-    public void getResize(Resize resize) {
-
-       /* int nX = (int)((((double)m_nX * (double)nScreenX)/(double)nFullZoneW)+0.5);
-        int nY = (int)((((double)m_nY * (double)nScreenH)/(double)nFullZoneH)+0.5);
-        int nW = (int)((((double)m_nW * (double)nScreenX)/(double)nFullZoneW)+0.5);
-        int nH = (int)((((double)m_nH * (double)nScreenH)/(double)nFullZoneH)+0.5);*/
-
+    public PaneEntity getSpaneEntity() {
+        if (mPaneEntityList != null) {
+            for (PaneEntity pe : mPaneEntityList) {
+                if (pe.getPaneType().equals("S")) {
+                    return pe;
+                }
+            }
+        }
+        return null;
     }
+
+
 }

@@ -29,6 +29,7 @@ public interface ContentDao {
     void deleteAllContent();
 
 
-    @Query("SELECT * FROM content_info WHERE scene_id = :sceneId AND opNotPlay != 1 order by id")
-    LiveData<List<ContentEntity>> loadContentListById(Integer sceneId);
+    @Query("SELECT * FROM content_info WHERE scene_id = :sceneId AND opNotPlay != 1  AND fileType IN(:types) order by id")
+    LiveData<List<ContentEntity>> loadContentListById(Integer sceneId, int[] types);
+
 }

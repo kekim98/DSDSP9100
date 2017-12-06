@@ -36,7 +36,6 @@ public class DSDSPApplication extends Application {
 
         }.execute(this);
 
-
     }
 
 }

@@ -14,6 +14,8 @@ public class ContentSchedule {
     public int idx=0;
 
     public int count=0;
+    public int bgm_count=0;
+    public boolean is_bgm_runnig;
 
     public long opRunTimeTick;
 
@@ -22,5 +24,6 @@ public class ContentSchedule {
     public int isMain=0;
 
     public List<ContentEntity> contents = new ArrayList<>();
+    public List<ContentEntity> bgms = new ArrayList<>();
 
 }

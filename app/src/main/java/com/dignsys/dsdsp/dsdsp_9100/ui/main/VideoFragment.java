@@ -1,9 +1,6 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,23 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.VideoView;
-import android.widget.ImageSwitcher;
 import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestListener;
-//import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
-import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleHelper;
-import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
 
 import java.io.File;
 
@@ -43,32 +37,21 @@ import java.io.File;
  * Use the {@link VideoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class VideoFragment extends Fragment {
+public class VideoFragment extends BaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
     private static final String TAG = VideoFragment.class.getSimpleName();
 
-    private int mPaneNum = 0;
-
     private VideoView mVideoView;
     private ContentEntity mContent;
-    private ScheduleViewModel mViewModel;
-    private PaneEntity mPaneEntity;
- //   private ImageView mImageSW;
+  //  private ScheduleViewModel mViewModel;
     private ImageSwitcher mImageSW;
 
     public VideoFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param pane_num Parameter test.
-     * @return A new instance of fragment VideoFragment.
-     */
-    public static VideoFragment newInstance(int pane_num) {
+    static VideoFragment newInstance(int pane_num) {
         VideoFragment fragment = new VideoFragment();
         Bundle args = new Bundle();
         args.putInt(PANE_NUM, pane_num);
@@ -76,14 +59,6 @@ public class VideoFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mPaneNum = getArguments().getInt(PANE_NUM);
-            mPaneEntity = ((MainActivity) getActivity()).getPaneEntity(mPaneNum);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,13 +66,7 @@ public class VideoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_video, container, false);
 
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.width = mPaneEntity.getPaneWidth();
-        layoutParams.height = mPaneEntity.getPaneHeight();
-
-        view.setLayoutParams(layoutParams);
-        view.setX(mPaneEntity.getPaneX());
-        view.setY(mPaneEntity.getPaneY());
+        makeLayout(view);
 
         return view;
 
@@ -110,17 +79,18 @@ public class VideoFragment extends Fragment {
         // TODO: Rename and change types and number of view
 
         mVideoView = view.findViewById(R.id.videoView);
+        //mVideoView.setZOrderMediaOverlay(true);
         mVideoView.setZOrderOnTop(true);
         mImageSW = view.findViewById(R.id.imageSW);
 
 
-        mViewModel = ViewModelProviders.of(getActivity()).get(ScheduleViewModel.class);
-        subscribe();
+/*        mViewModel = ViewModelProviders.of(getActivity()).get(ScheduleViewModel.class);
+        subscribe();*/
 
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-               run();
+                run();
             }
         });
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -154,7 +124,8 @@ public class VideoFragment extends Fragment {
 
     }
 
-    private void stop() {
+    @Override
+    void stop() {
         //TODO:......
         Log.d(TAG, "stop: .....");
         if (mVideoView.isPlaying()) {
@@ -162,15 +133,16 @@ public class VideoFragment extends Fragment {
         }
     }
 
-    private void run() {
-        Log.d(TAG, "run:........");
+    @Override
+    void run() {
+        Log.d(TAG, "bawoori1 run:........");
 
         mContent = mViewModel.getContent(mPaneNum); //for first content
-        if (mContent == null){
-            Log.d(TAG, "mContent null");
+        if (mContent == null) {
+            Log.d(TAG, "bawoori1 run:mContent null");
             return;
         }
-       // Log.d(TAG, "run: mContent.path=" + mContent.getFilePath());
+        // Log.d(TAG, "run: mContent.path=" + mContent.getFilePath());
 
 
         if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_VIDEO) {
@@ -188,7 +160,6 @@ public class VideoFragment extends Fragment {
             }
 
 
-
         } else if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_IMAGE) {
 
             mVideoView.setVisibility(View.GONE);
@@ -199,6 +170,17 @@ public class VideoFragment extends Fragment {
                 Log.d(TAG, "image run: path=" + UrlPath);
 
                 Glide.with(this)
+                        .applyDefaultRequestOptions(new RequestOptions()
+                                .format(DecodeFormat.PREFER_RGB_565))
+                        .load(new File(UrlPath))
+                        .into(new SimpleTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                                mImageSW.setImageDrawable(resource);
+                            }
+                        });
+
+               /* Glide.with(this)
                         .load(new File(UrlPath))
                         .asBitmap()
                         .listener(new RequestListener<File, Bitmap>() {
@@ -215,10 +197,10 @@ public class VideoFragment extends Fragment {
                                 return true;
                                 //   return false;
                             }
-                        }).into((ImageView) mImageSW.getCurrentView());
+                        }).into((ImageView) mImageSW.getCurrentView());*/
 
             } catch (NullPointerException e) {
-
+                Log.e(TAG, "run: NullPointException");
             }
 
         }
@@ -226,53 +208,5 @@ public class VideoFragment extends Fragment {
 
     }
 
-    private void subscribe() {
-        // Update the list when the data changes
-
-        /*mViewModel.getContentPlayDone().observe(getActivity(), new Observer<Integer>() {
-            @Override
-            public void onChanged(@Nullable Integer pane_num) {
-                Log.d(TAG, "onChanged: getContentPlayDone pane_num =" + String.valueOf(pane_num));
-                if(pane_num <= 0) return;
-
-                if (pane_num == mPaneNum) {
-                    stop();
-                    run();
-                }
-            }
-        });*/
-
-        ScheduleHelper.getInstance(getContext()).getContentPlayDone().observe(getActivity(), new Observer<Integer>() {
-            @Override
-            public void onChanged(@Nullable Integer pane_num) {
-                Log.d(TAG, "onChanged: bawoori getContentPlayDone pane_num =" + String.valueOf(pane_num));
-                if(pane_num <= 0) return;
-
-                if (pane_num == mPaneNum) {
-                    stop();
-                    run();
-                }
-
-            }
-        });
-
-        mViewModel.getConfig().observe(getActivity(), new Observer<ConfigEntity>() {
-            @Override
-            public void onChanged(@Nullable ConfigEntity pane_num) {
-                //TODO:apply dsdsp config to each play content
-
-            }
-        });
-
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        //TODO: release resource
-
-    }
 
 }

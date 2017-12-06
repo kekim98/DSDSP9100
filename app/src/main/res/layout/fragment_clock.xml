@@ -9,8 +9,10 @@
 
     <TextClock
         android:id="@+id/textClock"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
         android:textSize="50sp"
         android:textStyle="bold" />
 </FrameLayout>

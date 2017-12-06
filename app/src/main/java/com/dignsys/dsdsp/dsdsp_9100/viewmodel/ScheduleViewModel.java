@@ -14,24 +14,31 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.service.SyncService;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ScheduleViewModel extends AndroidViewModel {
 
+    TimerTask mTimerTask;
+    Timer mTimer;
+    int mTickCount =0;
 
+    private  final int DSDSP_TICK = 1 * 1000;
 
     private static final String TAG = ScheduleViewModel.class.getSimpleName();
 
 
-    private final LiveData<SceneEntity> mScene;
+   // private final LiveData<SceneEntity> mScene;
 
    // private final LiveData<List<PaneEntity>> mPaneList;
    // private final LiveData<List<ContentEntity>> mContentList;
    // private final MutableLiveData<Integer> mScheduleDone;
    // private final MutableLiveData<Integer> mContentPlayDone;
-    private LiveData<ConfigEntity> mConfig;
-    private MutableLiveData<Integer> mPlayStart;
+   // private LiveData<ConfigEntity> mConfig;
+   // private MutableLiveData<Integer> mPlayStart;
 
     //private final LiveData<List<ContentEntity>> mContentList;
 
@@ -40,8 +47,11 @@ public class ScheduleViewModel extends AndroidViewModel {
     public ScheduleViewModel(@NonNull final Application application){
         super(application);
 
+        mTimer = new Timer();
+        runDSPTimer();
 
-        mScene = ScheduleHelper.getInstance(application.getApplicationContext()).getScene();
+
+      //  mScene = ScheduleHelper.getInstance(application.getApplicationContext()).getScene();
       //  mPaneList = ScheduleHelper.getInstance(application.getApplicationContext()).getPaneList();
 
       //  mContentList = ScheduleHelper.getInstance(application.getApplicationContext()).getContentList();
@@ -49,8 +59,8 @@ public class ScheduleViewModel extends AndroidViewModel {
      //   mScheduleDone = ScheduleHelper.getInstance(application.getApplicationContext()).getScheduleDone();
 
      //   mContentPlayDone = ScheduleHelper.getInstance(application.getApplicationContext()).getContentPlayDone();
-        mConfig = ScheduleHelper.getInstance(application.getApplicationContext()).getConfig();
-        mPlayStart = ScheduleHelper.getInstance(application.getApplicationContext()).getPlayStart();
+     //   mConfig = ScheduleHelper.getInstance(application.getApplicationContext()).getConfig();
+     //   mPlayStart = ScheduleHelper.getInstance(application.getApplicationContext()).getPlayStart();
 
     }
     /**
@@ -59,11 +69,11 @@ public class ScheduleViewModel extends AndroidViewModel {
 
    // public LiveData<List<PaneEntity>> getNextPaneList() { return mPaneList;}
 
-    public LiveData<SceneEntity> getScene(){ return  mScene;}
+   // public LiveData<SceneEntity> getScene(){ return  mScene;}
 
     public List<PaneEntity> getPaneList() { return  ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).getPaneList();}
 
-    public LiveData<Integer> getPlayStart() { return  mPlayStart;}
+    public LiveData<Integer> getPlayStart() { return ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).getPlayStart();}
 
     //public LiveData<List<ContentEntity>> getContentList() { return mContentList;}
 
@@ -79,9 +89,13 @@ public class ScheduleViewModel extends AndroidViewModel {
         ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).requestNextScene();
     }*/
 
-    public LiveData<ConfigEntity> getConfig() { return mConfig; }
+    public LiveData<ConfigEntity> getConfig() {
+        return ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).getConfig();
+    }
 
-
+    public LiveData<Integer> getContentPlayDone() {
+        return ScheduleHelper.getInstance(this.getApplication().getApplicationContext()).getContentPlayDone();
+    }
 
 
     /**
@@ -109,4 +123,55 @@ public class ScheduleViewModel extends AndroidViewModel {
             return (T) new ScheduleViewModel(mApplication, mDspFormatId);
         }
     }*/
+
+
+    private void runDSPTimer() {
+        if (mTimerTask != null) {
+            mTimer.cancel();
+        }
+
+        mTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                mTickCount++;
+                //   mLiveTick.postValue(mTickCount);
+
+                //for play data download
+                if ((mTickCount*DSDSP_TICK % getPlayDataDownloadInterval()) == 0) {
+                    SyncService.startDownload(ScheduleViewModel.this.getApplication(), null, null);
+                }
+
+                //for playlist schedule
+                ScheduleHelper.getInstance(ScheduleViewModel.this.getApplication()).updateScheduleTick();
+            }
+        };
+
+        mTimer.schedule(mTimerTask, 0, DSDSP_TICK);
+    }
+
+    private long getPlayDataDownloadInterval() {
+
+        //TODO : have to change
+        return 6*1000;
+    }
+
+    private void stopDSPTimer() {
+        if (mTimerTask != null) {
+            mTimerTask.cancel();
+            mTimer.cancel();
+
+            mTimer = null;
+            mTimerTask = null;
+
+        }
+
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        stopDSPTimer();
+    }
+
+
 }
