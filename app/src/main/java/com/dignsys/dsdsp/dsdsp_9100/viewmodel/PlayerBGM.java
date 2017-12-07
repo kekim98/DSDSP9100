@@ -11,7 +11,6 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerBGM implements OnPreparedListener, OnCompletionListener, OnErrorListener {

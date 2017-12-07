@@ -17,12 +17,10 @@ import android.widget.ImageView;
 import android.widget.VideoView;
 import android.widget.ViewSwitcher;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
+import com.dignsys.dsdsp.dsdsp_9100.GlideApp;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
@@ -169,9 +167,7 @@ public class VideoFragment extends BaseFragment {
                 String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
                 Log.d(TAG, "image run: path=" + UrlPath);
 
-                Glide.with(this)
-                        .applyDefaultRequestOptions(new RequestOptions()
-                                .format(DecodeFormat.PREFER_RGB_565))
+                GlideApp.with(this)
                         .load(new File(UrlPath))
                         .into(new SimpleTarget<Drawable>() {
                             @Override
@@ -180,24 +176,6 @@ public class VideoFragment extends BaseFragment {
                             }
                         });
 
-               /* Glide.with(this)
-                        .load(new File(UrlPath))
-                        .asBitmap()
-                        .listener(new RequestListener<File, Bitmap>() {
-                            @Override
-                            public boolean onException(Exception e, File model, Target<Bitmap> target, boolean isFirstResource) {
-                                Log.d(TAG, "onException: glide Exception...");
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Bitmap resource, File model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                Log.d(TAG, "onResourceReady: isFirstResource=" + isFirstResource);
-                                mImageSW.setImageDrawable(new BitmapDrawable(getResources(), resource));
-                                return true;
-                                //   return false;
-                            }
-                        }).into((ImageView) mImageSW.getCurrentView());*/
 
             } catch (NullPointerException e) {
                 Log.e(TAG, "run: NullPointException");

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dignsys.dsdsp.dsdsp_9100.GlideApp;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
@@ -55,6 +56,8 @@ abstract class BaseFragment extends Fragment {
         super.onDetach();
         mViewModel.getContentPlayDone().removeObserver(mContentPlayDoneObserver);
         mViewModel.getConfig().removeObserver(mConfigObserver);
+
+        GlideApp.get(getActivity()).clearMemory();
 
         //TODO: release resource
 

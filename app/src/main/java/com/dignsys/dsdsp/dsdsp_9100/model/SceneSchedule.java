@@ -3,9 +3,6 @@ package com.dignsys.dsdsp.dsdsp_9100.model;
 
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SceneSchedule {
 
   //  public int scene_id;

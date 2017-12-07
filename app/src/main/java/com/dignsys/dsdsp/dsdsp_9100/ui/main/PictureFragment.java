@@ -14,12 +14,10 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
+import com.dignsys.dsdsp.dsdsp_9100.GlideApp;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
@@ -30,15 +28,15 @@ import java.io.File;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link ImageFragment#newInstance} factory method to
+ * Use the {@link PictureFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 
 
-public class ImageFragment extends BaseFragment {
+public class PictureFragment extends BaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
-    private static final String TAG = ImageFragment.class.getSimpleName();
+    private static final String TAG = PictureFragment.class.getSimpleName();
 
     ContentEntity mContent;
 
@@ -46,7 +44,7 @@ public class ImageFragment extends BaseFragment {
     private ImageSwitcher mImageSW;
 
 
-    public ImageFragment() {
+    public PictureFragment() {
         // Required empty public constructor
     }
 
@@ -58,8 +56,8 @@ public class ImageFragment extends BaseFragment {
      * @return A new instance of fragment VideoFragment.
      */
 
-    static ImageFragment newInstance(int pane_num) {
-        ImageFragment fragment = new ImageFragment();
+    static PictureFragment newInstance(int pane_num) {
+        PictureFragment fragment = new PictureFragment();
         Bundle args = new Bundle();
         args.putInt(PANE_NUM, pane_num);
         fragment.setArguments(args);
@@ -71,7 +69,7 @@ public class ImageFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_image, container, false);
+        View view = inflater.inflate(R.layout.fragment_picture, container, false);
 
         makeLayout(view);
 
@@ -92,17 +90,17 @@ public class ImageFragment extends BaseFragment {
         mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {
-                ImageView iv = new ImageView(ImageFragment.this.getContext());
+                ImageView iv = new ImageView(PictureFragment.this.getContext());
                 return iv;
             }
         });
 
-      /*  Animation in = AnimationUtils.loadAnimation(ImageFragment.this.getContext(), android.R.anim.slide_in_left);
-        Animation out = AnimationUtils.loadAnimation(ImageFragment.this.getContext(), android.R.anim.slide_out_right);
-      Animation in = AnimationUtils.loadAnimation(ImageFragment.this.getContext(), android.R.anim.fade_in);
-        Animation out = AnimationUtils.loadAnimation(ImageFragment.this.getContext(), android.R.anim.fade_out);*/
-        Animation in = AnimationUtils.loadAnimation(ImageFragment.this.getContext(), R.anim.slide_up);
-        Animation out = AnimationUtils.loadAnimation(ImageFragment.this.getContext(), R.anim.slide_down);
+      /*  Animation in = AnimationUtils.loadAnimation(PictureFragment.this.getContext(), android.R.anim.slide_in_left);
+        Animation out = AnimationUtils.loadAnimation(PictureFragment.this.getContext(), android.R.anim.slide_out_right);
+      Animation in = AnimationUtils.loadAnimation(PictureFragment.this.getContext(), android.R.anim.fade_in);
+        Animation out = AnimationUtils.loadAnimation(PictureFragment.this.getContext(), android.R.anim.fade_out);*/
+        Animation in = AnimationUtils.loadAnimation(PictureFragment.this.getContext(), R.anim.slide_up);
+        Animation out = AnimationUtils.loadAnimation(PictureFragment.this.getContext(), R.anim.slide_down);
 
         mImageSW.setInAnimation(in);
         mImageSW.setOutAnimation(out);
@@ -114,6 +112,7 @@ public class ImageFragment extends BaseFragment {
 
     @Override
     void stop() {
+
         //TODO:......
     }
 
@@ -132,9 +131,7 @@ public class ImageFragment extends BaseFragment {
             String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
             Log.d(TAG, "image run: path=" + UrlPath);
 
-            Glide.with(this)
-                    .applyDefaultRequestOptions(new RequestOptions()
-                            .format(DecodeFormat.PREFER_RGB_565))
+            GlideApp.with(this)
                     .load(new File(UrlPath))
                     .into(new SimpleTarget<Drawable>() {
                         @Override
@@ -143,24 +140,6 @@ public class ImageFragment extends BaseFragment {
                         }
                     });
 
-           /*Glide.with(this)
-                        .load(new File(UrlPath))
-                        .asBitmap()
-                        .listener(new RequestListener<File, Bitmap>() {
-                            @Override
-                            public boolean onException(Exception e, File model, Target<Bitmap> target, boolean isFirstResource) {
-                                Log.d(TAG, "onException: glide Exception...");
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Bitmap resource, File model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                Log.d(TAG, "onResourceReady: isFirstResource=" + isFirstResource);
-                                mImageSW.setImageDrawable(new BitmapDrawable(getResources(), resource));
-                                return true;
-                                //   return false;
-                            }
-                        }).into((ImageView) mImageSW.getCurrentView());*/
 
 
         } catch (NullPointerException e) {

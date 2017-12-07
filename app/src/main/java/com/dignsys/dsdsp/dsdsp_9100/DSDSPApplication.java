@@ -8,9 +8,6 @@ import android.os.AsyncTask;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseInitUtil;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ScheduleEntity;
-
-import java.util.Calendar;
 
 /**
  * Created by bawoori on 17. 11. 15.

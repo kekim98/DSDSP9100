@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
     private List<PaneEntity> mPaneEntityList;
     private ScheduleViewModel mViewModel;
-    private View mDefaultImageView;
+     ImageView mDefaultImageView;
 
 
 
@@ -37,6 +38,15 @@ public class MainActivity extends AppCompatActivity {
         mViewModel = ViewModelProviders.of(this).get(ScheduleViewModel.class);
 
         subscribe();
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
     }
 
     private void subscribe() {
@@ -69,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -90,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
         for (PaneEntity pe : mPaneEntityList) {
 
             if (pe.getPaneType().equals("B")) {
+                BackgroundFragment backgroundFragment =
+                        BackgroundFragment.newInstance(pe.getPane_id());
+                mFragmentList.add(backgroundFragment);
 
             }
             if (pe.getPaneType().equals("D")) {
@@ -104,13 +116,15 @@ public class MainActivity extends AppCompatActivity {
                 mFragmentList.add(videoFragment);
             }
             if (pe.getPaneType().equals("P")) {
-                ImageFragment imageFragment =
-                        ImageFragment.newInstance(pe.getPane_id());
-                mFragmentList.add(imageFragment);
+                PictureFragment pictureFragment =
+                        PictureFragment.newInstance(pe.getPane_id());
+                mFragmentList.add(pictureFragment);
 
             }
-
             if (pe.getPaneType().equals("W")) {
+                WeatherFragment weatherFragment =
+                        WeatherFragment.newInstance(pe.getPane_id());
+                mFragmentList.add(weatherFragment);
 
             }
             if (pe.getPaneType().equals("C")) {
