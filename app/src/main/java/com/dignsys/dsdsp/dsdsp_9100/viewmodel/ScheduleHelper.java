@@ -35,19 +35,17 @@ public class ScheduleHelper {
 
     private static ScheduleHelper sInstance;
 
-   // private static final MutableLiveData ABSENT = new MutableLiveData();
+    // private static final MutableLiveData ABSENT = new MutableLiveData();
     private final LiveData<List<ContentEntity>> mContentList;
     private final LiveData<ConfigEntity> mConfig;
     private long mTickCount = 0;
     private static final String TAG = ScheduleHelper.class.getSimpleName();
     private int mPaneListSyncDone = 0;
     private int mContentListSyncDone = 0;
-    private boolean mIsBGMMode = false;
     private final int[] mBgmType = {Definer.DEF_CONTENTS_TYPE_IMAGE, Definer.DEF_CONTENTS_TYPE_TEXT,
             Definer.DEF_CONTENTS_TYPE_RSS, Definer.DEF_CONTENTS_TYPE_BGM};
     private final int[] mNormalType = {Definer.DEF_CONTENTS_TYPE_IMAGE, Definer.DEF_CONTENTS_TYPE_TEXT,
             Definer.DEF_CONTENTS_TYPE_RSS, Definer.DEF_CONTENTS_TYPE_BGM, Definer.DEF_CONTENTS_TYPE_VIDEO};
-    private PlayerBGM mBGMPlayer;
 
 /*
 
@@ -134,7 +132,6 @@ public class ScheduleHelper {
                     mSceneSchedule.idx = 0;
                     mSceneSchedule.count = sceneEntities.size();
                     mSceneSchedule.scene = sceneEntities.get(0);
-                   // final int scene_id = sceneEntities.get(0).getId();
                     mSceneId.setValue(mSceneSchedule.scene.getId());
                 }
             }
@@ -146,22 +143,11 @@ public class ScheduleHelper {
             @Override
             public void onChanged(@Nullable final Integer sceneId) {
                 if (sceneId > 0 && mSceneList.getValue() != null) {
-                  //  Log.d(TAG, "onChanged: mSceneId= " + mSceneId.getValue());
-                  //  SceneEntity se = mSceneList.getValue().get(sceneId - 1);
+                    //  Log.d(TAG, "onChanged: mSceneId= " + mSceneId.getValue());
 
-                    //SceneEntity se = mSceneList.getValue().get(mSceneSchedule.idx % mSceneSchedule.count);
                     SceneEntity se = mSceneSchedule.scene;
 
-                    /*if (mBGMPlayer != null) {
-                        mBGMPlayer.releasePlayer();
-                        mBGMPlayer = null;
-                    }
-
-                    if (se.isOpBGMMode()) {
-                        mIsBGMMode = true;
-                    } else {
-                        mIsBGMMode = false;
-                    }*/
+                    initBGM(se);
 
                     if (se.getOpPlayTime().isEmpty()) {
                         mSceneSchedule.expire_time = 0;
@@ -211,7 +197,7 @@ public class ScheduleHelper {
                     public LiveData<List<ContentEntity>> apply(Integer mSceneId) {
                         if (mSceneId > 0) {
 
-                            final int[] types = mIsBGMMode?mBgmType:mNormalType;
+                            final int[] types = mSceneSchedule.isBGMMode ? mBgmType : mNormalType;
                             //noinspection unchecked
                             return DatabaseCreator.getInstance(_context).contentDao().loadContentListById(mSceneId, types);
                         }
@@ -231,6 +217,62 @@ public class ScheduleHelper {
         };
         mContentList.observeForever(contentListObserver);
 
+    }
+
+    public ContentEntity getContent(int paneNum) {
+
+        if (mContentList.getValue() == null) return null;
+
+        if (mContentList != null) {
+
+            if (mContentSchedule.size() <= 0) return null;
+
+            for (ContentSchedule cs : mContentSchedule) {
+
+                if (cs.pane_num == paneNum) {
+                    if (cs.count == cs.idx && cs.isMain == 1) {
+                        cs.idx = 0;
+                        if (requestNextScene()) {
+                            return null;
+                        }
+                    }
+                    Log.d(TAG, "getContent:bawoori- paneNum=" + String.valueOf(paneNum));
+
+                    if (cs.count == 0) return null;
+                    ContentEntity ce = cs.contents.get(cs.idx % cs.count);
+
+                    cs.opRunTimeTick = 0;
+                    cs.opMSGPlayTick = 0;
+
+                    if (ce.getOpRunTime() != 0) {
+                        cs.opRunTimeTick = ce.getOpRunTime() + mTickCount;
+                    } else {
+                        if (ce.getFileType() == Definer.DEF_CONTENTS_TYPE_IMAGE) {
+                            cs.opRunTimeTick = mConfig.getValue().getImageChangeInterval() + mTickCount;
+                            Log.d(TAG, "getContent bawoori: content=" + ce.getFilePath());
+                        }
+                    }
+
+                    if (ce.getOpMSGPlayTime() != 0) {
+                        cs.opMSGPlayTick = ce.getOpMSGPlayTime() + mTickCount;
+                    }
+
+                    if (!ce.getOpBGMFile().isEmpty() && !mSceneSchedule.isBGMMode) {
+                        playBGM(cs, ce);
+                    }
+
+                    cs.idx++;
+
+                    if (!checkDTime(ce)) {
+                        continue;
+                    }
+
+                    return ce;
+                }
+            }
+        }
+
+        return null;
     }
 
     private boolean requestNextScene() {
@@ -261,10 +303,29 @@ public class ScheduleHelper {
 
         }
 
-
         return true;
     }
 
+
+    private void makeContentSchedule() {
+
+        // Log.d(TAG, "makeContentSchedule: runtimeTick=0");
+        initContentSchedule();
+
+        findMainPane();
+
+
+
+        if (mSceneSchedule.isBGMMode) {
+            playSceneBGM();
+        }
+
+        mPaneListSyncDone = mContentListSyncDone = 0;
+
+        Log.d(TAG, "makeContentSchedule: bawoori1- make done");
+        mContentPlayDone.setValue(0);
+        mPlayStart.setValue(1);
+    }
 
     private void findMainPane() {
         final String[] priority = {"I", "D", "V", "P", "T"};
@@ -279,10 +340,9 @@ public class ScheduleHelper {
         }
     }
 
-    private void makeContentSchedule() {
-
+    private void initContentSchedule() {
         mContentSchedule.clear();
-        // Log.d(TAG, "makeContentSchedule: runtimeTick=0");
+
         for (PaneEntity pe : mPaneList.getValue()) {
 
             if (pe.getPaneType().equals("S")) continue;
@@ -312,25 +372,6 @@ public class ScheduleHelper {
                 }
             }
         }
-
-        findMainPane();
-
-        if (mIsBGMMode) {
-            for (ContentSchedule cs : mContentSchedule) {
-                if (cs.pane_type.equals("V") && cs.bgm_count > 0) {
-                    // cs.is_bgm_runnig = true;
-                    mBGMPlayer = new PlayerBGM(_context, cs.bgms, true);
-                    mBGMPlayer.playBGM();
-                    break;
-                }
-            }
-        }
-
-        mPaneListSyncDone = mContentListSyncDone = 0;
-
-        Log.d(TAG, "makeContentSchedule: bawoori1- make done");
-        mContentPlayDone.setValue(0);
-        mPlayStart.setValue(1);
     }
 
 
@@ -345,121 +386,46 @@ public class ScheduleHelper {
         return sInstance;
     }
 
-/*
 
-    public MutableLiveData<Integer> getScheduleDone() {
-        return mScheduleDone;
-    }
-*/
-
-    public MutableLiveData<Integer> getContentPlayDone() {
-        return mContentPlayDone;
-    }
-
-    public List<PaneEntity> getPaneList() {
-        return mPaneList.getValue();
-    }
-
-    public LiveData<SceneEntity> getScene() {
-        return mScene;
-    }
-
-    public LiveData<List<ContentEntity>> getContentList() {
-        return mContentList;
-    }
-
-    public LiveData<ConfigEntity> getConfig() {
-        return mConfig;
-    }
-
-
-    public ContentEntity getContent(int paneNum) {
-
-        if (mContentList.getValue() == null) return null;
-
-        if (mContentList != null) {
-
-            if (mContentSchedule.size() <= 0) return null;
-
-            for (ContentSchedule cs : mContentSchedule) {
-
-                if (cs.pane_num == paneNum) {
-                    if (cs.count == cs.idx && cs.isMain == 1) {
-                        cs.idx = 0;
-                        if (requestNextScene()) {
-                            return null;
-                        }
-                    }
-                    Log.d(TAG, "getContent:bawoori- paneNum=" + String.valueOf(paneNum));
-
-                    if(cs.count == 0) return  null;
-                    ContentEntity ce = cs.contents.get(cs.idx % cs.count);
-
-                    cs.opRunTimeTick = 0;
-                    cs.opMSGPlayTick = 0;
-
-                    if (ce.getOpRunTime() != 0) {
-                        cs.opRunTimeTick = ce.getOpRunTime() + mTickCount;
-                    } else {
-                        if (ce.getFileType() == Definer.DEF_CONTENTS_TYPE_IMAGE) {
-                            cs.opRunTimeTick = mConfig.getValue().getImageChangeInterval() + mTickCount;
-                            Log.d(TAG, "getContent bawoori: content=" + ce.getFilePath());
-                        }
-                    }
-                    if (ce.getOpMSGPlayTime() != 0) {
-                        cs.opMSGPlayTick = ce.getOpMSGPlayTime() + mTickCount;
-                    }
-                   /* if (!ce.getOpBGMFile().isEmpty() && !mIsBGMMode) {
-                        cs.is_bgm_runnig = true;
-                        playBackSound(ce);
-                    }*/
-                    cs.idx++;
-
-                    if (!checkDTime(ce)) {
-                        continue;
-                    }
-
-                    return ce;
-                }
-            }
+    private void initBGM(SceneEntity se) {
+        if (mSceneSchedule.BGMPlayer != null) {
+            mSceneSchedule.BGMPlayer.releasePlayer();
+            mSceneSchedule.BGMPlayer = null;
         }
 
-        return null;
+        if (se.isOpBGMMode()) {
+            mSceneSchedule.isBGMMode = true;
+        } else {
+            mSceneSchedule.isBGMMode = false;
+        }
     }
 
-    private void playBackSound(ContentEntity ce) {
+    private void playSceneBGM() {
+        for (ContentSchedule cs : mContentSchedule) {
+            if (cs.pane_type.equals("V") && cs.bgm_count > 0) {
+                // cs.is_bgm_runnig = true;
+                mSceneSchedule.BGMPlayer = new PlayerBGM(_context, cs.bgms, true);
+                mSceneSchedule.BGMPlayer.playBGM();
+                break;
+            }
+        }
+    }
+
+    private void playBGM(ContentSchedule cs, ContentEntity ce) {
+        cs.is_bgm_runnig = true;
         List<ContentEntity> bgms = new ArrayList<>();
         bgms.add(ce);
 
-        mBGMPlayer = new PlayerBGM(_context, bgms, false);
-        mBGMPlayer.playBGM();
+        mSceneSchedule.BGMPlayer = new PlayerBGM(_context, bgms, false);
+        mSceneSchedule.BGMPlayer.playBGM();
     }
 
-    private boolean checkDTime(ContentEntity ce) {
-
-        if (!ce.getOpStartDT().isEmpty()) {
-
-            Calendar calendar = Calendar.getInstance();
-            String currTime = new SimpleDateFormat("yyyyMMddHHmm").format(calendar.getTime());
-            long lCurrTime = Long.valueOf(currTime);
-            long lOpStartDT = Long.valueOf(ce.getOpStartDT());
-
-            if (lCurrTime > lOpStartDT) return false;
-        }
-
-        if (!ce.getOpEndDT().isEmpty()) {
-
-            Calendar calendar = Calendar.getInstance();
-            String currTime = new SimpleDateFormat("yyyyMMddHHmm").format(calendar.getTime());
-            long lCurrTime = Long.valueOf(currTime);
-            long lOpEndtDT = Long.valueOf(ce.getOpEndDT());
-
-            if (lCurrTime < lOpEndtDT) return false;
-        }
-
-        return true;
-
+    private void stopBGM(ContentSchedule cs) {
+        mSceneSchedule.BGMPlayer.releasePlayer();
+        mSceneSchedule.BGMPlayer = null;
+        cs.is_bgm_runnig = false;
     }
+
 
 
     // called per 1 second tick
@@ -491,11 +457,9 @@ public class ScheduleHelper {
             //  Log.d(TAG, "bawoori: runtimeTick=" + String.valueOf(cs.opRunTimeTick ));
 
             if (cs.opRunTimeTick > 0 && cs.opRunTimeTick <= mTickCount) {
-                Log.d(TAG, "contentScheduler bawoori1: runtimeTick=" + String.valueOf(cs.opRunTimeTick) +"  pane_num=" + cs.pane_num);
-                if (mBGMPlayer != null &&  cs.is_bgm_runnig) {
-                    mBGMPlayer.releasePlayer();
-                    mBGMPlayer = null;
-                    cs.is_bgm_runnig = false;
+                Log.d(TAG, "contentScheduler bawoori1: runtimeTick=" + String.valueOf(cs.opRunTimeTick) + "  pane_num=" + cs.pane_num);
+                if (mSceneSchedule.BGMPlayer != null && cs.is_bgm_runnig) {
+                    stopBGM(cs);
                 }
                 mContentPlayDone.postValue(cs.pane_num);
             }
@@ -504,9 +468,8 @@ public class ScheduleHelper {
             }
         }
 
-
-
     }
+
 
     private void scheduleScheduler() {
         if (mScheduleList.getValue() == null) return;
@@ -538,6 +501,32 @@ public class ScheduleHelper {
                 break;
             }
         }
+
+    }
+
+    private boolean checkDTime(ContentEntity ce) {
+
+        if (!ce.getOpStartDT().isEmpty()) {
+
+            Calendar calendar = Calendar.getInstance();
+            String currTime = new SimpleDateFormat("yyyyMMddHHmm").format(calendar.getTime());
+            long lCurrTime = Long.valueOf(currTime);
+            long lOpStartDT = Long.valueOf(ce.getOpStartDT());
+
+            if (lCurrTime > lOpStartDT) return false;
+        }
+
+        if (!ce.getOpEndDT().isEmpty()) {
+
+            Calendar calendar = Calendar.getInstance();
+            String currTime = new SimpleDateFormat("yyyyMMddHHmm").format(calendar.getTime());
+            long lCurrTime = Long.valueOf(currTime);
+            long lOpEndtDT = Long.valueOf(ce.getOpEndDT());
+
+            if (lCurrTime < lOpEndtDT) return false;
+        }
+
+        return true;
 
     }
 
@@ -600,4 +589,20 @@ public class ScheduleHelper {
     public MutableLiveData<Integer> getPlayStart() {
         return mPlayStart;
     }
+
+    // public MutableLiveData<Integer> getScheduleDone() { return mScheduleDone; }
+
+    public MutableLiveData<Integer> getContentPlayDone() {
+        return mContentPlayDone;
+    }
+
+    public List<PaneEntity> getPaneList() {
+        return mPaneList.getValue();
+    }
+
+    //public LiveData<SceneEntity> getScene() { return mScene; }
+
+    // public LiveData<List<ContentEntity>> getContentList() { return mContentList; }
+
+     public LiveData<ConfigEntity> getConfig() { return mConfig; }
 }

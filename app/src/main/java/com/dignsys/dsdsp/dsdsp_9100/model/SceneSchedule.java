@@ -2,6 +2,7 @@
 package com.dignsys.dsdsp.dsdsp_9100.model;
 
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.PlayerBGM;
 
 public class SceneSchedule {
 
@@ -13,7 +14,9 @@ public class SceneSchedule {
 
     public long expire_time =0;
 
-    public boolean is_bgm_mode = false;
+    public boolean isBGMMode = false;
+
+    public PlayerBGM BGMPlayer;
 
     public SceneEntity scene ;
 
