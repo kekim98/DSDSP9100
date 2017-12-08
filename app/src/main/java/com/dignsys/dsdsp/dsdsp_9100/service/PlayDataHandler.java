@@ -8,8 +8,13 @@ import android.util.Log;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.CommandEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.RssEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ScheduleEntity;
 import com.dignsys.dsdsp.dsdsp_9100.model.PlayContent;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.BasicHandler;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.CommandHandler;
@@ -29,7 +34,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.List;
 
 
 /**
@@ -112,12 +117,10 @@ public class PlayDataHandler {
         processPlayContentFiles(mPlayListHandler.getContentFiles(), downloadsAllowed);
         processPlayContentFiles(mCommandHandler.getContentFiles(), downloadsAllowed);
 
-        // update db
-        notifyDisableDB();
         // finally, push the changes into the ROOM
+
         applyPlayDataToDB();
 
-        notifyEnableDB();
 
         Log.d(TAG, "Done applying conference data.");
     }
@@ -138,16 +141,36 @@ public class PlayDataHandler {
 
     private void applyPlayDataToDB() {
         AppDatabase db = DatabaseCreator.getInstance(mContext);
-        db.updatePlayDataTransaction(mPlayListHandler.getScheduleList(),
-                mPlayListHandler.getSceneList(),
-                mFormatHandler.getPaneList(),
-                mPlayListHandler.getContentList());
 
-       db.updateCommandTransaction(mCommandHandler.getCommand());
+        List<ScheduleEntity> scheduleEntityList = mPlayListHandler.getScheduleList();
+        List<SceneEntity> sceneEntities = mPlayListHandler.getSceneList();
+        List<PaneEntity> paneEntityList = mFormatHandler.getPaneList();
+        List<ContentEntity> contentEntities = mPlayListHandler.getContentList();
+
+        if (scheduleEntityList.size() > 0 && sceneEntities.size() > 0
+                && paneEntityList.size() > 0 && contentEntities.size() > 0) {
+
+            notifyDisableDB();
+            db.updatePlayDataTransaction(scheduleEntityList,
+                    sceneEntities,
+                    paneEntityList,
+                    contentEntities);
+            notifyEnableDB();
+        }
+
+
+        CommandEntity commandEntity = mCommandHandler.getCommand();
+
+        if (commandEntity != null) {
+            db.updateCommandTransaction(commandEntity);
+        }
+
+
         ConfigEntity config = mConfigHandler.getConfig();
         if (config != null) {
             db.configDao().update(config);
         }
+
         RssEntity rss = mRssHandler.getRss();
         if (rss != null) {
             db.rssDao().update(rss);

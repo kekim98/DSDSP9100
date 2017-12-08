@@ -242,7 +242,13 @@ public class SyncHelper {
             Log.i(TAG, "Applying remote data.");
             // Save the remote data to the database.
             mPlayDataHandler.applyPlayData(dataFiles, true);
-            mRemoteDataFetcher.updatePlayDataTimestamp();
+
+            for(int i=0; i< dataFiles.length; i++) {
+                if (dataFiles[i] != null) {
+                    mRemoteDataFetcher.updatePlayDataTimestamp(i);
+                }
+            }
+
             Log.i(TAG, "Done applying remote data.");
 
             // Mark that conference data sync has succeeded.

@@ -61,15 +61,15 @@ public class RemotePlayDataFetcher {
     };
 
 
-    public  String[] mManifestUrl=new String[DATA_KEYS_IN_ORDER.length];
-    public  String[] mManifestLTimeStamp =new String[DATA_KEYS_IN_ORDER.length]; //local timestamp
-    public  String[] mManifestSTimeStamp = new String[DATA_KEYS_IN_ORDER.length]; // server timestamp
-        
+    public String[] mManifestUrl = new String[DATA_KEYS_IN_ORDER.length];
+    public String[] mManifestLTimeStamp = new String[DATA_KEYS_IN_ORDER.length]; //local timestamp
+    public String[] mManifestSTimeStamp = new String[DATA_KEYS_IN_ORDER.length]; // server timestamp
+
 
     public RemotePlayDataFetcher(Context context) {
         mContext = context;
 
-        for(int i=0; i< DATA_KEYS_IN_ORDER.length; i++) {
+        for (int i = 0; i < DATA_KEYS_IN_ORDER.length; i++) {
             mManifestUrl[i] = URL_KEYS_IN_ORDER[i];
             mManifestLTimeStamp[i] = getPlayTimestamp(context, i);
         }
@@ -92,7 +92,7 @@ public class RemotePlayDataFetcher {
         BasicHttpClient httpClient = new BasicHttpClient();
         httpClient.setRequestLogger(mQuietLogger);
 
-       // IOUtils.authorizeHttpClient(mContext, httpClient);
+        // IOUtils.authorizeHttpClient(mContext, httpClient);
 
         // Only download if data is newer than localTimestamp
         // WE Server is very picky with the If-Modified-Since format. If it's in a wrong
@@ -119,11 +119,11 @@ public class RemotePlayDataFetcher {
         if (status == HttpURLConnection.HTTP_OK) {
             Log.d(TAG, "Server returned HTTP_OK, so new data is available.");
             mManifestSTimeStamp[idx] = getLastModified(response);
-            Log.d(TAG, "Server timestamp for new data is: " +  mManifestSTimeStamp[idx]);
+            Log.d(TAG, "Server timestamp for new data is: " + mManifestSTimeStamp[idx]);
             //String body = response.getBodyAsString();
             byte[] body = response.getBody();
             String encodeBody = IOUtils.universalDetector(body);
-         //   String encodeBody = new String(body, "EUC-KR");
+            //   String encodeBody = new String(body, "EUC-KR");
             if (TextUtils.isEmpty(encodeBody)) {
                 Log.e(TAG, "Request for manifest returned empty data.");
                 throw new IOException("Error fetching conference data manifest: no data.");
@@ -146,7 +146,6 @@ public class RemotePlayDataFetcher {
     public String getServerDataTimestamp(int idx) {
         return mManifestSTimeStamp[idx];
     }
-
 
 
     /**
@@ -189,7 +188,7 @@ public class RemotePlayDataFetcher {
         }
 
         BasicHttpClient client = new BasicHttpClient();
-       // IOUtils.authorizeHttpClient(mContext, client);
+        // IOUtils.authorizeHttpClient(mContext, client);
         client.setRequestLogger(mQuietLogger);
 
         // We don't have the file on cache, so download it
@@ -313,29 +312,29 @@ public class RemotePlayDataFetcher {
         String[] bodys = new String[mManifestUrl.length];
         for (int i = 0; i < mManifestUrl.length; i++) {
             String url = mManifestUrl[i];
-            Log.d(TAG, "Processing data file: " + sanitizeUrl(url));
-          //  bodys[i] = fetchFile(url);
+            Log.d(TAG, "Processing data file: " + url);
+            //  bodys[i] = fetchFile(url);
             bodys[i] = fetchPlayDataIfNewer(i);
             if (TextUtils.isEmpty(bodys[i])) {
                 Log.w(TAG, "Failed to fetch data file: " + sanitizeUrl(url));
-                throw new IOException("Failed to fetch data file " + sanitizeUrl(url));
+              //  throw new IOException("Failed to fetch data file " + sanitizeUrl(url));
             }
         }
 
         Log.d(TAG, "Got " + bodys.length + " data files.");
         //cleanUpCache();
-      //  IOUtils.convertToUTF8(bodys);
+        //  IOUtils.convertToUTF8(bodys);
         return bodys;
 
     }
 
-    public boolean downloadContents() throws IOException{
+    public boolean downloadContents() throws IOException {
 
 
         return true;
     }
 
-    public boolean moveContents() throws  IOException{
+    public boolean moveContents() throws IOException {
 
         return true;
     }
@@ -386,20 +385,20 @@ public class RemotePlayDataFetcher {
      */
     private RequestLogger mQuietLogger = new ConsoleRequestLogger() {
         @Override
-        public void logRequest(HttpURLConnection uc, Object content) throws IOException { }
+        public void logRequest(HttpURLConnection uc, Object content) throws IOException {
+        }
 
         @Override
-        public void logResponse(HttpResponse res) { }
+        public void logResponse(HttpResponse res) {
+        }
     };
 
 
-    public void updatePlayDataTimestamp() {
+    public void updatePlayDataTimestamp(int idx) {
         String ts;
 
-        for(int i=0; i<DATA_KEYS_IN_ORDER.length; i++) {
-            ts = getServerDataTimestamp(i);
-            setDataTimestamp(mContext, ts, i);
-        }
+        ts = getServerDataTimestamp(idx);
+        setDataTimestamp(mContext, ts, idx);
 
     }
 
@@ -407,21 +406,21 @@ public class RemotePlayDataFetcher {
     public static String getPlayTimestamp(Context ctx, int idx) {
 
 
-        String key=DATA_KEYS_IN_ORDER[idx];
+        String key = DATA_KEYS_IN_ORDER[idx];
 
         return PreferenceManager.getDefaultSharedPreferences(ctx).getString(
-                SP_KEY_DATA_TIMESTAMP+ key , DEFAULT_TIMESTAMP);
+                SP_KEY_DATA_TIMESTAMP + "_" + key, DEFAULT_TIMESTAMP);
     }
 
 
     // Sets the timestamp of the data we have in the content provider.
     public static void setDataTimestamp(Context ctx, String timestamp, int idx) {
 
-        String key=DATA_KEYS_IN_ORDER[idx];
+        String key = DATA_KEYS_IN_ORDER[idx];
 
         Log.d(TAG, "Setting data timestamp to: " + timestamp);
         PreferenceManager.getDefaultSharedPreferences(ctx).edit().putString(
-                SP_KEY_DATA_TIMESTAMP+ key, timestamp).apply();
+                SP_KEY_DATA_TIMESTAMP + "_" + key, timestamp).apply();
     }
 
     // Reset the timestamp of the data we have in the content provider

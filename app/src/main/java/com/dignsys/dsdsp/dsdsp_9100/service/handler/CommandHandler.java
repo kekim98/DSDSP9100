@@ -3,9 +3,11 @@ package com.dignsys.dsdsp.dsdsp_9100.service.handler;
 
 import android.content.Context;
 
+import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.CommandEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.model.PlayContent;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 public class CommandHandler extends BasicHandler {
     private static final String TAG = CommandHandler.class.getSimpleName();
 
-    private CommandEntity mCommand = new CommandEntity();
+    private CommandEntity mCommand ;
 
 
 
@@ -32,6 +34,7 @@ public class CommandHandler extends BasicHandler {
     @Override
     public void process(String body) {
 
+        mCommand =  new CommandEntity();
 
         String strLine = "";
         // convert String into InputStream
@@ -93,38 +96,40 @@ public class CommandHandler extends BasicHandler {
     }
 
     public ArrayList<PlayContent> getContentFiles() {
+
         ArrayList<PlayContent> contents = new ArrayList<>();
+
+        if (mCommand == null) {
+            return contents;
+        }
 
         String url;
         String filename;
-        final String hostAddr = IOUtils.getHostAddress(mContext);
+
+        AppDatabase db = DatabaseCreator.getInstance(mContext);
+        ConfigEntity config = db.configDao().loadConfigSync();
+
+        final String hostAddr = config.getServerAddress();
+        final int port = config.getServerPort();
+        final String folder = config.getServerFolder();
+
 
         PlayContent content = new PlayContent();
 
-        if (!mCommand.getFwFilePath().isEmpty()) {
+        if (mCommand.getFwFilePath() != null) {
 
-            if (mCommand.getFwFilePath().startsWith("/")) {
-                url = hostAddr + mCommand.getFwFilePath();
-            }else{
-                url =mCommand.getFwFilePath();
-            }
-
-            filename = IOUtils.getFilename(url);
+            filename =mCommand.getFwFilePath();
+            url = String.format("http://%s:%d/%s/%s", hostAddr, port, folder, filename);
 
             content.filename = filename;
             content.url = url;
             contents.add(content);
         }
 
-        if (!mCommand.getFontFilePath().isEmpty()) {
+        if (mCommand.getFontFilePath() != null) {
 
-            if (mCommand.getFontFilePath().startsWith("/")) {
-                url = hostAddr + mCommand.getFontFilePath();
-            }else{
-                url =mCommand.getFontFilePath();
-            }
-
-            filename = IOUtils.getFilename(url);
+            filename = mCommand.getFontFilePath();
+            url = String.format("http://%s:%d/%s/%s", hostAddr, port, folder, filename);
 
             content.filename = filename;
             content.url = url;
