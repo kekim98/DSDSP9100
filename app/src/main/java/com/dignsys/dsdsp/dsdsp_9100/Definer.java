@@ -45,7 +45,6 @@ public class Definer {
 	public static final int DEF_ACTIVITY_REQUEST_CODE_CONFIG		= 0x02;
 	
 	/*
-	 * Activity ���� ���� Intent data ����.
 	 */
 	/*public static final String DEF_IDN_FINISH_CODE							= "FC";		// Intent Data Name. Activity finish code.
 	
@@ -235,24 +234,19 @@ public class Definer {
 	public static final String EXTRA_SYNC_TYPE = "com.dignsys.dsdsp.EXTRA_SYNC_TYPE";
 	public static final int SYNC_ALL					= 0;
 	public static final int SYNC_PLAY_ONLY				= 1;
-	public static final int SYNC_CONTROL_ONLY			= 2;
-	public static final int SYNC_CONFIG_ONLY			= 3;
+	public static final int SYNC_COMMAND_ONLY 			= 2;
+	public static final int SYNC_CONFIG_COMMAND_ONLY = 3;
 	public static final int SYNC_RSS_ONLY				= 4;
 
 	public static final int UPLOAD_LOG					= 5;
 	public static final int UPLOAD_LIVE_SCREEN			= 6;
 
-
 	public static final String TEST_PLAYLIST_URL = "http://192.168.1.132/site/bawooriTest/test/playlist.txt" ;
 	public static final String TEST_FORMAT_URL = "http://192.168.1.132/site/bawooriTest/test/format.txt";
 	public static final String TEST_CONFIG_URL = "http://192.168.1.132/site/bawooriTest/test/dspconfig.txt";
-	public static final String TEST_COMMAND_URL = "http://192.168.1.132/site/bawooriTest/test/comand.txt";
-	public static final int ORDER_PLAYLIST_DOWNLOAD = 0;
-	public static final int ORDER_FORMAT_DOWNLOAD = 1;
-	public static final int ORDER_CONFIG_DOWNLOAD = 2;
-	public static final int ORDER_COMMAND_DOWNLOAD = 3;
+	public static final String TEST_COMMAND_URL = "http://192.168.1.132/site/bawooriTest/test/command.txt";
+	public static final String TEST_RSS_URL = "http://open.moleg.go.kr/data/xml/lh_rssSH03.xml";
 
-	public static final int MANIFEST_LENGTH = 2;
 
 
 }

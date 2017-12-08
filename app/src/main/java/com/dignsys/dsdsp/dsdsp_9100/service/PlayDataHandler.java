@@ -1,19 +1,3 @@
-/*
- * Copyright 2014 Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.dignsys.dsdsp.dsdsp_9100.service;
 
 import android.content.Context;
@@ -25,10 +9,14 @@ import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.RssEntity;
 import com.dignsys.dsdsp.dsdsp_9100.model.PlayContent;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.BasicHandler;
+import com.dignsys.dsdsp.dsdsp_9100.service.handler.CommandHandler;
+import com.dignsys.dsdsp.dsdsp_9100.service.handler.ConfigHandler;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.FormatHandler;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.PlayListHandler;
+import com.dignsys.dsdsp.dsdsp_9100.service.handler.RssHandler;
 import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 import com.turbomanage.httpclient.BasicHttpClient;
@@ -43,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+
 /**
  * Helper class that parses conference data and imports them into the app's
  * Content Provider.
@@ -50,29 +39,19 @@ import java.util.HashMap;
 public class PlayDataHandler {
     private static final String TAG = PlayDataHandler.class.getSimpleName();
 
-    // Shared settings_prefs key under which we store the timestamp that corresponds to
-    // the data we currently have in our content provider.
-    private static final String SP_KEY_DATA_TIMESTAMP = "data_timestamp";
-
-    // symbolic timestamp to use when we are missing timestamp data (which means our data is
-    // really old or nonexistent)
-    private static final String DEFAULT_TIMESTAMP = "Sat, 1 Jan 2000 00:00:00 GMT";
-
-    private static final String DATA_KEY_PLAYLIST = "play_list";
-    private static final String DATA_KEY_FORMAT = "format";
-    private static final String DATA_KEY_CONFIG = "config";
-    private static final String DATA_KEY_COMMAND = "control";
-    
-    private static final String DATA_KEY_RSS= "rss";
+     static final String DATA_KEY_PLAYLIST = "play_list";
+     static final String DATA_KEY_FORMAT = "format";
+     static final String DATA_KEY_CONFIG = "config";
+     static final String DATA_KEY_COMMAND = "command";
+     static final String DATA_KEY_RSS= "rss";
 
 
-    private static final String[] DATA_KEYS_IN_ORDER = {
+     static final String[] DATA_KEYS_IN_ORDER = {
             DATA_KEY_PLAYLIST,
             DATA_KEY_FORMAT,
+            DATA_KEY_RSS,
             DATA_KEY_CONFIG,
-            DATA_KEY_COMMAND,
-            
-         //   DATA_KEY_RSS,
+            DATA_KEY_COMMAND
     };
 
     private final Context mContext;
@@ -81,13 +60,9 @@ public class PlayDataHandler {
     // Handlers for each entity type:
     private PlayListHandler mPlayListHandler;
     private FormatHandler mFormatHandler;
-
-
-    /*
     private ConfigHandler mConfigHandler;
-    private ControlHandler mControlHandler;
-    private RssHandler mRssHandler;*/
-
+    private CommandHandler mCommandHandler;
+    private RssHandler mRssHandler;
 
     // Convenience map that maps the key name to its corresponding handler (e.g.
     // "blocks" to mFormatHandler (to avoid very tedious if-elses)
@@ -116,8 +91,9 @@ public class PlayDataHandler {
         // create handlers for each data type
         mHandlerForKey.put(DATA_KEY_PLAYLIST, mPlayListHandler = new PlayListHandler(mContext));
         mHandlerForKey.put(DATA_KEY_FORMAT, mFormatHandler = new FormatHandler(mContext));
-       /* mHandlerForKey.put(DATA_KEY_CONFIG, mControlHandler = new ConfigHandler(mContext));
-        mHandlerForKey.put(DATA_KEY_COMMAND, mRssHandler = new RssHandler(mContext));*/
+        mHandlerForKey.put(DATA_KEY_RSS, mRssHandler = new RssHandler(mContext));
+        mHandlerForKey.put(DATA_KEY_CONFIG, mConfigHandler = new ConfigHandler(mContext));
+        mHandlerForKey.put(DATA_KEY_COMMAND, mCommandHandler = new CommandHandler(mContext));
 
 
         // process the playlist.txt and format.txt. This will call each of the handlers when appropriate to deal
@@ -134,13 +110,14 @@ public class PlayDataHandler {
       // download content files (media files)
         Log.d(TAG, "Processing content files");
         processPlayContentFiles(mPlayListHandler.getContentFiles(), downloadsAllowed);
+        processPlayContentFiles(mCommandHandler.getContentFiles(), downloadsAllowed);
 
         // update db
         notifyDisableDB();
         // finally, push the changes into the ROOM
         applyPlayDataToDB();
-        notifyEnableDB();
 
+        notifyEnableDB();
 
         Log.d(TAG, "Done applying conference data.");
     }
@@ -165,6 +142,17 @@ public class PlayDataHandler {
                 mPlayListHandler.getSceneList(),
                 mFormatHandler.getPaneList(),
                 mPlayListHandler.getContentList());
+
+       db.updateCommandTransaction(mCommandHandler.getCommand());
+        ConfigEntity config = mConfigHandler.getConfig();
+        if (config != null) {
+            db.configDao().update(config);
+        }
+        RssEntity rss = mRssHandler.getRss();
+        if (rss != null) {
+            db.rssDao().update(rss);
+        }
+
     }
 
     public int getContentProviderOperationsDone() {
@@ -237,43 +225,7 @@ public class PlayDataHandler {
         IOUtils.removeUnusedContents(mContext, usedContents);
     }
 
-    // Returns the timestamp of the data we have in the content provider.
-    public static String getPlayTimestamp(Context ctx, int idx) {
 
-
-        String key="";
-
-        if(idx == Definer.ORDER_PLAYLIST_DOWNLOAD) key = "_PLAY";
-        if(idx == Definer.ORDER_FORMAT_DOWNLOAD) key = "_FORMAT";
-        if(idx == Definer.ORDER_CONFIG_DOWNLOAD) key = "_CONFIG";
-        if(idx == Definer.ORDER_COMMAND_DOWNLOAD) key = "_COMMAND";
-
-        return PreferenceManager.getDefaultSharedPreferences(ctx).getString(
-                SP_KEY_DATA_TIMESTAMP+ key , DEFAULT_TIMESTAMP);
-    }
-
-
-    // Sets the timestamp of the data we have in the content provider.
-    public static void setDataTimestamp(Context ctx, String timestamp, int idx) {
-
-        String key="";
-
-        if(idx == Definer.ORDER_PLAYLIST_DOWNLOAD) key = "_PLAY";
-        if(idx == Definer.ORDER_FORMAT_DOWNLOAD) key = "_FORMAT";
-        if(idx == Definer.ORDER_CONFIG_DOWNLOAD) key = "_CONFIG";
-        if(idx == Definer.ORDER_COMMAND_DOWNLOAD) key = "_COMMAND";
-
-        Log.d(TAG, "Setting data timestamp to: " + timestamp);
-        PreferenceManager.getDefaultSharedPreferences(ctx).edit().putString(
-                SP_KEY_DATA_TIMESTAMP+ key, timestamp).apply();
-    }
-
-    // Reset the timestamp of the data we have in the content provider
-    public static void resetDataTimestamp(final Context context) {
-        Log.d(TAG, "Resetting data timestamp to default (to invalidate our synced data)");
-        PreferenceManager.getDefaultSharedPreferences(context).edit().remove(
-                SP_KEY_DATA_TIMESTAMP).apply();
-    }
 
     /**
      * A type of ConsoleRequestLogger that does not log requests and responses.

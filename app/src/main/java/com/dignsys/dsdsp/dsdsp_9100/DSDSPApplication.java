@@ -26,7 +26,7 @@ public class DSDSPApplication extends Application {
 
             @Override
             protected Void doInBackground(Context... params) {
-                if(db.configDao().cofigCount() == 0) DatabaseInitUtil.initializeDb(db);
+                if(db.configDao().configCount() == 0) DatabaseInitUtil.initializeDb(db);
                 return null;
             }
 

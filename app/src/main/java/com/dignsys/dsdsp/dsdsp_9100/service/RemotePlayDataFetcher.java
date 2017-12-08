@@ -1,6 +1,7 @@
 package com.dignsys.dsdsp.dsdsp_9100.service;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -19,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.dignsys.dsdsp.dsdsp_9100.service.PlayDataHandler.DATA_KEYS_IN_ORDER;
 
 
 /**
@@ -41,28 +43,36 @@ public class RemotePlayDataFetcher {
     // total # of bytes read from cache hits (approximate)
     private long mBytesReadFromCache = 0;
 
-   
-    public  String[] mManifestUrl=new String[Definer.MANIFEST_LENGTH];
-    public  String[] mManifestLTimeStamp =new String[Definer.MANIFEST_LENGTH];
-    public  String[] mManifestSTimeStamp = new String[Definer.MANIFEST_LENGTH];
+    // Shared settings_prefs key under which we store the timestamp that corresponds to
+    // the data we currently have in our content provider.
+    private static final String SP_KEY_DATA_TIMESTAMP = "data_timestamp";
+
+    // symbolic timestamp to use when we are missing timestamp data (which means our data is
+    // really old or nonexistent)
+    private static final String DEFAULT_TIMESTAMP = "Sat, 1 Jan 2000 00:00:00 GMT";
+
+
+    private static final String[] URL_KEYS_IN_ORDER = {
+            Definer.TEST_PLAYLIST_URL,
+            Definer.TEST_FORMAT_URL,
+            Definer.TEST_RSS_URL,
+            Definer.TEST_CONFIG_URL,
+            Definer.TEST_COMMAND_URL
+    };
+
+
+    public  String[] mManifestUrl=new String[DATA_KEYS_IN_ORDER.length];
+    public  String[] mManifestLTimeStamp =new String[DATA_KEYS_IN_ORDER.length]; //local timestamp
+    public  String[] mManifestSTimeStamp = new String[DATA_KEYS_IN_ORDER.length]; // server timestamp
         
 
     public RemotePlayDataFetcher(Context context) {
         mContext = context;
-        
-        mManifestUrl[Definer.ORDER_PLAYLIST_DOWNLOAD] = Definer.TEST_PLAYLIST_URL;
-        mManifestUrl[Definer.ORDER_FORMAT_DOWNLOAD] = Definer.TEST_FORMAT_URL;
-       /* mManifestUrl[Definer.ORDER_CONFIG_DOWNLOAD] = Definer.TEST_CONFIG_URL;
-        mManifestUrl[Definer.ORDER_COMMAND_DOWNLOAD] = Definer.TEST_COMMAND_URL;*/
 
-        mManifestLTimeStamp[Definer.ORDER_PLAYLIST_DOWNLOAD] =
-                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_PLAYLIST_DOWNLOAD );
-        mManifestLTimeStamp[Definer.ORDER_FORMAT_DOWNLOAD] =
-                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_FORMAT_DOWNLOAD );
-     /*   mManifestLTimeStamp[Definer.ORDER_CONFIG_DOWNLOAD] =
-                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_CONFIG_DOWNLOAD );
-        mManifestLTimeStamp[Definer.ORDER_COMMAND_DOWNLOAD] =
-                PlayDataHandler.getPlayTimestamp(mContext,Definer.ORDER_COMMAND_DOWNLOAD);*/
+        for(int i=0; i< DATA_KEYS_IN_ORDER.length; i++) {
+            mManifestUrl[i] = URL_KEYS_IN_ORDER[i];
+            mManifestLTimeStamp[i] = getPlayTimestamp(context, i);
+        }
 
     }
 
@@ -386,10 +396,38 @@ public class RemotePlayDataFetcher {
     public void updatePlayDataTimestamp() {
         String ts;
 
-        ts = getServerDataTimestamp(Definer.ORDER_PLAYLIST_DOWNLOAD);
-        PlayDataHandler.setDataTimestamp(mContext, ts, Definer.ORDER_PLAYLIST_DOWNLOAD);
+        for(int i=0; i<DATA_KEYS_IN_ORDER.length; i++) {
+            ts = getServerDataTimestamp(i);
+            setDataTimestamp(mContext, ts, i);
+        }
 
-        ts = getServerDataTimestamp(Definer.ORDER_FORMAT_DOWNLOAD);
-        PlayDataHandler.setDataTimestamp(mContext, ts, Definer.ORDER_FORMAT_DOWNLOAD);
+    }
+
+    // Returns the timestamp of the data we have in the content provider.
+    public static String getPlayTimestamp(Context ctx, int idx) {
+
+
+        String key=DATA_KEYS_IN_ORDER[idx];
+
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getString(
+                SP_KEY_DATA_TIMESTAMP+ key , DEFAULT_TIMESTAMP);
+    }
+
+
+    // Sets the timestamp of the data we have in the content provider.
+    public static void setDataTimestamp(Context ctx, String timestamp, int idx) {
+
+        String key=DATA_KEYS_IN_ORDER[idx];
+
+        Log.d(TAG, "Setting data timestamp to: " + timestamp);
+        PreferenceManager.getDefaultSharedPreferences(ctx).edit().putString(
+                SP_KEY_DATA_TIMESTAMP+ key, timestamp).apply();
+    }
+
+    // Reset the timestamp of the data we have in the content provider
+    public static void resetDataTimestamp(final Context context) {
+        Log.d(TAG, "Resetting data timestamp to default (to invalidate our synced data)");
+        PreferenceManager.getDefaultSharedPreferences(context).edit().remove(
+                SP_KEY_DATA_TIMESTAMP).apply();
     }
 }

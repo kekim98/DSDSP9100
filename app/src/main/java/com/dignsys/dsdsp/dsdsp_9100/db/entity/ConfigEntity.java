@@ -117,6 +117,79 @@ public class ConfigEntity  {
 
     private int Language;                // Language.
 
+/*
+
+    Append by bawoori
+
+*/
+    private int offDay;
+    private String offWeek;
+    private int rebootTime;
+    private int downloadStartTime;
+    private int downloadEndTime;
+    private int rssCaptionMode;
+    private int rssContinueTime;
+
+    public int getRssCaptionMode() {
+        return rssCaptionMode;
+    }
+
+    public void setRssCaptionMode(int rssCaptionMode) {
+        this.rssCaptionMode = rssCaptionMode;
+    }
+
+    public int getRssContinueTime() {
+        return rssContinueTime;
+    }
+
+    public void setRssContinueTime(int rssContinueTime) {
+        this.rssContinueTime = rssContinueTime;
+    }
+
+    public int getDownloadStartTime() {
+        return downloadStartTime;
+    }
+
+    public void setDownloadStartTime(int downloadStartTime) {
+        this.downloadStartTime = downloadStartTime;
+    }
+
+    public int getDownloadEndTime() {
+        return downloadEndTime;
+    }
+
+    public void setDownloadEndTime(int downloadEndTime) {
+        this.downloadEndTime = downloadEndTime;
+    }
+
+
+
+
+
+    public int getOffDay() {
+        return offDay;
+    }
+
+    public void setOffDay(int offDay) {
+        this.offDay = offDay;
+    }
+
+    public String getOffWeek() {
+        return offWeek;
+    }
+
+    public void setOffWeek(String offWeek) {
+        this.offWeek = offWeek;
+    }
+
+    public int getRebootTime() {
+        return rebootTime;
+    }
+
+    public void setRebootTime(int rebootTime) {
+        this.rebootTime = rebootTime;
+    }
+
     private int isDBEnable;
 
     public int getIsDBEnable() {

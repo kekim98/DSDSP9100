@@ -23,7 +23,7 @@ public interface ConfigDao {
 
 
     @Query("SELECT count(*) from config_info")
-    int cofigCount();
+    int configCount();
 
 
     /**
@@ -32,9 +32,11 @@ public interface ConfigDao {
      * @param config The config to update.
      * @return A number of cheeses updated. This should always be {@code 1}.
      */
+
     @Update
     int update(ConfigEntity config);
 
     @Insert
     void insertOne(ConfigEntity configEntity);
+
 }

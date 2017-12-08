@@ -5,7 +5,9 @@
 package com.dignsys.dsdsp.dsdsp_9100.db;
 
 
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.CommandEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.RssEntity;
 
 import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_BOARD_ID;
 import static com.dignsys.dsdsp.dsdsp_9100.Definer.DEF_COMPANY_ID;
@@ -20,9 +22,14 @@ public class DatabaseInitUtil {
     public static void initializeDb(AppDatabase db) {
 
         ConfigEntity configEntity = new ConfigEntity();
+        CommandEntity commandEntity = new CommandEntity(); //initialize command table
+        RssEntity   rssEntity = new RssEntity(); //initialize rss table
 
         generateConfig(configEntity);
         insertConfigData(db, configEntity);
+
+        db.commandDao().insertOne(commandEntity);
+        db.rssDao().insert(rssEntity);
        
     }
 
