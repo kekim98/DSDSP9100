@@ -11,8 +11,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
-import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
     private List<PaneEntity> mPaneEntityList;
-    private ScheduleViewModel mViewModel;
+    private MainViewModel mViewModel;
      ImageView mDefaultImageView;
 
 
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mDefaultImageView = findViewById(R.id.imageView);
 
-        mViewModel = ViewModelProviders.of(this).get(ScheduleViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         subscribe();
 
@@ -52,12 +53,13 @@ public class MainActivity extends AppCompatActivity {
     private void subscribe() {
         // Update the list when the data changes
 
-      /*  mViewModel.getScene().observe(this, new Observer<SceneEntity>() {
+    /*    mViewModel.getScene().observe(this, new Observer<SceneEntity>() {
             @Override
             public void onChanged(@Nullable SceneEntity sceneEntity) {
                 Log.d(TAG, "onChanged: sceneEntity id =" + String.valueOf(sceneEntity.getId()));
             }
         });*/
+
 
 
         mViewModel.getPlayStart().observe(this, new Observer<Integer>() {

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.dignsys.dsdsp.dsdsp_9100.GlideApp;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
-import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ScheduleViewModel;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
 
 /**
  * Created by bawoori on 17. 12. 6.
@@ -26,7 +26,7 @@ abstract class BaseFragment extends Fragment {
 
     Observer<Integer> mContentPlayDoneObserver;
     Observer<ConfigEntity> mConfigObserver;
-    ScheduleViewModel mViewModel;
+    MainViewModel mViewModel;
 
     int mPaneNum = 0;
     private PaneEntity mPaneEntity;
@@ -47,7 +47,7 @@ abstract class BaseFragment extends Fragment {
             mPaneEntity = ((MainActivity) getActivity()).getPaneEntity(mPaneNum);
             mSpaneEntity =  ((MainActivity) getActivity()).getSpaneEntity();
         }
-        mViewModel = ViewModelProviders.of(getActivity()).get(ScheduleViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         subscribe();
     }
 

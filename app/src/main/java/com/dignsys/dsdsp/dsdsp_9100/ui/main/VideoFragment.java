@@ -42,7 +42,7 @@ public class VideoFragment extends BaseFragment {
 
     private VideoView mVideoView;
     private ContentEntity mContent;
-  //  private ScheduleViewModel mViewModel;
+  //  private MainViewModel mViewModel;
     private ImageSwitcher mImageSW;
 
     public VideoFragment() {
@@ -82,7 +82,7 @@ public class VideoFragment extends BaseFragment {
         mImageSW = view.findViewById(R.id.imageSW);
 
 
-/*        mViewModel = ViewModelProviders.of(getActivity()).get(ScheduleViewModel.class);
+/*        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         subscribe();*/
 
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

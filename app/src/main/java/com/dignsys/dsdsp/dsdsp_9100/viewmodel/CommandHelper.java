@@ -1,0 +1,107 @@
+package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
+
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.Log;
+
+import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
+import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.CommandEntity;
+
+
+/**
+ * Created by bawoori on 17. 11. 24.
+ */
+
+public class CommandHelper {
+
+    private static final String TAG = CommandHelper.class.getSimpleName();
+    private static CommandHelper sInstance;
+
+    // private static final MutableLiveData ABSENT = new MutableLiveData();
+    private final LiveData<CommandEntity> mCommand;
+
+
+    private Context _context;
+
+    // For Singleton instantiation
+    private static final Object LOCK = new Object();
+
+    private CommandHelper(Context context) {
+        _context = context;
+
+        AppDatabase db = DatabaseCreator.getInstance(context);
+        mCommand = db.commandDao().loadCommand();
+       
+
+
+        // Create the observer which updates the schedule list .
+        final Observer<CommandEntity> commandObserver = new Observer<CommandEntity>() {
+            @Override
+            public void onChanged(@Nullable final CommandEntity command) {
+                processCommand(command);
+            }
+        };
+        mCommand.observeForever(commandObserver);
+
+
+    }
+
+    private void processCommand(CommandEntity command) {
+
+        if (command.getFontFilePath() != null) {
+            Log.d(TAG, "processCommand: font proc command...");
+        }
+
+        if (command.getFwFilePath() != null) {
+            Log.d(TAG, "processCommand: firmware proc command...");
+        }
+
+        if (command.isReboot()) {
+            Log.d(TAG, "processCommand: isReboot proc command...");
+        }
+
+        if (command.isPowerOff()) {
+            Log.d(TAG, "processCommand: isPowerOff proc command...");
+        }
+
+        if (command.isPowerOn()) {
+            Log.d(TAG, "processCommand: isPowerOn proc command...");
+        }
+
+        if (command.isSdFormat()) {
+            Log.d(TAG, "processCommand: isSdFormat proc command...");
+        }
+
+        if (command.isSdDelete()) {
+            Log.d(TAG, "processCommand: isSdDelete proc command...");
+        }
+
+        if (command.isUsbSync()) {
+            Log.d(TAG, "processCommand: isUsbSync proc command...");
+        }
+
+        if (command.isUsbCopy()) {
+            Log.d(TAG, "processCommand: isUsbCopy proc command...");
+        }
+
+
+    }
+
+
+
+    public synchronized static CommandHelper getInstance(Context context) {
+        if (sInstance == null) {
+            synchronized (LOCK) {
+                if (sInstance == null) {
+                    sInstance = new CommandHelper(context);
+                }
+            }
+        }
+        return sInstance;
+    }
+}
+
+    

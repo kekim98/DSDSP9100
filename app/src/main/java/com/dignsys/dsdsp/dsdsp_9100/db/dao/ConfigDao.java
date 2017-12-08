@@ -1,6 +1,7 @@
 package com.dignsys.dsdsp.dsdsp_9100.db.dao;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
@@ -38,5 +39,6 @@ public interface ConfigDao {
 
     @Insert
     void insertOne(ConfigEntity configEntity);
+
 
 }

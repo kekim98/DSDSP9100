@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2d8e674089ab7519f74f47848c499257",
+    "identityHash": "30b82574cbd02ad45492c86cc5aab8aa",
     "entities": [
       {
         "tableName": "config_info",
@@ -566,7 +566,7 @@
       },
       {
         "tableName": "command_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fwFilePath` TEXT, `fontFilePath` TEXT, `powerOff` INTEGER NOT NULL, `powerOn` INTEGER NOT NULL, `reboot` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `fwFilePath` TEXT, `fontFilePath` TEXT, `powerOff` INTEGER NOT NULL, `powerOn` INTEGER NOT NULL, `reboot` INTEGER NOT NULL, `sdFormat` INTEGER NOT NULL, `sdDelete` INTEGER NOT NULL, `usbSync` INTEGER NOT NULL, `usbCopy` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -601,6 +601,30 @@
           {
             "fieldPath": "reboot",
             "columnName": "reboot",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sdFormat",
+            "columnName": "sdFormat",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sdDelete",
+            "columnName": "sdDelete",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usbSync",
+            "columnName": "usbSync",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usbCopy",
+            "columnName": "usbCopy",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1036,7 +1060,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2d8e674089ab7519f74f47848c499257\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"30b82574cbd02ad45492c86cc5aab8aa\")"
     ]
   }
 }

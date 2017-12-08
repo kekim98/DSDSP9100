@@ -114,8 +114,10 @@ public class PlayDataHandler {
 
       // download content files (media files)
         Log.d(TAG, "Processing content files");
+
+        //TODO : have to separate playcontent dir and command content dir
         processPlayContentFiles(mPlayListHandler.getContentFiles(), downloadsAllowed);
-        processPlayContentFiles(mCommandHandler.getContentFiles(), downloadsAllowed);
+        //processPlayContentFiles(mCommandHandler.getContentFiles(), downloadsAllowed);
 
         // finally, push the changes into the ROOM
 

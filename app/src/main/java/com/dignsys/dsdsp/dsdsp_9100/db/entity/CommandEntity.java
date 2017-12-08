@@ -15,6 +15,43 @@ public class CommandEntity {
     private boolean powerOn;
     private boolean reboot;
 
+    private boolean sdFormat;
+    private boolean sdDelete;
+    private boolean usbSync;
+    private boolean usbCopy;
+
+
+    public boolean isSdFormat() {
+        return sdFormat;
+    }
+
+    public void setSdFormat(boolean sdFormat) {
+        this.sdFormat = sdFormat;
+    }
+
+    public boolean isSdDelete() {
+        return sdDelete;
+    }
+
+    public void setSdDelete(boolean sdDelete) {
+        this.sdDelete = sdDelete;
+    }
+
+    public boolean isUsbSync() {
+        return usbSync;
+    }
+
+    public void setUsbSync(boolean usbSync) {
+        this.usbSync = usbSync;
+    }
+
+    public boolean isUsbCopy() {
+        return usbCopy;
+    }
+
+    public void setUsbCopy(boolean usbCopy) {
+        this.usbCopy = usbCopy;
+    }
 
     public int getId() {
         return id;
