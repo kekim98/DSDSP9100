@@ -28,7 +28,8 @@ public class DlgSelectFW extends Dialog implements OnItemClickListener, View.OnC
 	private String m_strPath 	= "";
 	private String m_strFWVersion	= "";
 	private String m_strFWFilePath	= "";
-	
+	private View mView;
+
 	public DlgSelectFW(Context context, OnDismissListener listener, String strPath, String strFWVer) {
 		super(context);
 		
@@ -45,7 +46,7 @@ public class DlgSelectFW extends Dialog implements OnItemClickListener, View.OnC
 		this.setCanceledOnTouchOutside(false);
 		
 		setContentView(R.layout.dlg_filelist);
-		
+
 		((Button)findViewById(R.id.dlgFileList_btnOK)).setOnClickListener(this);
 		((Button)findViewById(R.id.dlgFileList_btnOK)).setText(mContext.getText(R.string.def_cancel));
 

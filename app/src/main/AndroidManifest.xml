@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.dignsys.dsdsp.dsdsp_9100">
+    package="com.dignsys.dsdsp.dsdsp_9100"
+    android:sharedUserId="android.uid.system">
 
     <uses-feature android:name="android.hardware.camera" />
 

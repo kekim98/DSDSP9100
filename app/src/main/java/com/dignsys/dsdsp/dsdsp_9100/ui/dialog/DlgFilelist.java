@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 
 import java.io.File;
 import java.util.Arrays;
@@ -52,7 +53,7 @@ public class DlgFilelist extends Dialog implements View.OnClickListener {
 	
 	private void initList()
 	{
-		ListView lv = (ListView)findViewById(R.id.dlgFileList_lvFiles);
+		ListView lv = findViewById(R.id.dlgFileList_lvFiles);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1);
 		
 		File f = new File(m_strPath);
@@ -64,7 +65,7 @@ public class DlgFilelist extends Dialog implements View.OnClickListener {
 		 */
 		if(!f.exists())	{
 			//TODO : create folder
-			//DaulUtils.createFolder(m_strPath);
+			DaulUtils.createFolder(m_strPath);
 		}
 		
         File[] files = f.listFiles();

@@ -43,15 +43,15 @@ public class ConfigHelper {
 
 
         // Create the observer which updates the schedule list .
-        final Observer<ConfigEntity> commandObserver = new Observer<ConfigEntity>() {
+        final Observer<ConfigEntity> configObserver = new Observer<ConfigEntity>() {
             @Override
-            public void onChanged(@Nullable final ConfigEntity command) {
-                if (command.getIsDBEnable() != 0) {
-                    _mConfig = command;
+            public void onChanged(@Nullable final ConfigEntity config) {
+                if (config.getIsDBEnable() != 0) {
+                    _mConfig = config;
                 }
             }
         };
-        mConfig.observeForever(commandObserver);
+        mConfig.observeForever(configObserver);
     }
 
    

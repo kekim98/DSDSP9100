@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/cfgArea_General"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:columnCount="5"
 	android:orientation="horizontal"
-	android:stretchMode="columnWidth">
+	android:stretchMode="columnWidth"
+	tools:context=".ui.config.GeneralFragmentCfg">
 
 	<TextView
 		android:layout_width="match_parent"
@@ -16,30 +18,30 @@
 		android:background="#FFFFFF"
 		android:padding="10dp"
 		android:text="@string/ci_general"
-		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium"
 		android:textColor="#000000" />
 
 	<TextView
 		android:layout_gravity="right"
 		android:padding="10dp"
 		android:text="@string/ci_fw_ver"
-		android:textAppearance="?android:attr/textAppearanceMedium" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium" />
 
 	<TextView
 		android:id="@+id/cfgValue_tvFV"
 		android:layout_columnSpan="2"
 		android:layout_gravity="fill"
 		android:padding="10dp"
-		android:textAppearance="?android:attr/textAppearanceMedium" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium" />
 
 
 	<Button
 		android:id="@+id/cfgAG_btnUpgrade"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_gravity="fill"
-		android:onClick="onAGBtnClick"
 		android:text="@string/def_upgrade"
-		android:textStyle="bold" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium" />
 
 	<TextView android:layout_gravity="fill" />
 
@@ -47,7 +49,7 @@
 		android:layout_gravity="right"
 		android:padding="10dp"
 		android:text="@string/ci_device_id"
-		android:textAppearance="?android:attr/textAppearanceMedium" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium" />
 
 	<EditText
 		android:id="@+id/cfgValue_etDevice_ID"
@@ -67,50 +69,55 @@
 		android:layout_gravity="right"
 		android:padding="10dp"
 		android:text="@string/ci_contents"
-		android:textAppearance="?android:attr/textAppearanceMedium" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium" />
 
 	<Button
 		android:id="@+id/cfgAG_btnSDFormat"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_gravity="fill"
-		android:onClick="onAGBtnClick"
 		android:text="@string/def_sd_format"
-		android:textStyle="bold" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+		/>
 
 	<Button
 		android:id="@+id/cfgAG_btnView"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_gravity="fill"
-		android:onClick="onAGBtnClick"
 		android:text="@string/def_view"
-		android:textStyle="bold" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+		/>
 
 	<Button
 		android:id="@+id/cfgAG_btnAllDelete"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_gravity="fill"
-		android:onClick="onAGBtnClick"
 		android:text="@string/def_all_delete"
-		android:textStyle="bold" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+		/>
 
 	<TextView android:layout_gravity="fill" />
 
 	<Button
 		android:id="@+id/cfgAG_btnUSBSync"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_column="1"
 		android:layout_gravity="fill"
-		android:onClick="onAGBtnClick"
 		android:text="@string/def_usb_sync"
-		android:textStyle="bold" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+		/>
 
 	<Button
 		android:id="@+id/cfgAG_btnUSBCopy"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_gravity="fill"
-		android:onClick="onAGBtnClick"
 		android:text="@string/def_usb_copy"
-		android:textStyle="bold" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+		/>
 
 	<TextView
 		android:layout_columnSpan="2"
@@ -126,16 +133,17 @@
 	
 	<TextView android:layout_gravity="fill"/>-->
 
-	<Button
+	<!--<Button
 		android:id="@+id/cfgAG_btnApply"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_column="2"
 		android:layout_columnSpan="2"
 		android:layout_gravity="fill"
-		android:onClick="onAGBtnClick"
 		android:text="@string/def_apply"
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium"
 		android:textStyle="bold" />
 
-	<TextView android:layout_gravity="fill" />
+	<TextView android:layout_gravity="fill" />-->
 
 </GridLayout>

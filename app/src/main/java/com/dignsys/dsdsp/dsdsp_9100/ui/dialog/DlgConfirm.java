@@ -35,7 +35,7 @@ public class DlgConfirm extends Dialog implements View.OnClickListener {
 		
 		setContentView(R.layout.dlg_confirm);
 		
-		mTVMessage	= (TextView)findViewById(R.id.dlgConfirm_tvMSG);
+		mTVMessage	= findViewById(R.id.dlgConfirm_tvMSG);
 		
 		mTVMessage.setText(m_strMessage);
 		

@@ -21,6 +21,7 @@
         
 	    <Button
 	        android:id="@+id/dlgConfirm_btnOK"
+			style="@android:style/Widget.Button"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
@@ -29,6 +30,7 @@
 	    
 	    <Button
 	        android:id="@+id/dlgConfirm_btnCancel"
+			style="@android:style/Widget.Button"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"

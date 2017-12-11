@@ -6,10 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageSwitcher;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,11 +22,6 @@ public class OptionalFragmentCfg extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
     private static final String TAG = OptionalFragmentCfg.class.getSimpleName();
-
-    ContentEntity mContent;
-
-    //   private ImageView mImageSW;
-    private ImageSwitcher mImageSW;
 
 
     public OptionalFragmentCfg() {

@@ -1,11 +1,11 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.config;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,6 +30,12 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
     public void onMenuItemClick(View v)
     {
         if(mFragmentID == v.getId()) return;
@@ -44,9 +50,9 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
             replaceFragment(generalFragmentCfg);
         }
 
-        if (mFragmentID == R.id.cfgBtnMI_AV)	{
+        /*if (mFragmentID == R.id.cfgBtnMI_AV)	{
             Toast.makeText(this, "Advanced Fragment", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         if (mFragmentID == R.id.cfgBtnMI_Server)	{
           //  Toast.makeText(this, "Server Fragment", Toast.LENGTH_SHORT).show();

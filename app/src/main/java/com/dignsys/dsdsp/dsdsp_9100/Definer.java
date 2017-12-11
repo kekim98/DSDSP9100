@@ -2,6 +2,17 @@ package com.dignsys.dsdsp.dsdsp_9100;
 
 public class Definer {
 
+	/*
+	 * Company Code.
+	 */
+	public static final String DEF_COMPANY_ID_CSGD = "001";    // Cheonan Sports Gym for the Disabled
+	public static final String DEF_BOARD_ID = "301";
+	public static final String DEF_MODEL_ID = "001";
+	public static final String DEF_COMPANY_ID = "001";
+	public static final String DEF_VERSION = "033";
+	public static final String DEF_CONFIG_VERSION=	"001";
+
+	public static final String DEF_PRODUCT_NAME	="ds7000";
 	
 	/*
 	 * Common.
@@ -20,23 +31,15 @@ public class Definer {
 	
 	public static final String DEF_SD_PATH				= "/mnt/external_sd";
 	public static final String DEF_CAPTURE_PATH			= "/mnt/external_sd/";
+	public static final String DEF_ROOT_PATH		    = "/mnt/external_sd/dsdsp";
+	public static final String DEF_UMS_PATH		   	    = "/mnt/usb_storage";
 	public static final String DEF_FILENAME_PLAYLIST	= "playlist.txt";
 	public static final String DEF_FILENAME_FORMAT		= "format.txt";
 	public static final String DEF_FILENAME_DSPCONFIG	= "dspconfig.txt";
 	public static final String DEF_FILENAME_COMMAND		= "command.txt";
 	public static final String DEF_FILENAME_CONTROL		= "control.txt";
 	
-	/*
-	 * Company Code.
-	 */
-	public static final String DEF_COMPANY_ID_CSGD = "001";    // Cheonan Sports Gym for the Disabled
-	public static final String DEF_BOARD_ID = "301";
-	public static final String DEF_MODEL_ID = "001";
-	public static final String DEF_COMPANY_ID = "001";
-	public static final String DEF_VERSION = "032";
-	public static final String DEF_CONFIG_VERSION=	"001";
 
-	public static final String DEF_PRODUCT_NAME	="ds7000";
 	
 	/*
 	 * Activity Request Code.
@@ -246,7 +249,6 @@ public class Definer {
 	public static final String TEST_CONFIG_URL = "http://192.168.1.132/site/bawooriTest/test/dspconfig.txt";
 	public static final String TEST_COMMAND_URL = "http://192.168.1.132/site/bawooriTest/test/command.txt";
 	public static final String TEST_RSS_URL = "http://open.moleg.go.kr/data/xml/lh_rssSH03.xml";
-
 
 
 }

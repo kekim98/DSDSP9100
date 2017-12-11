@@ -15,6 +15,7 @@ import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.ui.config.ConfigActivity;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
     private List<PaneEntity> mPaneEntityList;
     private MainViewModel mViewModel;
+    private ConfigHelper DSLibIF;
      ImageView mDefaultImageView;
 
 
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         mDefaultImageView = findViewById(R.id.imageView);
 
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        DSLibIF = ConfigHelper.getInstance(this);
+
 
         subscribe();
 

@@ -12,6 +12,7 @@
 
 	<Button
 		android:id="@+id/dlgFileList_btnOK"
+		style="@android:style/Widget.Button"
 		android:layout_width="match_parent"
         android:layout_height="wrap_content"
 		android:textStyle="bold"

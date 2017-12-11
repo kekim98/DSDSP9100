@@ -25,6 +25,7 @@
 
     <Button
         android:id="@+id/dlgSU_btnOK"
+        style="@android:style/Widget.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
