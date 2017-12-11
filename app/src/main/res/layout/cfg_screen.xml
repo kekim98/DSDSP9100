@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/cfgArea_Screen"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:columnCount="6"
+	android:orientation="horizontal"
+	android:stretchMode="columnWidth">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="6"
+		android:background="#FFFFFF"
+		android:padding="10dp"
+		android:text="@string/ci_screen"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="#000000" />
+
+	<TextView
+		android:id="@+id/textView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="6"
+		android:padding="10dp"
+		android:text="@string/ci_screen_rotation_change"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_direction"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spScreenRotation"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:id="@+id/textView4"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="6"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="6"
+		android:padding="10dp"
+		android:text="@string/ci_screen_pic_change"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_pic_change_effect"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spPicEffect"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_pic_change_time"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etScreenPicTime"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_columnSpan="6"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="6"
+		android:padding="10dp"
+		android:text="@string/ci_screen_resize"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textStyle="bold" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_resize_movie"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spResizeMovie"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_resize_pic"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spResizePic"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_columnSpan="6"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="6"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textStyle="bold" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_mode"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spCapMode"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_position"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spCapPosition"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_color"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spCapColor"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_bgcolor"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spCapBGColor"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_speed"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spCapSpeed"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_font"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spCapFont"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_font_size"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etScreenCapFontSize"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView
+		android:layout_columnSpan="4"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_rss_mode"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAS_spCapRSSMode"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_rss_update_time"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etScreenCapRSSUpdateTime"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_screen_caption_rss_address"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etScreenCapRSSAddress"
+		android:layout_columnSpan="3"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<Button
+		android:id="@+id/cfgAS_btnApply"
+		android:layout_width="160dp"
+		android:layout_column="2"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:onClick="onASBtnClick"
+		android:text="@string/def_apply"
+		android:textStyle="bold" />
+
+	<TextView android:layout_gravity="fill" />
+
+</GridLayout>

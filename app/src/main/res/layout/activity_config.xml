@@ -1,0 +1,167 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.config.ConfigActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/MA_ivBackArea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_menu_manage" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/config_title_main"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:background="#FFFFFF"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/cfgBtnMI_General"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawable="@android:color/holo_blue_dark"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_general"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/cfgBtnMI_AV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawable="@android:color/holo_blue_dark"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_av"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/cfgBtnMI_Server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_server"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/cfgBtnMI_Lan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_lan"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/cfgBtnMI_Wifi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_wifi"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/cfgBtnMI_Screen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_screen"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/cfgBtnMI_Time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_time"
+                android:textStyle="bold" />
+
+            <!--
+            <Button
+                android:id="@+id/cfgBtnMI_Advanced"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/ci_advanced"
+                android:onClick="onMenuItemClick" />
+            -->
+
+            <Button
+                android:id="@+id/cfgBtnMI_Optional"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_optional"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/cfgBtnMI_ChangeInitConfig"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_change_init_config"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+
+            <Button
+                android:id="@+id/cfgBtnMI_Reset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_reset"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/cfgBtnMI_Exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onMenuItemClick"
+                android:text="@string/ci_exit"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="7.5"
+            android:orientation="vertical">
+
+
+            <!-- <fragment
+                android:name="com.dignsys.dsdsp.dsdsp_9100.ui.config.GeneralFragmentCfg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />-->
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

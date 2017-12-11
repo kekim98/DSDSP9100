@@ -15,10 +15,10 @@ import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 
 @SuppressWarnings("deprecation")
-public class DTvFragment extends BaseFragment implements SurfaceHolder.Callback {
+public class DTvFragmentMain extends MainBaseFragment implements SurfaceHolder.Callback {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
-    private static final String TAG = DTvFragment.class.getSimpleName();
+    private static final String TAG = DTvFragmentMain.class.getSimpleName();
 
 
     private ContentEntity mContent;
@@ -28,7 +28,7 @@ public class DTvFragment extends BaseFragment implements SurfaceHolder.Callback 
     private SurfaceHolder mHolder;
 
 
-    public DTvFragment() {
+    public DTvFragmentMain() {
         // Required empty public constructor
     }
 
@@ -37,10 +37,10 @@ public class DTvFragment extends BaseFragment implements SurfaceHolder.Callback 
      * this fragment using the provided parameters.
      *
      * @param pane_num Parameter test.
-     * @return A new instance of fragment VideoFragment.
+     * @return A new instance of fragment VideoFragmentMain.
      */
-    public static DTvFragment newInstance(int pane_num) {
-        DTvFragment fragment = new DTvFragment();
+    public static DTvFragmentMain newInstance(int pane_num) {
+        DTvFragmentMain fragment = new DTvFragmentMain();
         Bundle args = new Bundle();
         args.putInt(PANE_NUM, pane_num);
         fragment.setArguments(args);

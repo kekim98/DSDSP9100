@@ -7,12 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.ui.config.ConfigActivity;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
@@ -101,43 +103,43 @@ public class MainActivity extends AppCompatActivity {
         for (PaneEntity pe : mPaneEntityList) {
 
             if (pe.getPaneType().equals("B")) {
-                BackgroundFragment backgroundFragment =
-                        BackgroundFragment.newInstance(pe.getPane_id());
+                BackgroundFragmentMain backgroundFragment =
+                        BackgroundFragmentMain.newInstance(pe.getPane_id());
                 mFragmentList.add(backgroundFragment);
 
             }
             if (pe.getPaneType().equals("D")) {
-                DTvFragment dTvFragment =
-                        DTvFragment.newInstance(pe.getPane_id());
+                DTvFragmentMain dTvFragment =
+                        DTvFragmentMain.newInstance(pe.getPane_id());
                 mFragmentList.add(dTvFragment);
 
             }
             if (pe.getPaneType().equals("V")) {
-                VideoFragment videoFragment =
-                        VideoFragment.newInstance(pe.getPane_id());
+                VideoFragmentMain videoFragment =
+                        VideoFragmentMain.newInstance(pe.getPane_id());
                 mFragmentList.add(videoFragment);
             }
             if (pe.getPaneType().equals("P")) {
-                PictureFragment pictureFragment =
-                        PictureFragment.newInstance(pe.getPane_id());
+                PictureFragmentMain pictureFragment =
+                        PictureFragmentMain.newInstance(pe.getPane_id());
                 mFragmentList.add(pictureFragment);
 
             }
             if (pe.getPaneType().equals("W")) {
-                WeatherFragment weatherFragment =
-                        WeatherFragment.newInstance(pe.getPane_id());
+                WeatherFragmentMain weatherFragment =
+                        WeatherFragmentMain.newInstance(pe.getPane_id());
                 mFragmentList.add(weatherFragment);
 
             }
             if (pe.getPaneType().equals("C")) {
-                ClockFragment clockFragment =
-                        ClockFragment.newInstance(pe.getPane_id());
+                ClockFragmentMain clockFragment =
+                        ClockFragmentMain.newInstance(pe.getPane_id());
                 mFragmentList.add(clockFragment);
 
             }
             if (pe.getPaneType().equals("M")) {
-                MessageFragment messageFragment =
-                        MessageFragment.newInstance(pe.getPane_id());
+                MessageFragmentMain messageFragment =
+                        MessageFragmentMain.newInstance(pe.getPane_id());
                 mFragmentList.add(messageFragment);
 
             }
@@ -204,6 +206,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+
+        if(keyCode == Definer.DEF_KEY_CODE_MENU)	{
+            ConfigActivity.startConfigActivity(this);
+        }
+
+        if(keyCode == KeyEvent.KEYCODE_BACK)	{
+            return false;
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 
 

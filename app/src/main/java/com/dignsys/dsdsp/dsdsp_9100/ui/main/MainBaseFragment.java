@@ -19,9 +19,9 @@ import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
  * Created by bawoori on 17. 12. 6.
  */
 
-abstract class BaseFragment extends Fragment {
+abstract class MainBaseFragment extends Fragment {
     private static final String PANE_NUM = "pane_num";
-    private static final String TAG = "BaseFragment";
+    private static final String TAG = "MainBaseFragment";
 
 
     Observer<Integer> mContentPlayDoneObserver;

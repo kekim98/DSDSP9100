@@ -19,15 +19,15 @@ import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link BackgroundFragment#newInstance} factory method to
+ * Use the {@link BackgroundFragmentMain#newInstance} factory method to
  * create an instance of this fragment.
  */
 
 
-public class BackgroundFragment extends BaseFragment {
+public class BackgroundFragmentMain extends MainBaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
-    private static final String TAG = BackgroundFragment.class.getSimpleName();
+    private static final String TAG = BackgroundFragmentMain.class.getSimpleName();
 
     ContentEntity mContent;
 
@@ -35,7 +35,7 @@ public class BackgroundFragment extends BaseFragment {
     private ImageView mImageView;
 
 
-    public BackgroundFragment() {
+    public BackgroundFragmentMain() {
         // Required empty public constructor
     }
 
@@ -44,11 +44,11 @@ public class BackgroundFragment extends BaseFragment {
      * this fragment using the provided parameters.
      *
      * @param pane_num Parameter test.
-     * @return A new instance of fragment VideoFragment.
+     * @return A new instance of fragment VideoFragmentMain.
      */
 
-    static BackgroundFragment newInstance(int pane_num) {
-        BackgroundFragment fragment = new BackgroundFragment();
+    static BackgroundFragmentMain newInstance(int pane_num) {
+        BackgroundFragmentMain fragment = new BackgroundFragmentMain();
         Bundle args = new Bundle();
         args.putInt(PANE_NUM, pane_num);
         fragment.setArguments(args);

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/cfgArea_Server"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:columnCount="4"
+	android:orientation="horizontal"
+	android:stretchMode="columnWidth">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="4"
+		android:background="#FFFFFF"
+		android:padding="10dp"
+		android:text="@string/ci_server"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="#000000" />
+
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_server_mode"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgASRV_spServerMode"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_server_addr"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etServerAddr"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_server_folder"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etServerFolder"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_server_port"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etServerPort"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_server_sync_interval"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etServerSI"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<Button
+		android:id="@+id/cfgASRV_btnApply"
+		android:layout_width="160dp"
+		android:layout_column="2"
+		android:layout_columnSpan="1"
+		android:layout_gravity="fill"
+		android:onClick="onASRVBtnClick"
+		android:text="@string/def_apply"
+		android:textStyle="bold" />
+
+	<TextView android:layout_gravity="fill" />
+
+</GridLayout>

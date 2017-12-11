@@ -5,7 +5,7 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.SET_TIME_ZONE" />
-   <!-- <uses-permission android:name="android.permission.REBOOT" />-->
+    <!-- <uses-permission android:name="android.permission.REBOOT" /> -->
 
     <uses-permission android:name="android.hardware.camera.autofocus" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -35,8 +35,9 @@
             </intent-filter>
         </activity>
 
-      <service android:name=".service.SyncService"/>
-    <!--    <service android:name=".service.LocalService"/>-->
+        <service android:name=".service.SyncService" />
+        <!-- <service android:name=".service.LocalService"/> -->
+        <activity android:name=".ui.config.ConfigActivity"></activity>
     </application>
 
 </manifest>

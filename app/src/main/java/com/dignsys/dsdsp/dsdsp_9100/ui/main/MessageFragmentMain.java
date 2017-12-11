@@ -16,17 +16,17 @@ import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 
 
-public class MessageFragment extends BaseFragment {
+public class MessageFragmentMain extends MainBaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
-    private static final String TAG = MessageFragment.class.getSimpleName();
+    private static final String TAG = MessageFragmentMain.class.getSimpleName();
 
 
     private ContentEntity mContent;
     private TextView mTextView;
     private ImageView mImageView;
 
-    public MessageFragment() {
+    public MessageFragmentMain() {
         // Required empty public constructor
     }
 
@@ -35,10 +35,10 @@ public class MessageFragment extends BaseFragment {
      * this fragment using the provided parameters.
      *
      * @param pane_num Parameter test.
-     * @return A new instance of fragment VideoFragment.
+     * @return A new instance of fragment VideoFragmentMain.
      */
-    public static MessageFragment newInstance(int pane_num) {
-        MessageFragment fragment = new MessageFragment();
+    public static MessageFragmentMain newInstance(int pane_num) {
+        MessageFragmentMain fragment = new MessageFragmentMain();
         Bundle args = new Bundle();
         args.putInt(PANE_NUM, pane_num);
         fragment.setArguments(args);
@@ -96,7 +96,7 @@ public class MessageFragment extends BaseFragment {
             mImageView.setVisibility(View.GONE);
             mTextView.setVisibility(View.VISIBLE);
 
-            Animation bottomToTop = AnimationUtils.loadAnimation(MessageFragment.this.getContext(), R.anim.slide_in_left);
+            Animation bottomToTop = AnimationUtils.loadAnimation(MessageFragmentMain.this.getContext(), R.anim.slide_in_left);
             mTextView.setText("Bawoori Test~~~");
             mTextView.startAnimation(bottomToTop);
            // bottomToTop.setRepeatCount(Animation.INFINITE);

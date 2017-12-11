@@ -12,17 +12,17 @@ import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 
 
-public class ClockFragment extends BaseFragment {
+public class ClockFragmentMain extends MainBaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
-    private static final String TAG = ClockFragment.class.getSimpleName();
+    private static final String TAG = ClockFragmentMain.class.getSimpleName();
 
     ContentEntity mContent;
 
     private TextClock mClockView;
 
-    public ClockFragment() {
+    public ClockFragmentMain() {
         // Required empty public constructor
     }
 
@@ -30,11 +30,11 @@ public class ClockFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment ClockFragment.
+     * @return A new instance of fragment ClockFragmentMain.
      */
     // TODO: Rename and change types and number of parameters
-    public static ClockFragment newInstance(int pane_num) {
-        ClockFragment fragment = new ClockFragment();
+    public static ClockFragmentMain newInstance(int pane_num) {
+        ClockFragmentMain fragment = new ClockFragmentMain();
         Bundle args = new Bundle();
         args.putInt(PANE_NUM, pane_num);
         fragment.setArguments(args);

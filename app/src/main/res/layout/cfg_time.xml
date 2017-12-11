@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/cfgArea_Time"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:columnCount="4"
+	android:orientation="horizontal"
+	android:stretchMode="columnWidth">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="4"
+		android:background="#FFFFFF"
+		android:padding="10dp"
+		android:text="@string/ci_time"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="#000000" />
+
+
+	<Button
+		android:id="@+id/cfgAT_btnSetTime"
+		android:layout_width="160dp"
+		android:layout_columnSpan="3"
+		android:layout_gravity="fill"
+		android:onClick="onATBtnClick"
+		android:text="@string/ci_time_current_time_setting"
+		android:textStyle="bold" />
+
+	<TextView android:layout_gravity="fill" />
+
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="4"
+		android:padding="10dp"
+		android:text="@string/ci_time_zone"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textStyle="bold" />
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_time_position"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAT_spTimeZone"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="4"
+		android:padding="10dp"
+		android:text="@string/ci_time_display"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textStyle="bold" />
+
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_time_position"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAT_spTimePosition"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_time_color"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAT_spTimeColor"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_time_bgcolor"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAT_spTimeBGColor"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_time_font"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAT_spTimeFont"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_time_font_size"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etTimeFontSize"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="4"
+		android:padding="10dp"
+		android:text="@string/ci_auto_onoff"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textStyle="bold" />
+
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_auto_onoff_mode"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAT_spAutoOnOffMode"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_auto_onoff_ontime"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etAutoOnTime"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_auto_onoff_offtime"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etAutoOffTime"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView android:layout_gravity="fill" />
+
+	<Button
+		android:id="@+id/cfgAT_btnApply"
+		android:layout_width="160dp"
+		android:layout_column="1"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:onClick="onATBtnClick"
+		android:text="@string/def_apply"
+		android:textStyle="bold" />
+
+	<TextView android:layout_gravity="fill" />
+
+
+</GridLayout>

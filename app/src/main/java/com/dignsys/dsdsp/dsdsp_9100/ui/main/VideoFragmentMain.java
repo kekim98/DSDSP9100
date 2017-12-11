@@ -32,25 +32,25 @@ import java.io.File;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link VideoFragment#newInstance} factory method to
+ * Use the {@link VideoFragmentMain#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class VideoFragment extends BaseFragment {
+public class VideoFragmentMain extends MainBaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
-    private static final String TAG = VideoFragment.class.getSimpleName();
+    private static final String TAG = VideoFragmentMain.class.getSimpleName();
 
     private VideoView mVideoView;
     private ContentEntity mContent;
   //  private MainViewModel mViewModel;
     private ImageSwitcher mImageSW;
 
-    public VideoFragment() {
+    public VideoFragmentMain() {
         // Required empty public constructor
     }
 
-    static VideoFragment newInstance(int pane_num) {
-        VideoFragment fragment = new VideoFragment();
+    static VideoFragmentMain newInstance(int pane_num) {
+        VideoFragmentMain fragment = new VideoFragmentMain();
         Bundle args = new Bundle();
         args.putInt(PANE_NUM, pane_num);
         fragment.setArguments(args);
@@ -102,19 +102,19 @@ public class VideoFragment extends BaseFragment {
         mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {
-                ImageView iv = new ImageView(VideoFragment.this.getContext());
+                ImageView iv = new ImageView(VideoFragmentMain.this.getContext());
                 return iv;
             }
         });
 
         // Set animations
         // https://danielme.com/2013/08/18/diseno-android-transiciones-entre-activities/
-        Animation in = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), android.R.anim.slide_in_left);
-        Animation out = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), android.R.anim.slide_out_right);
+        Animation in = AnimationUtils.loadAnimation(VideoFragmentMain.this.getContext(), android.R.anim.slide_in_left);
+        Animation out = AnimationUtils.loadAnimation(VideoFragmentMain.this.getContext(), android.R.anim.slide_out_right);
         mImageSW.setInAnimation(in);
         mImageSW.setOutAnimation(out);
-       /* Animation fadeIn = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), R.anim.fade_in);
-        Animation fadeOut = AnimationUtils.loadAnimation(VideoFragment.this.getContext(), R.anim.fade_out);
+       /* Animation fadeIn = AnimationUtils.loadAnimation(VideoFragmentMain.this.getContext(), R.anim.fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(VideoFragmentMain.this.getContext(), R.anim.fade_out);
         mImageSW.setInAnimation(fadeIn);
         mImageSW.setOutAnimation(fadeOut);*/
 

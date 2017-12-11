@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/cfgArea_Optional"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:columnCount="6"
+	android:orientation="horizontal"
+	android:stretchMode="columnWidth">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="6"
+		android:background="#FFFFFF"
+		android:padding="10dp"
+		android:text="@string/ci_optional"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="#000000" />
+
+
+	<TextView android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_columnSpan="6"
+		android:padding="10dp"
+		android:text="@string/ci_select_op"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textStyle="bold" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_select_op_sd"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAO_spSOSD"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_select_op_log_save"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<Spinner
+		android:id="@+id/cfgAO_spSOLog"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:focusable="true" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="right"
+		android:padding="10dp"
+		android:text="@string/ci_select_op_log_save_day"
+		android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<EditText
+		android:id="@+id/cfgValue_etSOLogSaveDay"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:imeOptions="actionDone"
+		android:inputType="number"
+		android:padding="10dp"
+		android:singleLine="true" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+	<Button
+		android:id="@+id/cfgAO_btnApply"
+		android:layout_width="160dp"
+		android:layout_column="2"
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill"
+		android:onClick="onAOBtnClick"
+		android:text="@string/def_apply"
+		android:textStyle="bold" />
+
+	<TextView
+		android:layout_columnSpan="2"
+		android:layout_gravity="fill" />
+
+
+</GridLayout>
