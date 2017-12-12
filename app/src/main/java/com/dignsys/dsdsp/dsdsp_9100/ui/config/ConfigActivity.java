@@ -1,5 +1,7 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.config;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,21 +9,29 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgConfirm;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
 
 
 public class ConfigActivity extends AppCompatActivity implements DialogInterface.OnDismissListener{
 
     private int mFragmentID;
+    private MainViewModel mViewModel;
+    private ConfigHelper DSLibIF;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
+
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        DSLibIF = mViewModel.getConfigHelper();
 
         GeneralFragmentCfg generalFragmentCfg =
                 GeneralFragmentCfg.newInstance(0);
@@ -38,7 +48,7 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
 
     public void onMenuItemClick(View v)
     {
-        if(mFragmentID == v.getId()) return;
+      //  if(mFragmentID == v.getId()) return;
 
         mFragmentID = v.getId();
 
@@ -64,14 +74,13 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
         }
 
         if (mFragmentID == R.id.cfgBtnMI_Lan)	{
-            Toast.makeText(this, "Sorry LAN Config not yet implemented...", Toast.LENGTH_SHORT).show();
 
-           /* Intent intent = new Intent();
+            Intent intent = new Intent();
 
             intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.SubSettings"));
             intent.putExtra(":settings:show_fragment", "com.android.settings.EthernetSettings");
 
-            startActivity(intent);*/
+            startActivity(intent);
 
         }
 
@@ -113,13 +122,10 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
 
         if (mFragmentID == R.id.cfgBtnMI_Reset)	{
 
-            Toast.makeText(this, "Reset Fragment", Toast.LENGTH_SHORT).show();
-
+          //  Toast.makeText(this, "Reset Fragment", Toast.LENGTH_SHORT).show();
 
             DlgConfirm dlg = new DlgConfirm(this, this, getString(R.string.msg_confirm_reset_config), Definer.DEF_CONFIRM_ID_RESET_CONFIG);
-
             dlg.show();
-
         }
 
         if (mFragmentID == R.id.cfgBtnMI_Exit)	{
@@ -133,18 +139,28 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container,
                         fragment, null)
-                .addToBackStack(null)
+               /* .addToBackStack(null)*/
                 .commit();
     }
 
     @Override
-    public void onDismiss(DialogInterface dialogInterface) {
+    public void onDismiss(DialogInterface dialog) {
+        DlgConfirm dlg = (DlgConfirm)dialog;
+
+        if(dlg.getConfirmID() == Definer.DEF_CONFIRM_ID_RESET_CONFIG)	{
+            DSLibIF.initConfigs();
+
+            ((Button)findViewById(R.id.cfgBtnMI_General)).setSelected(true);
+            ((Button)findViewById(R.id.cfgBtnMI_General)).requestFocus();
+            ((Button)findViewById(R.id.cfgBtnMI_General)).callOnClick();
+
+        }
+        dlg.dismiss();
 
     }
 
     public static final void startConfigActivity(Context context)
     {
-
         Intent intentConfigActivity = new Intent(context, ConfigActivity.class);
         context.startActivity(intentConfigActivity);
 

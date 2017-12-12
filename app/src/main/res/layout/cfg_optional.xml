@@ -85,11 +85,11 @@
 
 	<Button
 		android:id="@+id/cfgAO_btnApply"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_column="2"
 		android:layout_columnSpan="2"
 		android:layout_gravity="fill"
-		android:onClick="onAOBtnClick"
 		android:text="@string/def_apply"
 		android:textStyle="bold" />
 

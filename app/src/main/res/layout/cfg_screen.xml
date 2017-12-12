@@ -35,7 +35,8 @@
 	<Spinner
 		android:id="@+id/cfgAS_spScreenRotation"
 		android:layout_gravity="fill"
-		android:focusable="true" />
+		android:focusable="true"
+		android:focusedByDefault="true" />
 
 	<TextView
 		android:id="@+id/textView4"
@@ -276,11 +277,11 @@
 
 	<Button
 		android:id="@+id/cfgAS_btnApply"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_column="2"
 		android:layout_columnSpan="2"
 		android:layout_gravity="fill"
-		android:onClick="onASBtnClick"
 		android:text="@string/def_apply"
 		android:textStyle="bold" />
 

@@ -20,10 +20,10 @@
 
 	<Button
 		android:id="@+id/cfgAT_btnSetTime"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_columnSpan="3"
 		android:layout_gravity="fill"
-		android:onClick="onATBtnClick"
 		android:text="@string/ci_time_current_time_setting"
 		android:textStyle="bold" />
 
@@ -201,11 +201,11 @@
 
 	<Button
 		android:id="@+id/cfgAT_btnApply"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_column="1"
 		android:layout_columnSpan="2"
 		android:layout_gravity="fill"
-		android:onClick="onATBtnClick"
 		android:text="@string/def_apply"
 		android:textStyle="bold" />
 

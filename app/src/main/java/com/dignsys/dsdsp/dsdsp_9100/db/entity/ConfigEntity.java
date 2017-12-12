@@ -31,7 +31,7 @@ public class ConfigEntity  {
     private int serverMode;            // Server mode. 0: Stand-alone, 1: private internet
     private String serverAddress;    // Server address.
     private String serverFolder;        // Server folder.
-    private int serverPort;            // Server port.
+    private String serverPort;            // Server port.
     private String serverId;            // Server ID.
     private String serverPwd;        // Server password.
     private int serverSyncInterval;    // Server private interval for sync.
@@ -304,11 +304,11 @@ public class ConfigEntity  {
         this.serverFolder = serverFolder;
     }
 
-    public int getServerPort() {
+    public String getServerPort() {
         return serverPort;
     }
 
-    public void setServerPort(int serverPort) {
+    public void setServerPort(String serverPort) {
         this.serverPort = serverPort;
     }
 

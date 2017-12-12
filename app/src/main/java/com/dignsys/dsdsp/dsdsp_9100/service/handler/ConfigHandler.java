@@ -283,8 +283,7 @@ public class ConfigHandler extends BasicHandler {
 
                            // set dsp server port 8089
                            if(strSubItem.equals("port")) {
-                               int nCurrVal = Integer.valueOf(strValue);
-                               mConfig.setServerPort(nCurrVal);
+                               mConfig.setServerPort(strValue);
                            }
 
                            // set dsp server folder "site/o/s2"

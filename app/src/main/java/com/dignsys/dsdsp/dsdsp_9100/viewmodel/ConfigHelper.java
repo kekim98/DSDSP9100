@@ -1,14 +1,17 @@
 package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
+import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseInitUtil;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 
 
@@ -25,7 +28,11 @@ public class ConfigHelper {
 
     // private static final MutableLiveData ABSENT = new MutableLiveData();
     private final LiveData<ConfigEntity> mConfig;
-    
+
+    public LiveData<ConfigEntity> getConfig() {
+        return mConfig;
+    }
+
     private ConfigEntity _mConfig;
 
 
@@ -46,7 +53,7 @@ public class ConfigHelper {
         final Observer<ConfigEntity> configObserver = new Observer<ConfigEntity>() {
             @Override
             public void onChanged(@Nullable final ConfigEntity config) {
-                if (config.getIsDBEnable() != 0) {
+                if (config != null && config.getIsDBEnable() != 0) {
                     _mConfig = config;
                 }
             }
@@ -82,8 +89,15 @@ public class ConfigHelper {
 
      boolean m_bCommandOff		= false;
 
+    @SuppressLint("StaticFieldLeak")
     private void updateConfig() {
-        mDB.configDao().update(_mConfig);
+        new AsyncTask<Context, Void, Void>() {
+            @Override
+            protected Void doInBackground(Context... contexts) {
+                mDB.configDao().update(_mConfig);
+                return null;
+            }
+        }.execute(_context);
     }
 
     public   void setDeviceID(String str){
@@ -226,7 +240,7 @@ public class ConfigHelper {
         updateConfig();
     }
 
-    public   void setServerPort(int n){
+    public   void setServerPort(String n){
         _mConfig.setServerPort(n);
         updateConfig();
     }
@@ -504,7 +518,7 @@ public class ConfigHelper {
         return _mConfig.getServerMode();
     }
 
-    public   int getServerPort(){
+    public   String getServerPort(){
         return _mConfig.getServerPort();
     }
 
@@ -976,6 +990,21 @@ public class ConfigHelper {
         if(str.equals("transparent")) 	n = 9;
 
         return n;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void initConfigs() {
+
+        new AsyncTask<Context, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Context... params) {
+                final AppDatabase db = DatabaseCreator.getInstance(_context);
+                if(db.configDao().configCount() == 0) DatabaseInitUtil.initializeDb(db);
+                return null;
+            }
+
+        }.execute(_context);
     }
 }
 

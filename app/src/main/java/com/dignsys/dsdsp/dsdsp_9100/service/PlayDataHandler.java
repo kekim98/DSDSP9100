@@ -247,7 +247,9 @@ public class PlayDataHandler {
             IOUtils.clearDiskCache(mContext);
         }*/
 
-        IOUtils.removeUnusedContents(mContext, usedContents);
+        if (contents.size() > 0) {
+            IOUtils.removeUnusedContents(mContext, usedContents);
+        }
     }
 
 

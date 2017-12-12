@@ -31,6 +31,7 @@ public class MainViewModel extends AndroidViewModel {
     private final ScheduleHelper mScheduleHelper = ScheduleHelper.getInstance(this.getApplication());
 
     private final CommandHelper mCommandHelper = CommandHelper.getInstance(this.getApplication());
+    private ConfigHelper mConfigHelper = ConfigHelper.getInstance(this.getApplication());
 
 
     public MainViewModel(@NonNull final Application application){
@@ -57,13 +58,17 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
-    public LiveData<ConfigEntity> getConfig() {
-        return mScheduleHelper.getConfig();
+    public ConfigHelper getConfigHelper() {
+        return mConfigHelper;
     }
+
+    public LiveData<ConfigEntity> getConfig(){ return mConfigHelper.getConfig();}
 
     public LiveData<Integer> getContentPlayDone() {
         return mScheduleHelper.getContentPlayDone();
     }
+    public CommandHelper getCommandHelper() { return mCommandHelper;}
+
 
 
     /**
@@ -122,6 +127,7 @@ public class MainViewModel extends AndroidViewModel {
         super.onCleared();
         stopDSPTimer();
     }
+
 
 
 }

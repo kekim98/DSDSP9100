@@ -317,7 +317,7 @@ public class RemotePlayDataFetcher {
             bodys[i] = fetchPlayDataIfNewer(i);
             if (TextUtils.isEmpty(bodys[i])) {
                 Log.w(TAG, "Failed to fetch data file: " + sanitizeUrl(url));
-              //  throw new IOException("Failed to fetch data file " + sanitizeUrl(url));
+             //   throw new IOException("Failed to fetch data file " + sanitizeUrl(url));
             }
         }
 

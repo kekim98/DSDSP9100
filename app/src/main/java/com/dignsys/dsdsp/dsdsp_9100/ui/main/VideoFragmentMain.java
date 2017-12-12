@@ -123,6 +123,18 @@ public class VideoFragmentMain extends MainBaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        run();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stop();
+    }
+
+    @Override
     void stop() {
         //TODO:......
         Log.d(TAG, "stop: .....");

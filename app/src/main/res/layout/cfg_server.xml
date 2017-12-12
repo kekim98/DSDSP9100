@@ -28,6 +28,7 @@
 		android:id="@+id/cfgASRV_spServerMode"
 		android:layout_columnSpan="2"
 		android:layout_gravity="fill"
+		android:defaultFocusHighlightEnabled="true"
 		android:focusable="true" />
 
 	<TextView android:layout_gravity="fill" />
@@ -100,13 +101,13 @@
 
 	<Button
 		android:id="@+id/cfgASRV_btnApply"
+		style="@android:style/Widget.Button"
 		android:layout_width="160dp"
 		android:layout_column="2"
 		android:layout_columnSpan="1"
 		android:layout_gravity="fill"
-		android:onClick="onASRVBtnClick"
 		android:text="@string/def_apply"
-		android:textStyle="bold" />
+		android:textAppearance="@android:style/TextAppearance.Holo.Medium"/>
 
 	<TextView android:layout_gravity="fill" />
 

@@ -1,5 +1,6 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.config;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -21,6 +22,7 @@ import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgSelectFW;
 import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgSyncUMS;
 import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +40,7 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
     private ConfigHelper DSLibIF ;
     private View mView;
     private String m_strVersion;
+    private MainViewModel mViewModel;
 
 
     public GeneralFragmentCfg() {
@@ -63,7 +66,8 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DSLibIF = ConfigHelper.getInstance(getActivity());
+        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        DSLibIF = mViewModel.getConfigHelper();
     }
 
     @Override
@@ -79,8 +83,6 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
         mView.findViewById(R.id.cfgAG_btnUSBSync).setOnClickListener(this);
         mView.findViewById(R.id.cfgAG_btnView).setOnClickListener(this);
 
-
-       // makeLayout(view);
 
         return mView;
 

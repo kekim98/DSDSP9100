@@ -1,14 +1,20 @@
 package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
 
+import android.app.AlarmManager;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.CommandEntity;
+
+import java.util.TimeZone;
 
 
 /**
@@ -41,7 +47,10 @@ public class CommandHelper {
         final Observer<CommandEntity> commandObserver = new Observer<CommandEntity>() {
             @Override
             public void onChanged(@Nullable final CommandEntity command) {
-                processCommand(command);
+                if (command != null) {
+                    processCommand(command);
+                }
+
             }
         };
         mCommand.observeForever(commandObserver);
@@ -101,6 +110,29 @@ public class CommandHelper {
             }
         }
         return sInstance;
+    }
+
+    public void setScreenRotation(int mode) {
+        if(mode >= 0 && mode < 4) {
+            Display display = ((WindowManager) _context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+            if(display.getRotation() == mode) return;
+
+            // You can get ContentResolver from the Context
+            Settings.System.putInt(_context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
+            Settings.System.putInt(_context.getContentResolver(), Settings.System.USER_ROTATION, mode);
+
+        }else{
+            Log.e(TAG, "setScreenMode: not support mode");
+
+        }
+
+    }
+
+    public void setTimeZone(String zone) {
+        if(zone.equals(TimeZone.getDefault().getID())) return;
+
+        AlarmManager alarm = (AlarmManager) _context.getSystemService(Context.ALARM_SERVICE);
+        alarm.setTimeZone(zone);
     }
 }
 

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="spinnerDefUseNotUse">
+        <item>사용함</item>
+        <item>사용안함</item>
+    </string-array>
+
+    <string-array name="spinnerServerMode">
+        <item>독립모드</item>
+        <item>인터넷</item>
+    </string-array>
+
+    <string-array name="spinnerScreenRotation">
+        <item>0 (Landscape)</item>
+        <item>90 (Protrait)</item>
+        <item>180 (Landscape Reversed)</item>
+        <item>270 (Protrait Reversed)</item>
+    </string-array>
+    <string-array name="spinnerPicEffect">
+        <item>사용안함</item>
+        <item>랜덤</item>
+        <item>크로스페이드</item>
+        <item>우측으로 덮기</item>
+        <item>좌측으로 덮기</item>
+        <item>위로 덮기</item>
+        <item>점점 크게</item>
+        <item>아래로 덮기</item>
+    </string-array>
+    
+    <string-array name="spinnerCapMode">
+        <item>텍스트/BMP</item>
+        <item>텍스트/BMP+RSS</item>
+    </string-array>
+    
+    <string-array name="spinnerCapPosition">
+        <item>상단</item>
+        <item>하단</item>
+        <item>왼쪽</item>
+        <item>오른쪽</item>
+    </string-array>
+    
+    <string-array name="spinnerCapColor">
+        <item>빨강</item>
+        <item>주황</item>
+        <item>노랑</item>
+        <item>초록</item>
+        <item>파랑</item>
+        <item>남색</item>
+        <item>보라</item>
+        <item>검정</item>
+        <item>흰색</item>
+    </string-array>
+    
+    <string-array name="spinnerCapBGColor">
+        <item>빨강</item>
+        <item>주황</item>
+        <item>노랑</item>
+        <item>초록</item>
+        <item>파랑</item>
+        <item>남색</item>
+        <item>보라</item>
+        <item>검정</item>
+        <item>흰색</item>
+        <item>투명</item>
+    </string-array>
+    
+    <string-array name="spinnerCapSpeed">
+        <item>빠르게</item>
+        <item>보통</item>
+        <item>느리게</item>
+    </string-array>
+    
+    <string-array name="spinnerCapFont">
+        <item>기본</item>
+        <item>나눔고딕</item>
+        <item>나눔명조</item>
+    </string-array>
+    
+    <string-array name="spinnerCapRSSMode">
+        <item>설명</item>
+        <item>타이틀</item>
+        <item>타이틀+설명</item>
+    </string-array>
+        
+    <string-array name="spinnerTimePosition">
+        <item>사용안함</item>
+        <item>좌상단</item>
+        <item>우상단</item>
+        <item>좌하단</item>
+        <item>우하단</item>
+    </string-array>
+    
+    <string-array name="spinnerTimeColor">
+        <item>빨강</item>
+        <item>주황</item>
+        <item>노랑</item>
+        <item>초록</item>
+        <item>파랑</item>
+        <item>남색</item>
+        <item>보라</item>
+        <item>검정</item>
+        <item>흰색</item>
+    </string-array>
+    
+    <string-array name="spinnerTimeBGColor">
+        <item>빨강</item>
+        <item>주황</item>
+        <item>노랑</item>
+        <item>초록</item>
+        <item>파랑</item>
+        <item>남색</item>
+        <item>보라</item>
+        <item>검정</item>
+        <item>흰색</item>
+        <item>투명</item>
+    </string-array>
+
+</resources>

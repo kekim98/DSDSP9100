@@ -110,7 +110,7 @@ public class CommandHandler extends BasicHandler {
         ConfigEntity config = db.configDao().loadConfigSync();
 
         final String hostAddr = config.getServerAddress();
-        final int port = config.getServerPort();
+        final String port = config.getServerPort();
         final String folder = config.getServerFolder();
 
 

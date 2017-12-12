@@ -78,7 +78,8 @@ public class ScheduleHelper {
         _context = context;
 
         AppDatabase db = DatabaseCreator.getInstance(context);
-        mConfig = db.configDao().loadConfig();
+       // mConfig = db.configDao().loadConfig();
+        mConfig = ConfigHelper.getInstance(_context).getConfig();
         mScheduleList = db.scheduleDao().loadAllSchedule();
 
 

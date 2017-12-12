@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private List<PaneEntity> mPaneEntityList;
     private MainViewModel mViewModel;
     private ConfigHelper DSLibIF;
-     ImageView mDefaultImageView;
+
+    ImageView mDefaultImageView;
 
 
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         mDefaultImageView = findViewById(R.id.imageView);
 
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        DSLibIF = ConfigHelper.getInstance(this);
+        DSLibIF = mViewModel.getConfigHelper();
 
 
         subscribe();

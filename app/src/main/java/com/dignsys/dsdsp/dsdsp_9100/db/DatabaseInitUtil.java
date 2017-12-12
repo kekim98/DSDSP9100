@@ -59,7 +59,7 @@ public class DatabaseInitUtil {
         configEntity.setServerFolder("site/");
 
         configEntity.setServerMode(0);
-        configEntity.setServerPort(80);
+        configEntity.setServerPort("80");
         configEntity.setServerSyncInterval(60);
 
         configEntity.setUseLAN(1);
