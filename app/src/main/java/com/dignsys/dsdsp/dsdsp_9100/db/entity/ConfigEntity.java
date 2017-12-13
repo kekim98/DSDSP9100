@@ -190,15 +190,6 @@ public class ConfigEntity  {
         this.rebootTime = rebootTime;
     }
 
-    private int isDBEnable;
-
-    public int getIsDBEnable() {
-        return isDBEnable;
-    }
-
-    public void setIsDBEnable(int isDBEnable) {
-        this.isDBEnable = isDBEnable;
-    }
 
     public int getId() {
         return id;

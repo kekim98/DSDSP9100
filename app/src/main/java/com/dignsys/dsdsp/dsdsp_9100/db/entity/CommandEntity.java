@@ -10,48 +10,37 @@ public class CommandEntity {
     private int id;
 
     private String fwFilePath;
-    private String fontFilePath;
+    private String fontFilePath_1;
+    private String fontFilePath_2;
+    private String fontFilePath_3;
     private boolean powerOff;
     private boolean powerOn;
     private boolean reboot;
 
-    private boolean sdFormat;
-    private boolean sdDelete;
-    private boolean usbSync;
-    private boolean usbCopy;
-
-
-    public boolean isSdFormat() {
-        return sdFormat;
+    public String getFontFilePath_1() {
+        return fontFilePath_1;
     }
 
-    public void setSdFormat(boolean sdFormat) {
-        this.sdFormat = sdFormat;
+    public void setFontFilePath_1(String fontFilePath_1) {
+        this.fontFilePath_1 = fontFilePath_1;
     }
 
-    public boolean isSdDelete() {
-        return sdDelete;
+    public String getFontFilePath_2() {
+        return fontFilePath_2;
     }
 
-    public void setSdDelete(boolean sdDelete) {
-        this.sdDelete = sdDelete;
+    public void setFontFilePath_2(String fontFilePath_2) {
+        this.fontFilePath_2 = fontFilePath_2;
     }
 
-    public boolean isUsbSync() {
-        return usbSync;
+    public String getFontFilePath_3() {
+        return fontFilePath_3;
     }
 
-    public void setUsbSync(boolean usbSync) {
-        this.usbSync = usbSync;
+    public void setFontFilePath_3(String fontFilePath_3) {
+        this.fontFilePath_3 = fontFilePath_3;
     }
 
-    public boolean isUsbCopy() {
-        return usbCopy;
-    }
-
-    public void setUsbCopy(boolean usbCopy) {
-        this.usbCopy = usbCopy;
-    }
 
     public int getId() {
         return id;
@@ -69,13 +58,7 @@ public class CommandEntity {
         this.fwFilePath = fwFilePath;
     }
 
-    public String getFontFilePath() {
-        return fontFilePath;
-    }
 
-    public void setFontFilePath(String fontFilePath) {
-        this.fontFilePath = fontFilePath;
-    }
 
     public boolean isPowerOff() {
         return powerOff;

@@ -1,7 +1,7 @@
 package com.dignsys.dsdsp.dsdsp_9100.service;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -24,6 +24,7 @@ import com.dignsys.dsdsp.dsdsp_9100.service.handler.PlayListHandler;
 import com.dignsys.dsdsp.dsdsp_9100.service.handler.RssHandler;
 import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
 import com.turbomanage.httpclient.BasicHttpClient;
 import com.turbomanage.httpclient.ConsoleRequestLogger;
 import com.turbomanage.httpclient.HttpResponse;
@@ -117,7 +118,7 @@ public class PlayDataHandler {
 
         //TODO : have to separate playcontent dir and command content dir
         processPlayContentFiles(mPlayListHandler.getContentFiles(), downloadsAllowed);
-        //processPlayContentFiles(mCommandHandler.getContentFiles(), downloadsAllowed);
+        processCommandContentFiles(mCommandHandler.getContentFiles(), downloadsAllowed);
 
         // finally, push the changes into the ROOM
 
@@ -127,17 +128,18 @@ public class PlayDataHandler {
         Log.d(TAG, "Done applying conference data.");
     }
 
-    private void notifyEnableDB() {
-        ConfigEntity configEntity = DatabaseCreator.getInstance(mContext).configDao().loadConfigSync();
-        configEntity.setIsDBEnable(1);
-        DatabaseCreator.getInstance(mContext).configDao().update(configEntity);
+    private void notifyPlayStart() {
+
+        /*MutableLiveData<Integer> command = CommandHelper.getInstance(mContext).getPlayCommand();
+        command.postValue(Definer.DEF_PLAY_START_COMMAND);*/
 
     }
 
-    private void notifyDisableDB() {
-        ConfigEntity configEntity = DatabaseCreator.getInstance(mContext).configDao().loadConfigSync();
-        configEntity.setIsDBEnable(0);
-        DatabaseCreator.getInstance(mContext).configDao().update(configEntity);
+    private void notifyPlayStop() {
+
+        MutableLiveData<Integer> command = CommandHelper.getInstance(mContext).getPlayCommand();
+      //  command.postValue(Definer.DEF_PLAY_STOP_COMMAND);
+        command.postValue(Definer.DEF_PLAY_IDLE_COMMAND);
 
     }
 
@@ -152,12 +154,12 @@ public class PlayDataHandler {
         if (scheduleEntityList.size() > 0 && sceneEntities.size() > 0
                 && paneEntityList.size() > 0 && contentEntities.size() > 0) {
 
-            notifyDisableDB();
+            notifyPlayStop();
             db.updatePlayDataTransaction(scheduleEntityList,
                     sceneEntities,
                     paneEntityList,
                     contentEntities);
-            notifyEnableDB();
+            notifyPlayStart();
         }
 
 
@@ -253,6 +255,52 @@ public class PlayDataHandler {
     }
 
 
+
+    private void processCommandContentFiles(ArrayList<PlayContent> contents, boolean downloadAllowed)
+            throws IOException{
+        // clear the content cache on disk if any contents have been updated
+        // boolean shouldClearCache = false;
+        // keep track of used files, unused files are removed
+        ArrayList<String> usedContents = new ArrayList<>();
+        for (PlayContent content : contents) {
+            final String filename = content.filename;
+            final String url = content.url;
+
+            usedContents.add(filename);
+
+            if (!IOUtils.hasContent(mContext, filename)) {
+                //       shouldClearCache = true;
+                // copy or download the content if it is not stored yet
+                if (downloadAllowed && !TextUtils.isEmpty(url)) {
+                    try {
+                        // download the file only if downloads are allowed and url is not empty
+                        File contentFile = IOUtils.getCommandContentFile(mContext, filename);
+                        BasicHttpClient httpClient = new BasicHttpClient();
+                        httpClient.setRequestLogger(mQuietLogger);
+                        //  IOUtils.authorizeHttpClient(mContext, httpClient);
+                        String encURL = DaulUtils.encodeURL(url);
+                        HttpResponse httpResponse = httpClient.get(encURL, null);
+                        IOUtils.writeToFile(httpResponse.getBody(), contentFile);
+
+                    } catch (IOException ex) {
+                        Log.e(TAG, "FAILED downloading map overlay content " + url +
+                                ": " + ex.getMessage(), ex);
+                    }
+                } else {
+                    Log.d(TAG, "Skipping download of map overlay content" +
+                            " (since downloadsAllowed=false)");
+                }
+            }
+        }
+
+        /*if (shouldClearCache) {
+            IOUtils.clearDiskCache(mContext);
+        }*/
+
+        if (contents.size() > 0) {
+            IOUtils.removeUnusedCommandContents(mContext, usedContents);
+        }
+    }
 
     /**
      * A type of ConsoleRequestLogger that does not log requests and responses.

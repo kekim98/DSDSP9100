@@ -424,9 +424,12 @@ public class RemotePlayDataFetcher {
     }
 
     // Reset the timestamp of the data we have in the content provider
-    public static void resetDataTimestamp(final Context context) {
+    public static void resetDataTimestamp(final Context context, int idx) {
         Log.d(TAG, "Resetting data timestamp to default (to invalidate our synced data)");
+
+        String key = DATA_KEYS_IN_ORDER[idx];
+
         PreferenceManager.getDefaultSharedPreferences(context).edit().remove(
-                SP_KEY_DATA_TIMESTAMP).apply();
+                SP_KEY_DATA_TIMESTAMP + "_" + key).apply();
     }
 }

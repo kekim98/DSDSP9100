@@ -2,6 +2,7 @@
 package com.dignsys.dsdsp.dsdsp_9100.service.handler;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
@@ -10,6 +11,8 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.CommandEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.model.PlayContent;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -60,8 +63,20 @@ public class CommandHandler extends BasicHandler {
                    if(strLine.startsWith("addfont"))	{
 
                        String strFontFileName = strLine.substring(strLine.indexOf(" ")).trim() + ".ttf";
+                       int n = Integer.valueOf(strLine.substring(7, 8));
 
-                       mCommand.setFontFilePath(strFontFileName);
+                       switch (n) {
+                           case 1:
+                               mCommand.setFontFilePath_1(strFontFileName);
+                               break;
+                           case 2:
+                               mCommand.setFontFilePath_2(strFontFileName);
+                               break;
+                           case 3:
+                               mCommand.setFontFilePath_3(strFontFileName);
+                               break;
+                       }
+
 
                    }
 
@@ -116,20 +131,42 @@ public class CommandHandler extends BasicHandler {
 
         PlayContent content = new PlayContent();
 
-        if (mCommand.getFwFilePath() != null) {
+        if (!TextUtils.isEmpty(mCommand.getFwFilePath())) {
 
             filename =mCommand.getFwFilePath();
-            url = String.format("http://%s:%d/%s/%s", hostAddr, port, folder, filename);
+            url = String.format("http://%s:%s/%s/%s", hostAddr, port, folder, filename);
 
             content.filename = filename;
             content.url = url;
             contents.add(content);
         }
 
-        if (mCommand.getFontFilePath() != null) {
+        if (!TextUtils.isEmpty(mCommand.getFontFilePath_1())) {
 
-            filename = mCommand.getFontFilePath();
-            url = String.format("http://%s:%d/%s/%s", hostAddr, port, folder, filename);
+            filename = mCommand.getFontFilePath_1() + ".ttf";
+            url = String.format("http://%s:%s/%s/%s", hostAddr, port, folder, filename);
+
+            content.filename = filename;
+            content.url = url;
+            contents.add(content);
+
+        }
+
+        if (!TextUtils.isEmpty(mCommand.getFontFilePath_2())) {
+
+            filename = mCommand.getFontFilePath_2() + ".ttf";
+            url = String.format("http://%s:%s/%s/%s", hostAddr, port, folder, filename);
+
+            content.filename = filename;
+            content.url = url;
+            contents.add(content);
+
+        }
+
+        if (!TextUtils.isEmpty(mCommand.getFontFilePath_3())) {
+
+            filename = mCommand.getFontFilePath_3() + ".ttf";
+            url = String.format("http://%s:%s/%s/%s", hostAddr, port, folder, filename);
 
             content.filename = filename;
             content.url = url;

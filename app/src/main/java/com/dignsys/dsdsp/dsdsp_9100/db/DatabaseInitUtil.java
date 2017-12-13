@@ -134,7 +134,6 @@ public class DatabaseInitUtil {
 
         configEntity.setCaptureScale(30);
 
-        configEntity.setIsDBEnable(1); //1:enable, 0:disable
     }
 
 }

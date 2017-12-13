@@ -29,7 +29,6 @@ public class MainViewModel extends AndroidViewModel {
     private static final String TAG = MainViewModel.class.getSimpleName();
 
     private final ScheduleHelper mScheduleHelper = ScheduleHelper.getInstance(this.getApplication());
-
     private final CommandHelper mCommandHelper = CommandHelper.getInstance(this.getApplication());
     private ConfigHelper mConfigHelper = ConfigHelper.getInstance(this.getApplication());
 
@@ -49,25 +48,25 @@ public class MainViewModel extends AndroidViewModel {
 
 
     public List<PaneEntity> getPaneList() { return  mScheduleHelper.getPaneList();}
-
-    public LiveData<Integer> getPlayCommand() { return mScheduleHelper.getPlayCommand();}
-
-
     public ContentEntity getContent(int paneNum) {
         return mScheduleHelper.getContent(paneNum);
     }
 
 
+    public ScheduleHelper getScheduleHelper() {
+        return mScheduleHelper;
+    }
     public ConfigHelper getConfigHelper() {
         return mConfigHelper;
     }
+    public CommandHelper getCommandHelper() { return mCommandHelper;}
 
     public LiveData<ConfigEntity> getConfig(){ return mConfigHelper.getConfig();}
-
+    public LiveData<Integer> getPlayCommand() { return mCommandHelper.getPlayCommand();}
     public LiveData<Integer> getContentPlayDone() {
         return mScheduleHelper.getContentPlayDone();
     }
-    public CommandHelper getCommandHelper() { return mCommandHelper;}
+
 
 
 
@@ -129,5 +128,9 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
-
+    public void removeObservers() {
+        getCommandHelper().removeObservers();
+        getConfigHelper().removeObservers();
+        getScheduleHelper().removeObservers();
+    }
 }

@@ -73,4 +73,11 @@ public abstract class AppDatabase extends RoomDatabase {
         commandDao().insertOne(commandEntity);
     }
 
+    @Transaction
+    public void deletePlayDataTransaction() {
+        scheduleDao().deleteAllSchedule();
+        sceneDao().deleteAllScene();
+        paneDao().deleteAllPane();
+        contentDao().deleteAllContent();
+    }
 }

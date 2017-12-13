@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -91,9 +92,10 @@ public class ScreenFragmentCfg extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
 
         List<String> listFonts = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.spinnerCapFont)));
-        if(!DSLibIF.getUserFont(1).isEmpty()) listFonts.add(DSLibIF.getUserFont(1));
-        if(!DSLibIF.getUserFont(2).isEmpty()) listFonts.add(DSLibIF.getUserFont(2));
-        if(!DSLibIF.getUserFont(3).isEmpty()) listFonts.add(DSLibIF.getUserFont(3));
+
+        if(!TextUtils.isEmpty(DSCommanIF.getUserFont(1))) listFonts.add(DSCommanIF.getUserFont(1));
+        if(!TextUtils.isEmpty(DSCommanIF.getUserFont(2))) listFonts.add(DSCommanIF.getUserFont(2));
+        if(!TextUtils.isEmpty(DSCommanIF.getUserFont(3))) listFonts.add(DSCommanIF.getUserFont(3));
 
         ArrayAdapter<String> adpCapFont = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, listFonts);
         ArrayAdapter<CharSequence> adpCapRSSMode	= ArrayAdapter.createFromResource(getContext(), R.array.spinnerCapRSSMode, android.R.layout.simple_spinner_item);

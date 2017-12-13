@@ -15,9 +15,11 @@ import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.ui.config.ConfigActivity;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> mFragmentList = new ArrayList<Fragment>();
     private List<PaneEntity> mPaneEntityList;
     private MainViewModel mViewModel;
+    private CommandHelper mCommand;
     private ConfigHelper DSLibIF;
 
     ImageView mDefaultImageView;
@@ -42,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
         mDefaultImageView = findViewById(R.id.imageView);
 
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mCommand = mViewModel.getCommandHelper();
         DSLibIF = mViewModel.getConfigHelper();
 
+      //  mCommand.screenOnOff(true);
 
         subscribe();
 
@@ -55,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy()
     {
         stopDSDSP();
+        mViewModel.removeObservers();
         super.onDestroy();
 
     }
@@ -79,13 +85,31 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onChanged:bawoori1 command=" + String.valueOf(command));
                // mPlayStart =1;
 
-                if (command == 1) {
+                if (command == Definer.DEF_PLAY_START_COMMAND) {
                     stopDSDSP();
                     playDSDSP();
                 }
-                if (command == 0) {
+                if (command == Definer.DEF_PLAY_STOP_COMMAND) {
                     stopDSDSP();
                 }
+                if (command == Definer.DEF_PLAY_IDLE_COMMAND) {
+                    stopDSDSP();
+                    mDefaultImageView.setVisibility(View.VISIBLE);
+                }
+                if (command == Definer.DEF_SLEEP_IN_COMMAND) {
+                    mCommand.screenOnOff(false);
+                    stopDSDSP();
+                }
+                if (command == Definer.DEF_SLEEP_OUT_COMMAND) {
+                    mCommand.screenOnOff(true);
+                    playDSDSP();
+                }
+
+                if (command == Definer.DEF_REBOOT_COMMAND) {
+                    stopDSDSP();
+                    mCommand.rebootSystem();
+                }
+
 
             }
         });

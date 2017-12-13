@@ -13,7 +13,6 @@ import android.util.Log;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.SceneEntity;
@@ -37,7 +36,8 @@ public class ScheduleHelper {
 
     // private static final MutableLiveData ABSENT = new MutableLiveData();
     private final LiveData<List<ContentEntity>> mContentList;
-    private final LiveData<ConfigEntity> mConfig;
+  //  private final LiveData<ConfigEntity> mConfig;
+    private final ConfigHelper mConfig;
     private long mTickCount = 0;
     private static final String TAG = ScheduleHelper.class.getSimpleName();
     private int mPaneListSyncDone = 0;
@@ -55,7 +55,8 @@ public class ScheduleHelper {
     }
 */
 
-    private final MutableLiveData<Integer> mPlayCommand = new MutableLiveData<>();
+    //private final MutableLiveData<Integer> mPlayCommand = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mPlayCommand;
     private final MutableLiveData<Integer> mScheduleId = new MutableLiveData<>();
     private final MutableLiveData<Integer> mSceneId = new MutableLiveData<>();
     // private final MutableLiveData<Integer> mScheduleDone = new MutableLiveData<>();
@@ -79,25 +80,25 @@ public class ScheduleHelper {
 
         AppDatabase db = DatabaseCreator.getInstance(context);
        // mConfig = db.configDao().loadConfig();
-        mConfig = ConfigHelper.getInstance(_context).getConfig();
+        mConfig = ConfigHelper.getInstance(_context);
         mScheduleList = db.scheduleDao().loadAllSchedule();
+
+        mPlayCommand = CommandHelper.getInstance(_context).getPlayCommand();
 
 
         // Create the observer which updates the schedule list .
-        final Observer<ConfigEntity> configObserver = new Observer<ConfigEntity>() {
+        final Observer<Integer> configObserver = new Observer<Integer>() {
             @Override
-            public void onChanged(@Nullable final ConfigEntity config) {
-                if (config != null) {
-                    if (config.getIsDBEnable() == 0) {
+            public void onChanged(@Nullable final Integer command) {
+                if (command == Definer.DEF_PLAY_STOP_COMMAND
+                        || command == Definer.DEF_PLAY_IDLE_COMMAND) {
                         mScheduleId.setValue(0);
                         mSceneId.setValue(0);
-                        mPlayCommand.setValue(0);
                         mContentPlayDone.setValue(0);
                     }
-                }
             }
         };
-        mConfig.observeForever(configObserver);
+        mPlayCommand.observeForever(configObserver);
 
 
         // Create the observer which updates the schedule list .
@@ -249,7 +250,7 @@ public class ScheduleHelper {
                         cs.opRunTimeTick = ce.getOpRunTime() + mTickCount;
                     } else {
                         if (ce.getFileType() == Definer.DEF_CONTENTS_TYPE_IMAGE) {
-                            cs.opRunTimeTick = mConfig.getValue().getImageChangeInterval() + mTickCount;
+                            cs.opRunTimeTick = mConfig.getPicChangeTime() + mTickCount;
                             Log.d(TAG, "getContent bawoori: content=" + ce.getFilePath());
                         }
                     }
@@ -325,7 +326,7 @@ public class ScheduleHelper {
 
         Log.d(TAG, "makeContentSchedule: bawoori1- make done");
         mContentPlayDone.setValue(0);
-        mPlayCommand.setValue(1);
+        mPlayCommand.setValue(Definer.DEF_PLAY_START_COMMAND);
     }
 
     private void findMainPane() {
@@ -587,9 +588,7 @@ public class ScheduleHelper {
     }
 
 
-    public MutableLiveData<Integer> getPlayCommand() {
-        return mPlayCommand;
-    }
+    //public MutableLiveData<Integer> getPlayCommand() { return mPlayCommand; }
 
     // public MutableLiveData<Integer> getScheduleDone() { return mScheduleDone; }
 
@@ -605,5 +604,9 @@ public class ScheduleHelper {
 
     // public LiveData<List<ContentEntity>> getContentList() { return mContentList; }
 
-     public LiveData<ConfigEntity> getConfig() { return mConfig; }
+    // public LiveData<ConfigEntity> getConfig() { return mConfig; }
+
+    public void removeObservers() {
+
+    }
 }

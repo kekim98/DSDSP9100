@@ -3,6 +3,7 @@ package com.dignsys.dsdsp.dsdsp_9100.util;
 
 import android.content.Context;
 
+import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.turbomanage.httpclient.BasicHttpClient;
 
 import org.mozilla.universalchardet.UniversalDetector;
@@ -129,16 +130,28 @@ public class IOUtils {
     }
 
     public static File getContentFile(Context context, String filename) {
-        File folder = new File(context.getFilesDir(), getContentFileFolder());
+        File folder = new File(Definer.DEF_ROOT_PATH, getPlayContentFileFolder());
         if (!folder.exists()) {
             folder.mkdirs();
         }
         return new File(folder, filename);
     }
 
-    public static String getContentFileFolder() {
-        //TODO: have to change to SD Card path
-        return "test-content";
+
+    public static File getCommandContentFile(Context context, String filename) {
+        File folder = new File(Definer.DEF_ROOT_PATH, getCommandContentFileFolder());
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        return new File(folder, filename);
+    }
+
+    public static String getPlayContentFileFolder() {
+        return Definer.DEF_PLAY_CONTENT_FOLDER;
+    }
+
+    public static String getCommandContentFileFolder() {
+        return Definer.DEF_COMMAND_CONTENT_FOLDER;
     }
 
     public static String getDspPlayContent(Context context, String filePath) throws NullPointerException{
@@ -155,7 +168,25 @@ public class IOUtils {
 
     public static void removeUnusedContents(Context mContext, final ArrayList<String> usedContents) {
         // remove all files are stored in the content path but are not used
-        File folder = new File(mContext.getFilesDir(), getContentFileFolder());
+        File folder = new File(Definer.DEF_ROOT_PATH, getPlayContentFileFolder());
+        File[] unused = folder.listFiles(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String filename) {
+                return !usedContents.contains(filename);
+            }
+        });
+
+        if (unused != null) {
+            for (File f : unused) {
+                f.delete();
+            }
+        }
+    }
+
+    public static void removeUnusedCommandContents(Context mContext, final ArrayList<String> usedContents) {
+        // remove all files are stored in the content path but are not used
+        File folder = new File(Definer.DEF_ROOT_PATH, getCommandContentFileFolder());
         File[] unused = folder.listFiles(new FilenameFilter() {
 
             @Override

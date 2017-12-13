@@ -4,17 +4,13 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +19,6 @@ import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgConfirm;
 import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgFilelist;
 import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgSelectFW;
-import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgSyncUMS;
 import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
@@ -49,8 +44,7 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
     private String m_strVersion;
     private MainViewModel mViewModel;
     private CommandHelper DSCommanIF;
-    private Observer<Boolean> mSyncObserver;
-    private ProgressBar mProgressBar;
+    private Observer<Boolean> mDismssPopupObserver;
     private ProgressDialog mProgressDialog;
 
 
@@ -81,24 +75,22 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
         DSLibIF = mViewModel.getConfigHelper();
         DSCommanIF = mViewModel.getCommandHelper();
 
-        mSyncObserver = new Observer<Boolean>() {
+        mDismssPopupObserver = new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable Boolean isSyncDone) {
-                if (isSyncDone  && mProgressDialog != null) {
-                  //  mProgressBar.setVisibility(View.GONE);
+            public void onChanged(@Nullable Boolean dismiss) {
+                if (dismiss) {
                     mProgressDialog.dismiss();
-                    GeneralFragmentCfg.this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
         };
 
-        DSCommanIF.isSyncDone().observe(this, mSyncObserver);
+        DSCommanIF.getIsSyncDone().observe(this, mDismssPopupObserver);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        DSCommanIF.isSyncDone().removeObserver(mSyncObserver);
+        DSCommanIF.getIsSyncDone().removeObserver(mDismssPopupObserver);
     }
 
     @Override
@@ -187,13 +179,6 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
 
     }
 
-    /*private void applyGeneralConfig()
-    {
-        DSLibIF.setDeviceID(((EditText)mView.findViewById(R.id.cfgValue_etDevice_ID)).getText().toString());
-     //   DSLibIF.applyConfig();
-
-        DaulUtils.showMessageBox(this.getContext(), getString(R.string.ca_msg_apply_config), getString(R.string.def_yes));
-    }*/
 
 
     @Override

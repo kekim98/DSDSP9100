@@ -53,7 +53,7 @@ public class ConfigHelper {
         final Observer<ConfigEntity> configObserver = new Observer<ConfigEntity>() {
             @Override
             public void onChanged(@Nullable final ConfigEntity config) {
-                if (config != null && config.getIsDBEnable() != 0) {
+                if (config != null ) {
                     _mConfig = config;
                 }
             }
@@ -835,24 +835,7 @@ public class ConfigHelper {
         }
     }
 
-    public  String getUserFont(int n)	{
 
-        String strPath = "";
-
-        switch(n)	{
-            case 1:
-                strPath = m_strUserFontPath1;
-                break;
-            case 2:
-                strPath = m_strUserFontPath2;
-                break;
-            case 3:
-                strPath = m_strUserFontPath3;
-                break;
-        }
-
-        return strPath;
-    }
 
     public  int getUserFontID(String strFontName)	{
 
@@ -1005,6 +988,10 @@ public class ConfigHelper {
             }
 
         }.execute(_context);
+    }
+
+    public void removeObservers() {
+
     }
 }
 

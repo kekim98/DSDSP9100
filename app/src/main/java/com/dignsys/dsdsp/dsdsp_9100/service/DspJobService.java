@@ -2,8 +2,10 @@ package com.dignsys.dsdsp.dsdsp_9100.service;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
-import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.dignsys.dsdsp.dsdsp_9100.Definer;
 
 
 /**
@@ -42,24 +44,55 @@ public class DspJobService extends JobService {
     @Override
     public boolean onStartJob(final JobParameters params) {
 
+        String value = params.getExtras().getString(Definer.DEF_DSP_JOB_KEY);
+        Log.i(TAG, "onStartJob:value= " + value);
 
-        final String pmCmd = "pm install -r -d /mnt/external_sd/test.apk";
-        final String startCmd = "am start -a android.intent.action.MAIN -n com.dignsys.dsdsp.dsdsp_9100/.ui.main.MainActivity";
+        if (!TextUtils.isEmpty(value) && value.equals(Definer.DEF_FW_UPGRADE_VALUE)) {
 
-        Log.e(TAG, "onStartJob: ....................................." );
-        Process p = null;
-        try {
-            p = Runtime.getRuntime().exec(pmCmd);
-            p.waitFor();
+            final String file = params.getExtras().getString(Definer.DEF_VALUE_SUB_KEY);
 
-            p = Runtime.getRuntime().exec(startCmd);
-            p.waitFor();
+            final String upgradeCmd = "pm install -r -d " + file;
 
-            //	Toast.makeText(this, "SD카드가 포맷되었습니다", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.e(TAG, "onStartJob: ....................................." );
+            Process p = null;
+            try {
+                p = Runtime.getRuntime().exec(upgradeCmd);
+                p.waitFor();
+
+                //	Toast.makeText(this, "SD카드가 포맷되었습니다", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+
         }
+
+        if (!TextUtils.isEmpty(value) && value.equals(Definer.DEF_WATCH_DOG_VALUE)) {
+
+            final String checkDSDSPStatus = "ps | grep 'com.dignsys.dsdsp.dsdsp_9100";
+            final String startCmd = "am start -a android.intent.action.MAIN -n com.dignsys.dsdsp.dsdsp_9100/.ui.main.MainActivity";
+            Process p = null;
+            try {
+                p = Runtime.getRuntime().exec(checkDSDSPStatus);
+                p.waitFor();
+                int exitStatus = p.exitValue();
+
+                if (exitStatus != 0) {
+                    p = Runtime.getRuntime().exec(startCmd);
+                    p.waitFor();
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return false;
+
+
+        }
+
 
         // The work that this service "does" is simply wait for a certain duration and finish
         // the job (on another thread).
@@ -85,40 +118,15 @@ public class DspJobService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        Log.e(TAG, "onStopJob: ....................................." );
-        Process p = null;
-
-        final String startCmd = "am start -a android.intent.action.MAIN -n com.dignsys.dsdsp.dsdsp_9100/.ui.main.MainActivity";
-
-        try {
-            p = Runtime.getRuntime().exec(startCmd);
-            p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
       /*  // Stop tracking these job parameters, as we've 'finished' executing.
         sendMessage(MSG_COLOR_STOP, params.getJobId());
         Log.i(TAG, "on stop job: " + params.getJobId());
 */
         // Return false to drop the job.
+        Log.i(TAG, "onStopJob:........................... " + params.getJobId());
         return false;
     }
 
-    /*private void sendMessage(int messageID, @Nullable Object params) {
-        // If this service is launched by the JobScheduler, there's no callback Messenger. It
-        // only exists when the MainActivity calls startService() with the callback in the Intent.
-        if (mActivityMessenger == null) {
-            Log.d(TAG, "Service is bound, not started. There's no callback to send a message to.");
-            return;
-        }
-        Message m = Message.obtain();
-        m.what = messageID;
-        m.obj = params;
-        try {
-            mActivityMessenger.send(m);
-        } catch (RemoteException e) {
-            Log.e(TAG, "Error passing service object back to activity.");
-        }
-    }*/
+
 }

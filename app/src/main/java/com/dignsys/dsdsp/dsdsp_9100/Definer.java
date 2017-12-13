@@ -1,5 +1,7 @@
 package com.dignsys.dsdsp.dsdsp_9100;
 
+import java.io.File;
+
 public class Definer {
 
 	/*
@@ -32,6 +34,10 @@ public class Definer {
 	public static final String DEF_SD_PATH				= "/mnt/external_sd";
 	public static final String DEF_CAPTURE_PATH			= "/mnt/external_sd/";
 	public static final String DEF_ROOT_PATH		    = "/mnt/external_sd/dsdsp";
+	public static final String DEF_PLAY_CONTENT_FOLDER  = "play_content";
+	public static final String DEF_COMMAND_CONTENT_FOLDER  = "command_content";
+	public static final String DEF_COMMAND_CONTENT_PATH = DEF_ROOT_PATH + File.separator + DEF_COMMAND_CONTENT_FOLDER ;
+
 	public static final String DEF_UMS_PATH		   	    = "/mnt/usb_storage";
 	public static final String DEF_FILENAME_PLAYLIST	= "playlist.txt";
 	public static final String DEF_FILENAME_FORMAT		= "format.txt";
@@ -249,6 +255,23 @@ public class Definer {
 	public static final String TEST_CONFIG_URL = "http://192.168.1.132/site/bawooriTest/test/dspconfig.txt";
 	public static final String TEST_COMMAND_URL = "http://192.168.1.132/site/bawooriTest/test/command.txt";
 	public static final String TEST_RSS_URL = "http://open.moleg.go.kr/data/xml/lh_rssSH03.xml";
+
+
+	public static final Integer DEF_PLAY_STOP_COMMAND = 3;
+	public static final Integer DEF_PLAY_START_COMMAND = 1;
+	public static final Integer DEF_DISMISS_POPUP_COMMAND = 2;
+	public static final Integer DEF_PLAY_IDLE_COMMAND = 0;
+	public static final Integer DEF_SLEEP_IN_COMMAND = 4;
+	public static final Integer DEF_SLEEP_OUT_COMMAND = 5;
+	public static final Integer DEF_REBOOT_COMMAND = 6;
+	public static final Integer DEF_PLAY_UPGRADE_COMMAND = 7;
+
+
+    public static final String DEF_WATCH_DOG_VALUE = "-WATCH-DOG" ;
+	public static final String DEF_FW_UPGRADE_VALUE = "-FW-UPGRADE" ;
+	public static final String DEF_DSP_JOB_KEY = "DSDSP-JOB-KEY";
+	public static final String DEF_VALUE_SUB_KEY = "DSDSP-VALUE-KEY";
+
 
 
 }
