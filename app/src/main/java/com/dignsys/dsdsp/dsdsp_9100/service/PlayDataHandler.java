@@ -235,11 +235,11 @@ public class PlayDataHandler {
                         IOUtils.writeToFile(httpResponse.getBody(), contentFile);
 
                     } catch (IOException ex) {
-                        Log.e(TAG, "FAILED downloading map overlay content " + url +
+                        Log.e(TAG, "FAILED downloading  content " + url +
                                 ": " + ex.getMessage(), ex);
                     } 
                 } else {
-                    Log.d(TAG, "Skipping download of map overlay content" +
+                    Log.d(TAG, "Skipping download of  content" +
                             " (since downloadsAllowed=false)");
                 }
             }
@@ -283,11 +283,11 @@ public class PlayDataHandler {
                         IOUtils.writeToFile(httpResponse.getBody(), contentFile);
 
                     } catch (IOException ex) {
-                        Log.e(TAG, "FAILED downloading map overlay content " + url +
+                        Log.e(TAG, "FAILED downloading  content " + url +
                                 ": " + ex.getMessage(), ex);
                     }
                 } else {
-                    Log.d(TAG, "Skipping download of map overlay content" +
+                    Log.d(TAG, "Skipping download of  content" +
                             " (since downloadsAllowed=false)");
                 }
             }

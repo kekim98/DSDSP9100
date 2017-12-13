@@ -129,10 +129,11 @@ public class CommandHandler extends BasicHandler {
         final String folder = config.getServerFolder();
 
 
-        PlayContent content = new PlayContent();
+
 
         if (!TextUtils.isEmpty(mCommand.getFwFilePath())) {
 
+            PlayContent content = new PlayContent();
             filename =mCommand.getFwFilePath();
             url = String.format("http://%s:%s/%s/%s", hostAddr, port, folder, filename);
 
@@ -142,8 +143,9 @@ public class CommandHandler extends BasicHandler {
         }
 
         if (!TextUtils.isEmpty(mCommand.getFontFilePath_1())) {
+            PlayContent content = new PlayContent();
 
-            filename = mCommand.getFontFilePath_1() + ".ttf";
+            filename = mCommand.getFontFilePath_1();
             url = String.format("http://%s:%s/%s/%s", hostAddr, port, folder, filename);
 
             content.filename = filename;
@@ -153,8 +155,9 @@ public class CommandHandler extends BasicHandler {
         }
 
         if (!TextUtils.isEmpty(mCommand.getFontFilePath_2())) {
+            PlayContent content = new PlayContent();
 
-            filename = mCommand.getFontFilePath_2() + ".ttf";
+            filename = mCommand.getFontFilePath_2();
             url = String.format("http://%s:%s/%s/%s", hostAddr, port, folder, filename);
 
             content.filename = filename;
@@ -164,8 +167,9 @@ public class CommandHandler extends BasicHandler {
         }
 
         if (!TextUtils.isEmpty(mCommand.getFontFilePath_3())) {
+            PlayContent content = new PlayContent();
 
-            filename = mCommand.getFontFilePath_3() + ".ttf";
+            filename = mCommand.getFontFilePath_3();
             url = String.format("http://%s:%s/%s/%s", hostAddr, port, folder, filename);
 
             content.filename = filename;
