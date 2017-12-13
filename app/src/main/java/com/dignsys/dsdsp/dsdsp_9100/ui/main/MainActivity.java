@@ -50,12 +50,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
 
+    @Override
+    protected void onDestroy()
+    {
+        stopDSDSP();
+        super.onDestroy();
 
     }
+
+
 
     private void subscribe() {
         // Update the list when the data changes
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        mViewModel.getPlayStart().observe(this, new Observer<Integer>() {
+        mViewModel.getPlayCommand().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer command) {
                 Log.d(TAG, "onChanged:bawoori1 command=" + String.valueOf(command));
@@ -88,10 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+
 
 
     //V:video/picture, P:picture, M:message, C:clock, B:background color

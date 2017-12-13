@@ -148,6 +148,7 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
         DlgConfirm dlg = (DlgConfirm)dialog;
 
         if(dlg.getConfirmID() == Definer.DEF_CONFIRM_ID_RESET_CONFIG)	{
+
             DSLibIF.initConfigs();
 
             ((Button)findViewById(R.id.cfgBtnMI_General)).setSelected(true);

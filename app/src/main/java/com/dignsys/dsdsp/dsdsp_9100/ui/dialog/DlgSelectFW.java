@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 
 import java.io.File;
 import java.util.Arrays;
@@ -80,8 +81,7 @@ public class DlgSelectFW extends Dialog implements OnItemClickListener, View.OnC
                 try  {
                 	String str = new String(file.getName());
 
-                	//TODO : DaulUtils.getExtension
-                	//if (!file.isDirectory() && DaulUtils.getExtension(str).equals("bin")) adapter.add(str);
+                	if (!file.isDirectory() && DaulUtils.getExtension(str).equals("bin")) adapter.add(str);
 
     			} 
                 catch (Exception e)  {

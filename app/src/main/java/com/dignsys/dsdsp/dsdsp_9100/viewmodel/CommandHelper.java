@@ -1,11 +1,17 @@
 package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
 
 import android.app.AlarmManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
+import android.content.ComponentName;
 import android.content.Context;
+import android.os.PersistableBundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -13,6 +19,8 @@ import android.view.WindowManager;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.CommandEntity;
+import com.dignsys.dsdsp.dsdsp_9100.service.DspJobService;
+import com.dignsys.dsdsp.dsdsp_9100.service.SyncService;
 
 import java.util.TimeZone;
 
@@ -28,6 +36,8 @@ public class CommandHelper {
 
     // private static final MutableLiveData ABSENT = new MutableLiveData();
     private final LiveData<CommandEntity> mCommand;
+
+    private final MutableLiveData<Boolean> mIsSyncDone = new MutableLiveData<>();
 
 
     private Context _context;
@@ -134,6 +144,57 @@ public class CommandHelper {
         AlarmManager alarm = (AlarmManager) _context.getSystemService(Context.ALARM_SERVICE);
         alarm.setTimeZone(zone);
     }
+
+    public void umsSync() {
+        SyncService.startUmsSync(_context, null, null );
+    }
+
+    public void umsCopy() {
+        SyncService.startUmsCopy(_context, null, null );
+    }
+
+    public void sdFormat() {
+        SyncService.startSDFormat(_context, null, null );
+    }
+
+    public void deleteAll() {
+        SyncService.startDeletAll(_context, null, null );
+
+    }
+
+
+    public void upgrade(String strDestFilePath) {
+
+        JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(_context, DspJobService.class));
+
+        builder.setMinimumLatency(1000);
+
+        builder.setOverrideDeadline(10 * 1000);
+
+
+
+        // Extras, work duration.
+        PersistableBundle extras = new PersistableBundle();
+        /*String workDuration = mDurationTimeEditText.getText().toString();
+        if (TextUtils.isEmpty(workDuration)) {
+            workDuration = "1";
+        }*/
+        extras.putString("FW-UPGRADE", strDestFilePath);
+
+        builder.setExtras(extras);
+
+        // Schedule job
+        Log.d(TAG, "Scheduling job");
+        JobScheduler tm = (JobScheduler) _context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        tm.schedule(builder.build());
+    }
+
+    /** Used to observe when the database initialization is done */
+    public MutableLiveData<Boolean> isSyncDone() {
+        return mIsSyncDone;
+    }
+
+
 }
 
     

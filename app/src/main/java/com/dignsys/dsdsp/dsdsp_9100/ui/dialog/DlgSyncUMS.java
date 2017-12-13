@@ -14,8 +14,6 @@ import com.dignsys.dsdsp.dsdsp_9100.R;
 
 public class DlgSyncUMS extends Dialog implements View.OnClickListener {
 
-	private SyncUMSHandler 		mHandler 		= null;
-	private SyncUMSThread 		mThread 		= null;
 	private OnDismissListener m_odListener	= null;
 
 	public Context mContext 	= null;
@@ -42,8 +40,7 @@ public class DlgSyncUMS extends Dialog implements View.OnClickListener {
 		
 		mTV			= (TextView)findViewById(R.id.dlgSU_tvMSG);
 		mBtnOK		= (Button)findViewById(R.id.dlgSU_btnOK);
-		mHandler 	= new SyncUMSHandler(this);
-		mThread		= new SyncUMSThread(mHandler, m_nOperationID);
+
 		
 		if(m_nOperationID == Definer.DEF_USM_SYNC_OP_ID_COPY) mTV.setText(mContext.getString(R.string.msg_ums_sync_dialog_copy));
 		
@@ -52,11 +49,7 @@ public class DlgSyncUMS extends Dialog implements View.OnClickListener {
 		super.onCreate(savedInstanceState);
 	}
 	
-	public void startSync()
-	{
-		mThread.start();		
-	}
-	
+
 	public void completedSync()
 	{
 		mTV.setText(mContext.getString(R.string.msg_ums_sync_dialog_completed));	

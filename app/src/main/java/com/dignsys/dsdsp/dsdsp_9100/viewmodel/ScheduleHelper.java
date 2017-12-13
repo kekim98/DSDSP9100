@@ -55,7 +55,7 @@ public class ScheduleHelper {
     }
 */
 
-    private final MutableLiveData<Integer> mPlayStart = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mPlayCommand = new MutableLiveData<>();
     private final MutableLiveData<Integer> mScheduleId = new MutableLiveData<>();
     private final MutableLiveData<Integer> mSceneId = new MutableLiveData<>();
     // private final MutableLiveData<Integer> mScheduleDone = new MutableLiveData<>();
@@ -91,7 +91,7 @@ public class ScheduleHelper {
                     if (config.getIsDBEnable() == 0) {
                         mScheduleId.setValue(0);
                         mSceneId.setValue(0);
-                        mPlayStart.setValue(0);
+                        mPlayCommand.setValue(0);
                         mContentPlayDone.setValue(0);
                     }
                 }
@@ -325,7 +325,7 @@ public class ScheduleHelper {
 
         Log.d(TAG, "makeContentSchedule: bawoori1- make done");
         mContentPlayDone.setValue(0);
-        mPlayStart.setValue(1);
+        mPlayCommand.setValue(1);
     }
 
     private void findMainPane() {
@@ -587,8 +587,8 @@ public class ScheduleHelper {
     }
 
 
-    public MutableLiveData<Integer> getPlayStart() {
-        return mPlayStart;
+    public MutableLiveData<Integer> getPlayCommand() {
+        return mPlayCommand;
     }
 
     // public MutableLiveData<Integer> getScheduleDone() { return mScheduleDone; }

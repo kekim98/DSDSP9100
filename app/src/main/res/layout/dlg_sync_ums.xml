@@ -16,12 +16,7 @@
         android:text="@string/msg_ums_sync_dialog"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <ProgressBar
-        android:id="@+id/dlgSU_pb"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp" />
+
 
     <Button
         android:id="@+id/dlgSU_btnOK"

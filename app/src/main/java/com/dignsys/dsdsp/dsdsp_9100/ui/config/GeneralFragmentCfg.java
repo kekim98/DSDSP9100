@@ -1,5 +1,7 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.config;
 
+import android.app.ProgressDialog;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -10,7 +12,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +25,11 @@ import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgFilelist;
 import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgSelectFW;
 import com.dignsys.dsdsp.dsdsp_9100.ui.dialog.DlgSyncUMS;
 import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
+
+import java.io.File;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +48,10 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
     private View mView;
     private String m_strVersion;
     private MainViewModel mViewModel;
+    private CommandHelper DSCommanIF;
+    private Observer<Boolean> mSyncObserver;
+    private ProgressBar mProgressBar;
+    private ProgressDialog mProgressDialog;
 
 
     public GeneralFragmentCfg() {
@@ -68,6 +79,26 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
         super.onCreate(savedInstanceState);
         mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         DSLibIF = mViewModel.getConfigHelper();
+        DSCommanIF = mViewModel.getCommandHelper();
+
+        mSyncObserver = new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean isSyncDone) {
+                if (isSyncDone  && mProgressDialog != null) {
+                  //  mProgressBar.setVisibility(View.GONE);
+                    mProgressDialog.dismiss();
+                    GeneralFragmentCfg.this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                }
+            }
+        };
+
+        DSCommanIF.isSyncDone().observe(this, mSyncObserver);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        DSCommanIF.isSyncDone().removeObserver(mSyncObserver);
     }
 
     @Override
@@ -83,6 +114,9 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
         mView.findViewById(R.id.cfgAG_btnUSBSync).setOnClickListener(this);
         mView.findViewById(R.id.cfgAG_btnView).setOnClickListener(this);
 
+      //  mProgressBar = mView.findViewById(R.id.dlgSync_pb);
+         mProgressDialog = new ProgressDialog(
+                GeneralFragmentCfg.this.getActivity());
 
         return mView;
 
@@ -98,8 +132,6 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
         String strModelID 		= Definer.DEF_MODEL_ID;
         String m_strCompanyID 	= Definer.DEF_COMPANY_ID;
         String strVersion 		= Definer.DEF_VERSION;
-
-      //  m_strCompanyID 	= DSFrameworkIF.getVendorCode(this);
 
 
         m_strVersion 	= strBoardID + strModelID + m_strCompanyID + "_" + strVersion;
@@ -123,10 +155,8 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
         }
 
         if (nID == R.id.cfgAG_btnSDFormat)	{
-			/*Intent intent= new Intent("android.settings.MEMORY_CARD_SETTINGS");
-			startActivity(intent);*/
-                DlgConfirm dlg = new DlgConfirm(this.getContext(), this, getString(R.string.msg_confirm_format_sdcard), Definer.DEF_CONFIRM_ID_FORMAT_SDCARD);
-                dlg.show();
+            DlgConfirm dlg = new DlgConfirm(this.getContext(), this, getString(R.string.msg_confirm_format_sdcard), Definer.DEF_CONFIRM_ID_FORMAT_SDCARD);
+            dlg.show();
 
         }
 
@@ -155,18 +185,15 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
         }
 
 
-       /* if (nID == R.id.cfgAG_btnApply)	{
-            applyGeneralConfig();
-        }*/
     }
 
-    private void applyGeneralConfig()
+    /*private void applyGeneralConfig()
     {
         DSLibIF.setDeviceID(((EditText)mView.findViewById(R.id.cfgValue_etDevice_ID)).getText().toString());
      //   DSLibIF.applyConfig();
 
         DaulUtils.showMessageBox(this.getContext(), getString(R.string.ca_msg_apply_config), getString(R.string.def_yes));
-    }
+    }*/
 
 
     @Override
@@ -182,74 +209,43 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
 
             if(dlg.getConfirmID() == Definer.DEF_CONFIRM_ID_DELETE_ALL)	{
 
-                /*if(DSLibIF.getServerMode() == Definer.DEF_CFG_SERVER_MODE_INTERNET)	{
-                    mServiceBinder.setWaitFlagForDownloader(true);
-                    mServiceBinder.stopDownload();
-                    DaulUtils.deleteFilesInDirectory(m_strRootPath);
-                    mServiceBinder.startDownload(m_strDownladPath);
-                }
-                else DaulUtils.deleteFilesInDirectory(m_strRootPath);*/
+                mProgressDialog.setMessage("동삭제중입니다...");
+                mProgressDialog.show();
 
+                DSCommanIF.deleteAll();
 
-                Toast.makeText(this.getContext(), this.getString(R.string.msg_completed_delete_all), Toast.LENGTH_SHORT).show();
             }
 
 
             if(dlg.getConfirmID() == Definer.DEF_CONFIRM_ID_USB_SYNC)	{
 
-                /*if(DaulUtils.isUMSConnected(DSLibIF.getUMSPath()))	{
+                if(DaulUtils.isUMSConnected(Definer.DEF_UMS_PATH)) {
 
-                    if(DSLibIF.getServerMode() == Definer.DEF_CFG_SERVER_MODE_INTERNET) mServiceBinder.stopDownload();
+                    mProgressDialog.setMessage("동기화중입니다...");
+                    mProgressDialog.show();
 
-                    DlgSyncUMS dlgUMS = new DlgSyncUMS(this, this, Definer.DEF_USM_SYNC_OP_ID_SYNC);
-                    dlgUMS.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-                    dlgUMS.setOnShowListener(new DialogInterface.OnShowListener() {
+                    DSCommanIF.umsSync();
 
-                        @Override
-                        public void onShow(DialogInterface dialog) {
-                            ((DlgSyncUMS)dialog).startSync();
-                        }
-
-                    });
-
-                    dlgUMS.show();
                 }
                 else {
                     Toast.makeText(this.getContext(), this.getString(R.string.msg_not_detected_ums), Toast.LENGTH_SHORT).show();
-                }*/
-                Toast.makeText(this.getContext(), this.getString(R.string.msg_not_detected_ums), Toast.LENGTH_SHORT).show();
+                }
 
             }
 
             if(dlg.getConfirmID() == Definer.DEF_CONFIRM_ID_USB_COPY)	{
 
+                if(DaulUtils.isUMSConnected(Definer.DEF_UMS_PATH)) {
 
-              /*  if(DaulUtils.isUMSConnected(DSLibIF.getUMSPath()))	{
+                    mProgressDialog.setMessage("복사중입니다...");
+                    mProgressDialog.show();
 
-                    if(DSLibIF.getServerMode() == Definer.DEF_CFG_SERVER_MODE_INTERNET) {
-                        mServiceBinder.setWaitFlagForDownloader(true);
-                        mServiceBinder.stopDownload();
-                    }
+                    DSCommanIF.umsCopy();
 
-                    DlgSyncUMS dlgUMS = new DlgSyncUMS(this.getContext(), this, Definer.DEF_USM_SYNC_OP_ID_COPY);
-                dlgUMS.getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-                dlgUMS.setOnShowListener(new DialogInterface.OnShowListener() {
-
-                    @Override
-                    public void onShow(DialogInterface dialog) {
-                        ((DlgSyncUMS)dialog).startSync();
-                    }
-
-                });
-
-                dlgUMS.show();
                 }
                 else {
                     Toast.makeText(this.getContext(), this.getString(R.string.msg_not_detected_ums), Toast.LENGTH_SHORT).show();
-                }*/
-
-
-                Toast.makeText(this.getContext(), this.getString(R.string.msg_not_detected_ums), Toast.LENGTH_SHORT).show();
+                }
 
 
 
@@ -258,54 +254,41 @@ public class GeneralFragmentCfg extends Fragment implements View.OnClickListener
 
 
             if(dlg.getConfirmID() == Definer.DEF_CONFIRM_ID_FORMAT_SDCARD)	{
-               /* mServiceBinder.setWaitFlagForDownloader(true);
-                mServiceBinder.stopDownload();
-                mServiceBinder.formatSDCard();
-                mServiceBinder.startDownload(m_strDownladPath);*/
-                Toast.makeText(this.getContext(), "format sd-card", Toast.LENGTH_SHORT).show();
+
+                mProgressDialog.setMessage("포맷중입니다...");
+                mProgressDialog.show();
+
+                DSCommanIF.sdFormat();
+
+               // Toast.makeText(this.getContext(), "format sd-card", Toast.LENGTH_SHORT).show();
 
             }
 
 
         }
 
-        if(strClassName.equals("DlgSyncUMS"))	{
-            DlgSyncUMS dlg = (DlgSyncUMS)dialog;
-
-            dlg.dismiss();
-/*
-            DaulUtils.createFolder(m_strRootPath);
-            DaulUtils.createFolder(m_strDownladPath);
-
-            if(DSLibIF.getServerMode() == Definer.DEF_CFG_SERVER_MODE_INTERNET) mServiceBinder.startDownload(m_strDownladPath);*/
-
-            Toast.makeText(this.getContext(), "DlgSyncUMS", Toast.LENGTH_SHORT).show();
-
-
-        }
 
         if(strClassName.equals("DlgSelectFW"))	{
 
             DlgSelectFW dlg = (DlgSelectFW)dialog;
+            dlg.dismiss();
 
-           /* File fileFW = new File(dlg.getFWFilePath());
+            File fileFW = new File(dlg.getFWFilePath());
 
 
             if(fileFW.exists()){
+                Toast.makeText(this.getContext(), "DlgSelectFW", Toast.LENGTH_SHORT).show();
 
-                String strDestFilePath = m_strRootPath + File.separator + DaulUtils.stripExtension(fileFW.getName()) + ".apk";
+                String strDestFilePath =Definer.DEF_ROOT_PATH + File.separator + DaulUtils.stripExtension(fileFW.getName()) + ".apk";
 
                 DaulUtils.copyFile(fileFW , strDestFilePath);
 
 
-                Intent update = new Intent(DS7000ServiceManager. ACTION_DS7000_INSTALL_REQ_PLAYER);
-                update.putExtra(DS7000ServiceManager. EXTRA_PLAYER_INSTALL_PATH, strDestFilePath);
-                sendBroadcast(update);
+                DSCommanIF.upgrade(strDestFilePath);
 
-            }*/
+            }
 
-            Toast.makeText(this.getContext(), "DlgSelectFW", Toast.LENGTH_SHORT).show();
-            dlg.dismiss();
+
         }
 
     }

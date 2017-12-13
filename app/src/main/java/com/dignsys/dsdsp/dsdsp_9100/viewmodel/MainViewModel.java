@@ -50,7 +50,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public List<PaneEntity> getPaneList() { return  mScheduleHelper.getPaneList();}
 
-    public LiveData<Integer> getPlayStart() { return mScheduleHelper.getPlayStart();}
+    public LiveData<Integer> getPlayCommand() { return mScheduleHelper.getPlayCommand();}
 
 
     public ContentEntity getContent(int paneNum) {
