@@ -1,11 +1,15 @@
 package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
@@ -13,6 +17,14 @@ import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseInitUtil;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
+import com.dignsys.dsdsp.dsdsp_9100.service.AlarmReceiver;
+
+import org.w3c.dom.Text;
+
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -23,11 +35,16 @@ public class ConfigHelper {
 
     private static final String TAG = ConfigHelper.class.getSimpleName();
     private static ConfigHelper sInstance;
+    private final CommandHelper mCommand;
 
     private AppDatabase mDB;
 
     // private static final MutableLiveData ABSENT = new MutableLiveData();
     private final LiveData<ConfigEntity> mConfig;
+    private PendingIntent mOnTimePI;
+    private AlarmManager mOnTimeAlarm;
+    private AlarmManager mOffTimeAlarm;
+    private PendingIntent mOffTimePI;
 
     public LiveData<ConfigEntity> getConfig() {
         return mConfig;
@@ -46,6 +63,8 @@ public class ConfigHelper {
 
         mDB = DatabaseCreator.getInstance(context);
         mConfig = mDB.configDao().loadConfig();
+
+        mCommand = CommandHelper.getInstance(context);
        
 
 
@@ -55,13 +74,147 @@ public class ConfigHelper {
             public void onChanged(@Nullable final ConfigEntity config) {
                 if (config != null ) {
                     _mConfig = config;
+                    applyConfigs();
                 }
             }
         };
         mConfig.observeForever(configObserver);
     }
 
-   
+    private void applyConfigs() {
+        //apply config item only to system configuration(ex, timezone)
+
+        applyTimezone();
+        applyOnOffTime();
+
+
+    }
+
+    private void applyOnOffTime() {
+
+        applyOffTime();
+        applyOnTime();
+
+    }
+
+    private void applyOffTime() {
+        if(_mConfig.getAutoOnOffMode() == 1) return;
+
+        if (mOffTimeAlarm != null) {
+            mOffTimeAlarm.cancel(mOffTimePI);
+        }
+
+        regOffTimeAlarm( ); //0=ON, 1=OFF
+
+    }
+
+    private void applyOnTime() {
+
+        if(_mConfig.getAutoOnOffMode() == 1) return;
+
+        if (mOnTimeAlarm != null) {
+            mOnTimeAlarm.cancel(mOnTimePI);
+        }
+
+        regOnTimeAlarm(); //0=ON, 1=OFF
+
+    }
+
+    private void regOffTimeAlarm() {
+        String time = _mConfig.getOffTime();
+
+        if(TextUtils.isEmpty(time)) return;
+
+        Log.d(TAG, "applyOnOffTime: onTime=" + time);
+
+        Pattern pattern = Pattern.compile("^(\\d{2})(\\d{2})$");
+        Matcher matcher = pattern.matcher(time);
+
+        int hour=0;
+        int minute = 0;
+        while (matcher.find()) {
+            hour = Integer.valueOf(matcher.group(1));
+            minute = Integer.valueOf(matcher.group(2));
+        }
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, hour); // For 24
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        Intent intent = new Intent(_context, AlarmReceiver.class);
+
+        intent.setAction(Definer.DEF_OFF_TIME_ACTION);
+
+        mOffTimePI = PendingIntent.getBroadcast(_context, 1,
+                intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mOffTimeAlarm = (AlarmManager) _context.getSystemService(Context.ALARM_SERVICE);
+        mOffTimeAlarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mOffTimePI);
+    }
+
+    private void regOnTimeAlarm() {
+        String time = _mConfig.getOnTime();
+
+        if(TextUtils.isEmpty(time)) return;
+
+        Log.d(TAG, "applyOnOffTime: onTime=" + time);
+
+        Pattern pattern = Pattern.compile("^(\\d{2})(\\d{2})$");
+        Matcher matcher = pattern.matcher(time);
+
+        int hour=0;
+        int minute = 0;
+        while (matcher.find()) {
+            hour = Integer.valueOf(matcher.group(1));
+            minute = Integer.valueOf(matcher.group(2));
+        }
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, hour); // For 24
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        Intent intent = new Intent(_context, AlarmReceiver.class);
+
+        intent.setAction(Definer.DEF_ON_TIME_ACTION);
+
+        mOnTimePI = PendingIntent.getBroadcast(_context, 0,
+                intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mOnTimeAlarm = (AlarmManager) _context.getSystemService(Context.ALARM_SERVICE);
+        mOnTimeAlarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mOnTimePI);
+    }
+
+
+
+    private void applyTimezone() {
+        String timezone = _mConfig.getTimezone(); //get rawoffset
+        String temp = "GMT"+timezone;
+
+        TimeZone tz = TimeZone.getTimeZone(temp);
+        int offset = tz.getRawOffset();
+
+        TimeZone searchTimeZone = null;
+
+        Log.d(TAG, "applyConfigs: offset=" + tz.getRawOffset());
+
+        for (String id : TimeZone.getAvailableIDs()) {
+            TimeZone tt = TimeZone.getTimeZone(id);
+            if (tt.getRawOffset() == offset) {
+                searchTimeZone = tt;
+                break;
+
+            }
+        }
+
+        if (searchTimeZone != null) {
+            Log.d(TAG, "applyConfigs: searchTimeZone.id=" + searchTimeZone.getID());
+            mCommand.setTimeZone(searchTimeZone.getID());
+        }
+    }
+
+
     public synchronized static ConfigHelper getInstance(Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
@@ -87,7 +240,7 @@ public class ConfigHelper {
      int m_nRSSCaptionMode 	= Definer.DEF_MESSAGE_TYPE_SCROLL;
      int m_nRSSContinueTime	= 0;
 
-     boolean m_bCommandOff		= false;
+     //boolean m_bCommandOff		= false;
 
     @SuppressLint("StaticFieldLeak")
     private void updateConfig() {
@@ -355,8 +508,8 @@ public class ConfigHelper {
     }
 
     public   void setTimePosition(int n) {
-        _mConfig.setTimeDisplayPosition(n);
-        updateConfig();
+   /*     _mConfig.setTimeDisplayPosition(n);
+        updateConfig();*/
     }
     public   void setTimeColor(int n) {
         _mConfig.setTimeDisplayColor(n);
@@ -488,7 +641,15 @@ public class ConfigHelper {
         updateConfig();
     }
 
+    public   void setTimezone(String n) {
+        _mConfig.setTimezone(n);
+        updateConfig();
+    }
 
+
+    public   String getTimezone(){
+        return _mConfig.getTimezone();
+    }
 
     public   int getDSPMode(){
         return _mConfig.getDSPMode();
@@ -611,7 +772,9 @@ public class ConfigHelper {
     }
 
     public   int getTimePosition(){
-        return _mConfig.getTimeDisplayPosition();
+        //TODO : must change
+        return 0;
+       // return _mConfig.getTimeDisplayPosition();
     }
 
     public   int getTimeColor(){
@@ -795,6 +958,12 @@ public class ConfigHelper {
         return _mConfig.getOffTime();
     }
 
+    public   int getOffDay(){
+        return _mConfig.getOffDay();
+    }
+
+    public String getOffWeek(){ return _mConfig.getOffWeek();}
+
     public   String getIANetIP(){
         return _mConfig.getIA_NetIP();
     }
@@ -857,8 +1026,8 @@ public class ConfigHelper {
         return n;
     }
 
-    public  boolean getCommandOff()			{ return m_bCommandOff;			}
-    public  void setCommandOff(boolean b)		{ m_bCommandOff = b;			}
+   /* public  boolean getCommandOff()			{ return m_bCommandOff;			}
+    public  void setCommandOff(boolean b)		{ m_bCommandOff = b;			}*/
 
     public  void setDownStartTime(int n)		{ m_nDownStartTime 	= n;		}
     public  void setDownEndTime(int n)		{ m_nDownEndTime 	= n;		}

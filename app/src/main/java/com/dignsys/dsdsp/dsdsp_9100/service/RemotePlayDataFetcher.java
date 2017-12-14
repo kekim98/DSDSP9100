@@ -126,7 +126,7 @@ public class RemotePlayDataFetcher {
             //   String encodeBody = new String(body, "EUC-KR");
             if (TextUtils.isEmpty(encodeBody)) {
                 Log.e(TAG, "Request for manifest returned empty data.");
-                throw new IOException("Error fetching conference data manifest: no data.");
+        //        throw new IOException("Error fetching conference data manifest: no data.");
             }
             Log.d(TAG, "Manifest " + mManifestUrl[idx] + " read, contents: " + body);
             mBytesDownloaded += encodeBody.getBytes().length;
@@ -138,7 +138,8 @@ public class RemotePlayDataFetcher {
         } else {
             Log.e(TAG, "Error fetching play data: HTTP status " + status + " and manifest " +
                     mManifestUrl[idx]);
-            throw new IOException("Error fetching conference data: HTTP status " + status);
+            return null;
+     //       throw new IOException("Error fetching conference data: HTTP status " + status);
         }
     }
 

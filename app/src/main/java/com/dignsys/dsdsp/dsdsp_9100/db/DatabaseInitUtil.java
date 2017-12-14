@@ -96,8 +96,8 @@ public class DatabaseInitUtil {
 
         configEntity.setRSSAddress("http://rss.com");
 
-        configEntity.setTimezone(9);
-        configEntity.setTimeDisplayPosition(0);
+        configEntity.setTimezone("+9");
+       // configEntity.setTimeDisplayPosition(0);
         configEntity.setTimeDisplayColor(7);
         configEntity.setTimeDisplayBackColor(2);
         configEntity.setTimeDisplayFont(0);

@@ -74,6 +74,7 @@ public class ScheduleHelper {
 
     // For Singleton instantiation
     private static final Object LOCK = new Object();
+    private Integer _command;
 
     private ScheduleHelper(Context context) {
         _context = context;
@@ -90,6 +91,7 @@ public class ScheduleHelper {
         final Observer<Integer> configObserver = new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable final Integer command) {
+                _command = command;
                 if (command == Definer.DEF_PLAY_STOP_COMMAND
                         || command == Definer.DEF_PLAY_IDLE_COMMAND) {
                         mScheduleId.setValue(0);
@@ -476,6 +478,7 @@ public class ScheduleHelper {
     private void scheduleScheduler() {
         if (mScheduleList.getValue() == null) return;
         if (mScheduleId.getValue() == null) return;
+        if (_command == Definer.DEF_SLEEP_IN_COMMAND) return;
 
 
         Calendar cal = Calendar.getInstance();

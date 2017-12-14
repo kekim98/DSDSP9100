@@ -79,5 +79,6 @@ public abstract class AppDatabase extends RoomDatabase {
         sceneDao().deleteAllScene();
         paneDao().deleteAllPane();
         contentDao().deleteAllContent();
+        commandDao().deleteAll();
     }
 }

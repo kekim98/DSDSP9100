@@ -11,6 +11,7 @@ import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 import java.io.File;
 
@@ -46,6 +47,10 @@ public class SyncService extends IntentService {
      * @see IntentService
      */
     public static void startDownload(Context context, String param1, String param2) {
+
+        if(ConfigHelper.getInstance(context).getServerMode()
+                == Definer.DEF_CFG_ITEM_VALUE_STANDALONE) return;
+
         Log.d(TAG, "startDownload: ..............................");
         Intent intent = new Intent(context, SyncService.class);
         intent.setAction(ACTION_DOWNLOAD);
@@ -202,8 +207,7 @@ public class SyncService extends IntentService {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            MutableLiveData<Boolean> isSyncDone = CommandHelper.getInstance(this).getIsSyncDone();
-            isSyncDone.postValue(true);
+            contentSyncCallback();
         }
     }
 
@@ -213,21 +217,25 @@ public class SyncService extends IntentService {
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
-            MutableLiveData<Boolean> isSyncDone = CommandHelper.getInstance(this).getIsSyncDone();
-            isSyncDone.postValue(true);
-
-            MutableLiveData<Integer> command = CommandHelper.getInstance(this).getPlayCommand();
-            command.postValue(Definer.DEF_PLAY_IDLE_COMMAND);
-
-            AppDatabase db = DatabaseCreator.getInstance(this);
-            db.deletePlayDataTransaction();
-
-            for(int i=0; i<PlayDataHandler.DATA_KEYS_IN_ORDER.length; i++) {
-                RemotePlayDataFetcher.resetDataTimestamp(this, i);
-            }
+            contentSyncCallback();
         }
 
 
+    }
+
+    private void contentSyncCallback() {
+        MutableLiveData<Boolean> isSyncDone = CommandHelper.getInstance(this).getIsSyncDone();
+        isSyncDone.postValue(true);
+
+        MutableLiveData<Integer> command = CommandHelper.getInstance(this).getPlayCommand();
+        command.postValue(Definer.DEF_PLAY_IDLE_COMMAND);
+
+        AppDatabase db = DatabaseCreator.getInstance(this);
+        db.deletePlayDataTransaction();
+
+        for(int i = 0; i< PlayDataHandler.DATA_KEYS_IN_ORDER.length; i++) {
+            RemotePlayDataFetcher.resetDataTimestamp(this, i);
+        }
     }
 
     private void handleActionSDFormat(String param1, String param2) {
@@ -258,18 +266,7 @@ public class SyncService extends IntentService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }finally {
-            MutableLiveData<Boolean> isSyncDone = CommandHelper.getInstance(this).getIsSyncDone();
-            isSyncDone.postValue(true);
-
-            MutableLiveData<Integer> command = CommandHelper.getInstance(this).getPlayCommand();
-            command.postValue(Definer.DEF_PLAY_IDLE_COMMAND);
-
-            AppDatabase db = DatabaseCreator.getInstance(this);
-            db.deletePlayDataTransaction();
-
-            for(int i=0; i<PlayDataHandler.DATA_KEYS_IN_ORDER.length; i++) {
-                RemotePlayDataFetcher.resetDataTimestamp(this, i);
-            }
+            contentSyncCallback();
 
         }
 

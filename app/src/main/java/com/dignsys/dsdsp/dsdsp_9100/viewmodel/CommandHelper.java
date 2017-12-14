@@ -124,10 +124,11 @@ public class CommandHelper {
             Log.d(TAG, "processCommand: getFwFilePath=" + command.getFwFilePath());
 
             String url = Definer.DEF_COMMAND_CONTENT_PATH + File.separator + command.getFwFilePath();
-            upgrade(url);
 
             command.setFwFilePath(null);
             updateCommand();
+
+            upgrade(url);
 
         }
 
@@ -263,7 +264,7 @@ public class CommandHelper {
 
             final String upgradeCmd = "pm install -r -d " + strDestFilePath;
 
-            Log.e(TAG, "onStartJob: ....................................." );
+            Log.e(TAG, "firmware upgrade: ....................................." );
             Process p = null;
             try {
                 p = Runtime.getRuntime().exec(upgradeCmd);

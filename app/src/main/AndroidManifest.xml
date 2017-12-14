@@ -5,9 +5,8 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> -->
     <uses-permission android:name="android.permission.SET_TIME_ZONE" />
-
     <uses-permission android:name="android.hardware.camera.autofocus" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -35,16 +34,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.config.ConfigActivity"></activity>
+        <activity android:name=".ui.config.ConfigActivity" />
 
         <service android:name=".service.SyncService" />
-       <!-- <service
+        <!--
+            <service
             android:name=".service.DspJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"
-            />-->
+            />
+        -->
         <!-- <service android:name=".service.LocalService"/> -->
 
+        <receiver
+            android:name=".service.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="DSDSP.ACTION.OFF.DAY.WEEK" />
+                <action android:name="DSDSP.ACTION.ON.TIME" />
+                <action android:name="DSDSP.ACTION.OFF.TIME" />
+
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -1,7 +1,11 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,13 +18,14 @@ import android.widget.ImageView;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.service.AlarmReceiver;
 import com.dignsys.dsdsp.dsdsp_9100.ui.config.ConfigActivity;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -51,9 +56,33 @@ public class MainActivity extends AppCompatActivity {
       //  mCommand.screenOnOff(true);
 
         subscribe();
+        regAlarms();
 
 
     }
+
+    private void regAlarms() {
+        regOffDayWeekAlarm();
+    }
+
+
+
+    private void regOffDayWeekAlarm() {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, 24); // For 24
+        calendar.set(Calendar.MINUTE, 1);
+        calendar.set(Calendar.SECOND, 0);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.setAction(Definer.DEF_OFF_DAY_WEEK_ACTION);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 3,
+                intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pi);
+    }
+
 
 
     @Override

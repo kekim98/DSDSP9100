@@ -273,5 +273,7 @@ public class Definer {
 	public static final String DEF_VALUE_SUB_KEY = "DSDSP-VALUE-KEY";
 
 
-
+	public static final String DEF_OFF_DAY_WEEK_ACTION = "DSDSP.ACTION.OFF.DAY.WEEK";
+	public static final String DEF_ON_TIME_ACTION = "DSDSP.ACTION.ON.TIME";
+	public static final String DEF_OFF_TIME_ACTION = "DSDSP.ACTION.OFF.TIME";
 }

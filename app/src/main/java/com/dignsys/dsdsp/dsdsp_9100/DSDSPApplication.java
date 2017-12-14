@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseInitUtil;
-import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
 
 /**
  * Created by bawoori on 17. 11. 15.
@@ -35,6 +34,7 @@ public class DSDSPApplication extends Application {
         }.execute(this);
 
       //  CommandHelper.startWatchDog(this);
+
 
     }
 

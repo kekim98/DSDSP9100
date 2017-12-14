@@ -542,13 +542,14 @@ public class ConfigHandler extends BasicHandler {
                            //set dsp time display lefttop
                            if(strSubItem.equals("display")) {
 
-                               int nCurrVal = Integer.valueOf(strValue);
-                               mConfig.setTimeDisplayPosition(nCurrVal);
+                              // int nCurrVal = Integer.valueOf(strValue);
+                               mConfig.setTimeDisplayPosition(strValue);
                            }
 
                            //set dsp time zone -9
                            if(strSubItem.equals("zone")) {
-                               // PASS DSPCONFIG!.
+                            //   int nCurrVal = Integer.valueOf(strValue);
+                               mConfig.setTimezone(strValue);
                            }
 
                            //set dsp time ntpinterval 999
