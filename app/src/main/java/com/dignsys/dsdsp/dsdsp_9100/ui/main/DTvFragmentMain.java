@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 
 @SuppressWarnings("deprecation")
@@ -121,6 +122,11 @@ public class DTvFragmentMain extends MainBaseFragment implements SurfaceHolder.C
             mCamera.release();
             mCamera = null;
         }
+    }
+
+    @Override
+    protected void applyConfig(ConfigEntity config) {
+
     }
 
     @Override

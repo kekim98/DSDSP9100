@@ -79,7 +79,7 @@ public class DatabaseInitUtil {
         configEntity.setWifi_ESSID("dsp");
         configEntity.setWifi_PWD("1234");
 
-        configEntity.setImageChangeEffect(1);	// 0: Random, 1: Not used.
+        configEntity.setImageChangeEffect(7);	// 7: Random, 1: Not used.
         configEntity.setImageChangeInterval(3);
         configEntity.setUseAutoResizeMovie(1);
         configEntity.setUseAutoResizeImage(1);

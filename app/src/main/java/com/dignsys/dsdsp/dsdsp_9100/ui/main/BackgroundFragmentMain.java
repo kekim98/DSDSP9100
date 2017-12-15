@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.GlideApp;
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 
@@ -86,6 +87,11 @@ public class BackgroundFragmentMain extends MainBaseFragment {
     void stop() {
 
         //TODO:......
+    }
+
+    @Override
+    protected void applyConfig(ConfigEntity config) {
+
     }
 
     @Override

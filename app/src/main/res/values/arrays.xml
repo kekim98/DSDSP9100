@@ -19,13 +19,13 @@
     </string-array>
     <string-array name="spinnerPicEffect">
         <item>사용안함</item>
-        <item>랜덤</item>
+        <item>아래로 덮기</item>
         <item>크로스페이드</item>
-        <item>우측으로 덮기</item>
         <item>좌측으로 덮기</item>
+        <item>우측으로 덮기</item>
         <item>위로 덮기</item>
         <item>점점 크게</item>
-        <item>아래로 덮기</item>
+        <item>랜덤</item>
     </string-array>
     
     <string-array name="spinnerCapMode">

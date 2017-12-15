@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextClock;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 
 
@@ -76,6 +77,11 @@ public class ClockFragmentMain extends MainBaseFragment {
 
     @Override
     void stop() {
+
+    }
+
+    @Override
+    protected void applyConfig(ConfigEntity config) {
 
     }
 

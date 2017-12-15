@@ -14,16 +14,19 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
-import android.widget.VideoView;
 import android.widget.ViewSwitcher;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.GlideApp;
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
+import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 import java.io.File;
 
@@ -40,10 +43,14 @@ public class VideoFragmentMain extends MainBaseFragment {
     private static final String PANE_NUM = "pane_num";
     private static final String TAG = VideoFragmentMain.class.getSimpleName();
 
-    private VideoView mVideoView;
+    private MyVideoView mVideoView;
     private ContentEntity mContent;
   //  private MainViewModel mViewModel;
     private ImageSwitcher mImageSW;
+    private RequestOptions mPicOptions;
+
+
+
 
     public VideoFragmentMain() {
         // Required empty public constructor
@@ -74,16 +81,26 @@ public class VideoFragmentMain extends MainBaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         // TODO: Rename and change types and number of view
 
         mVideoView = view.findViewById(R.id.videoView);
         //mVideoView.setZOrderMediaOverlay(true);
         mVideoView.setZOrderOnTop(true);
+
         mImageSW = view.findViewById(R.id.imageSW);
 
 
 /*        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         subscribe();*/
+
+        if (ConfigHelper.getInstance(getContext()).getResizeMovie() == Definer.DEF_USE) {
+            mVideoView.setResizeMode(true);
+        } else {
+            mVideoView.setResizeMode(false);
+        }
+
+        mVideoView.setSize(getW(), getH());
 
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -98,6 +115,15 @@ public class VideoFragmentMain extends MainBaseFragment {
                 return true;
             }
         });
+        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                Log.d(TAG, "onPrepared: ");
+                mVideoView.setContentSize(mp.getVideoWidth(), mp.getVideoHeight());
+            }
+        });
+
+
 
         mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
 
@@ -107,16 +133,11 @@ public class VideoFragmentMain extends MainBaseFragment {
             }
         });
 
-        // Set animations
-        // https://danielme.com/2013/08/18/diseno-android-transiciones-entre-activities/
-        Animation in = AnimationUtils.loadAnimation(VideoFragmentMain.this.getContext(), android.R.anim.slide_in_left);
-        Animation out = AnimationUtils.loadAnimation(VideoFragmentMain.this.getContext(), android.R.anim.slide_out_right);
-        mImageSW.setInAnimation(in);
-        mImageSW.setOutAnimation(out);
-       /* Animation fadeIn = AnimationUtils.loadAnimation(VideoFragmentMain.this.getContext(), R.anim.fade_in);
-        Animation fadeOut = AnimationUtils.loadAnimation(VideoFragmentMain.this.getContext(), R.anim.fade_out);
-        mImageSW.setInAnimation(fadeIn);
-        mImageSW.setOutAnimation(fadeOut);*/
+        if (ConfigHelper.getInstance(getContext()).getResizePic() == Definer.DEF_USE) {
+            setPicOptions(true);
+        } else {
+            setPicOptions(false);
+        }
 
         run();
 
@@ -141,6 +162,43 @@ public class VideoFragmentMain extends MainBaseFragment {
         if (mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }
+    }
+
+
+    @Override
+    protected void applyConfig(ConfigEntity config) {
+
+        if (config.getUseAutoResizeImage() == Definer.DEF_USE) {
+            setPicOptions(true);
+        } else {
+            setPicOptions(false);
+        }
+
+        if (config.getUseAutoResizeMovie() == Definer.DEF_USE) {
+            if (mVideoView != null) {
+
+                mVideoView.setResizeMode(true);
+            }
+
+        } else{
+            if (mVideoView != null) {
+
+                mVideoView.setResizeMode(false);
+            }
+        }
+
+    }
+
+    private void setPicOptions(boolean mode) {
+        if (mode) {
+            mPicOptions = new RequestOptions()
+                    .centerCrop()
+                    .override(getW(), getH());
+
+        } else {
+            mPicOptions = new RequestOptions();
+        }
+
     }
 
     @Override
@@ -179,8 +237,11 @@ public class VideoFragmentMain extends MainBaseFragment {
                 String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
                 Log.d(TAG, "image run: path=" + UrlPath);
 
+                ImageUtil.setPicEffect(getContext(), mImageSW);
+
                 GlideApp.with(this)
                         .load(new File(UrlPath))
+                        .apply(mPicOptions)
                         .into(new SimpleTarget<Drawable>() {
                             @Override
                             public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
@@ -195,8 +256,6 @@ public class VideoFragmentMain extends MainBaseFragment {
 
         }
 
-
     }
-
 
 }

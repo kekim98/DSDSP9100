@@ -223,14 +223,15 @@ public class Definer {
 	public static final int DEF_MESSAGE_DIR_DOWN			= 3;
 	
 	public static final	int DEF_PIC_EFFECT_NONE				= 0;
-	public static final	int DEF_PIC_EFFECT_RANDOM			= 1;
+	public static final	int DEF_PIC_EFFECT_DOWN				= 1;
 	public static final	int DEF_PIC_EFFECT_CROSS_FADE		= 2;
-	public static final	int DEF_PIC_EFFECT_RIGHT			= 3;
-	public static final	int DEF_PIC_EFFECT_LEFT				= 4;
+	public static final	int DEF_PIC_EFFECT_LEFT				= 3;
+	public static final	int DEF_PIC_EFFECT_RIGHT			= 4;
 	public static final	int DEF_PIC_EFFECT_UP				= 5;
 	public static final	int DEF_PIC_EFFECT_GROWING			= 6;
-	public static final	int DEF_PIC_EFFECT_DOWN				= 7;
-	
+	public static final	int DEF_PIC_EFFECT_RANDOM			= 7;
+
+
 	public static final int DEF_CLOCK_DEFAULT_CAP_WIDTH		= 12;
 	public static final int DEF_CLOCK_DEFAULT_CAP_HEIGHT	= 6;
 	

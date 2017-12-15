@@ -274,9 +274,9 @@ public class MainActivity extends AppCompatActivity {
             ConfigActivity.startConfigActivity(this);
         }
 
-        if(keyCode == KeyEvent.KEYCODE_BACK)	{
+        /*if(keyCode == KeyEvent.KEYCODE_BACK)	{
             return false;
-        }
+        }*/
 
         return super.onKeyUp(keyCode, event);
     }

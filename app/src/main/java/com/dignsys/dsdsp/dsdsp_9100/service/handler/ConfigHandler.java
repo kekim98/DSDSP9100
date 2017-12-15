@@ -7,6 +7,7 @@ import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
+import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -354,11 +355,9 @@ public class ConfigHandler extends BasicHandler {
                        if(strItem.equals("screen"))	{
 
 //								set dsp screen slide downward | increase | upward | leftward | rightward | crossfade | random | disable
-                           if(strSubItem.equals("slide") || strSubItem.equals("downward") || strSubItem.equals("upward")
-                                   || strSubItem.equals("leftward") || strSubItem.equals("rightward")
-                                   || strSubItem.equals("crossfade") || strSubItem.equals("random") || strSubItem.equals("disable") ) {
+                           if(strSubItem.equals("slide")) {
 
-                               mConfig.setImageChangeEffect(Integer.valueOf(strValue));
+                               mConfig.setImageChangeEffect(ImageUtil.getPicChangeEffectValue(strValue));
                            }
 
 //								set dsp screen transitiontime 999

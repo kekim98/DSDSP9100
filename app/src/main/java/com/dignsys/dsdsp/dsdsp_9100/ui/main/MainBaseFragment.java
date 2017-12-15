@@ -31,12 +31,15 @@ abstract class MainBaseFragment extends Fragment {
     int mPaneNum = 0;
     private PaneEntity mPaneEntity;
     private PaneEntity mSpaneEntity;
+    private int nX;
+    private int nY;
+    private int nW;
+    private int nH;
+
 
     abstract void run();
-
     abstract void stop();
-
-
+    protected abstract void applyConfig(ConfigEntity config);
 
 
     @Override
@@ -82,21 +85,22 @@ abstract class MainBaseFragment extends Fragment {
 
         mConfigObserver = new Observer<ConfigEntity>() {
             @Override
-            public void onChanged(@Nullable ConfigEntity pane_num) {
-                //TODO:apply dsdsp config to each play content
-
+            public void onChanged(@Nullable ConfigEntity config) {
+                applyConfig(config);
             }
         };
         mViewModel.getConfig().observe(getActivity(), mConfigObserver);
 
     }
 
+
+
     void makeLayout(View view) {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         this.getActivity().getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
 
-        int nX, nY,  nW, nH;
+        //int nX, nY,  nW, nH;
         nX=nY=0;
         nW=1920;
         nH=1080;
@@ -122,6 +126,23 @@ abstract class MainBaseFragment extends Fragment {
         view.setLayoutParams(layoutParams);
         view.setX(nX);
         view.setY(nY);
+    }
+
+
+    public int getX() {
+        return nX;
+    }
+
+    public int getY() {
+        return nY;
+    }
+
+    public int getW() {
+        return nW;
+    }
+
+    public int getH() {
+        return nH;
     }
 
 

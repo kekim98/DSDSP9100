@@ -233,20 +233,20 @@ public class CommandHelper {
       //  String basePath = Definer.DEF_COMMAND_CONTENT_PATH + File.separator;
         switch(n)	{
             case 1:
-                if (!TextUtils.isEmpty(_command.getFontFilePath_1())) {
+                if (_command!= null && !TextUtils.isEmpty(_command.getFontFilePath_1())) {
                   //  strPath = basePath + _command.getFontFilePath_1();
                     strPath = _command.getFontFilePath_1();
                 }
 
                 break;
             case 2:
-                if (!TextUtils.isEmpty(_command.getFontFilePath_2())) {
+                if (_command!= null && !TextUtils.isEmpty(_command.getFontFilePath_2())) {
                    // strPath = basePath + _command.getFontFilePath_2();
                     strPath = _command.getFontFilePath_2();
                 }
                 break;
             case 3:
-                if (!TextUtils.isEmpty(_command.getFontFilePath_3())) {
+                if (_command!= null && !TextUtils.isEmpty(_command.getFontFilePath_3())) {
                    // strPath = basePath + _command.getFontFilePath_3();
                     strPath = _command.getFontFilePath_3();
                 }

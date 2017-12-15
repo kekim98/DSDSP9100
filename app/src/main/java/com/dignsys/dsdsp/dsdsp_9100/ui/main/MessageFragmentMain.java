@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 
 
@@ -79,6 +80,11 @@ public class MessageFragmentMain extends MainBaseFragment {
     @Override
     void stop() {
         //TODO:......
+    }
+
+    @Override
+    protected void applyConfig(ConfigEntity config) {
+
     }
 
     @Override

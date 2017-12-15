@@ -14,15 +14,21 @@ import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.GlideApp;
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
+import com.dignsys.dsdsp.dsdsp_9100.model.ImageAnimInfo;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
+import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 import java.io.File;
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +48,8 @@ public class PictureFragmentMain extends MainBaseFragment {
 
     //   private ImageView mImageSW;
     private ImageSwitcher mImageSW;
+    private View mView;
+    private RequestOptions mPicOptions;
 
 
     public PictureFragmentMain() {
@@ -69,11 +77,11 @@ public class PictureFragmentMain extends MainBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_picture, container, false);
+        mView = inflater.inflate(R.layout.fragment_picture, container, false);
 
-        makeLayout(view);
+        makeLayout(mView);
 
-        return view;
+        return mView;
 
     }
 
@@ -86,6 +94,12 @@ public class PictureFragmentMain extends MainBaseFragment {
         //  mVideoView = view.findViewById(R.id.videoView);
         mImageSW = view.findViewById(R.id.imageSW);
 
+        if (ConfigHelper.getInstance(getContext()).getResizePic() == Definer.DEF_USE) {
+            setPicOptions(true);
+        } else {
+            setPicOptions(false);
+        }
+
 
         mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
 
@@ -95,25 +109,40 @@ public class PictureFragmentMain extends MainBaseFragment {
             }
         });
 
-      /*  Animation in = AnimationUtils.loadAnimation(PictureFragmentMain.this.getContext(), android.R.anim.slide_in_left);
-        Animation out = AnimationUtils.loadAnimation(PictureFragmentMain.this.getContext(), android.R.anim.slide_out_right);
-      Animation in = AnimationUtils.loadAnimation(PictureFragmentMain.this.getContext(), android.R.anim.fade_in);
-        Animation out = AnimationUtils.loadAnimation(PictureFragmentMain.this.getContext(), android.R.anim.fade_out);*/
-        Animation in = AnimationUtils.loadAnimation(PictureFragmentMain.this.getContext(), R.anim.slide_up);
-        Animation out = AnimationUtils.loadAnimation(PictureFragmentMain.this.getContext(), R.anim.slide_down);
-
-        mImageSW.setInAnimation(in);
-        mImageSW.setOutAnimation(out);
-
 
         run();
 
     }
 
+
+
     @Override
     void stop() {
 
         //TODO:......
+    }
+
+    private void setPicOptions(boolean mode) {
+        if (mode) {
+            mPicOptions = new RequestOptions()
+                    .centerCrop()
+                    .override(getW(), getH());
+
+        } else {
+            mPicOptions = new RequestOptions();
+        }
+    }
+
+    @Override
+    protected void applyConfig(ConfigEntity config) {
+
+        if (config.getUseAutoResizeImage() == Definer.DEF_USE) {
+            setPicOptions(true);
+        } else {
+            setPicOptions(false);
+        }
+
+
     }
 
     @Override
@@ -131,16 +160,17 @@ public class PictureFragmentMain extends MainBaseFragment {
             String UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
             Log.d(TAG, "image run: path=" + UrlPath);
 
+            ImageUtil.setPicEffect(getContext(), mImageSW);
+
             GlideApp.with(this)
                     .load(new File(UrlPath))
+                    .apply(mPicOptions)
                     .into(new SimpleTarget<Drawable>() {
                         @Override
                         public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
                             mImageSW.setImageDrawable(resource);
                         }
                     });
-
-
 
         } catch (NullPointerException e) {
             Log.e(TAG, "run: NullPointException");

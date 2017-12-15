@@ -18,6 +18,7 @@ import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseInitUtil;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.service.AlarmReceiver;
+import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
 
 import org.w3c.dom.Text;
 

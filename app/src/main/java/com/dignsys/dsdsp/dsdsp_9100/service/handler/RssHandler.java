@@ -92,19 +92,9 @@ public class RssHandler extends BasicHandler {
 
                     if(strEndTag.equals("item")) {
 
+                        if(!strDesc.isEmpty())	strDesc = strDesc + " | ";
 
-                       /* if(mConfig.getRSSMode() == Definer.DEF_MESSAGE_RSS_MODE_DESC)	{
-                            if(!strDesc.isEmpty())	strRSSText += strDesc + " | ";
-                        }
-
-                        if(mConfig.getRSSMode() == Definer.DEF_MESSAGE_RSS_MODE_TITLE)	{
-                            if(!strTitle.isEmpty())	strRSSText += strTitle + " ▶ ";
-                        }
-
-                        if(mConfig.getRSSMode() == Definer.DEF_MESSAGE_RSS_MODE_TITLE_DESC)	{
-                            if(!strTitle.isEmpty())	strRSSText += strTitle + " ▶ ";
-                            if(!strDesc.isEmpty())	strRSSText += strDesc + " | ";
-                        }*/
+                        if(!strTitle.isEmpty())	strTitle = strTitle + " ▶ ";
 
                         bIsItem = false;
 
@@ -119,9 +109,14 @@ public class RssHandler extends BasicHandler {
             }
             Log.d(TAG,"End document");
 
-            /*strRSSText = strRSSText.replace("\r", "");
-            strRSSText = strRSSText.replace("\n", "");
-            strRSSText = Html.fromHtml(strRSSText).toString();*/
+            strDesc = strDesc.replace("\r", "");
+            strDesc = strDesc.replace("\n", "");
+
+            strTitle = strTitle.replace("\r", "");
+            strTitle = strTitle.replace("\n", "");
+
+            strDesc = Html.fromHtml(strDesc).toString();
+            strTitle = Html.fromHtml(strTitle).toString();
 
 
             mRss.setTitle_text(strTitle);
