@@ -6,26 +6,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
+import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
+import com.dignsys.dsdsp.dsdsp_9100.util.MessageUtil;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
+
+import java.io.IOException;
 
 
-public class MessageFragmentMain extends MainBaseFragment {
+public class MessageFragmentMain extends MainBaseFragment implements ViewSwitcher.ViewFactory {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
     private static final String TAG = MessageFragmentMain.class.getSimpleName();
 
 
     private ContentEntity mContent;
-    private TextView mTextView;
+    private TextSwitcher mTextSW;
     private ImageView mImageView;
+    private View mView;
+    private TextView mTv;
 
     public MessageFragmentMain() {
         // Required empty public constructor
@@ -51,11 +58,11 @@ public class MessageFragmentMain extends MainBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_message, container, false);
+        mView = inflater.inflate(R.layout.fragment_message, container, false);
 
-        makeLayout(view);
+        makeLayout(mView);
 
-        return view;
+        return mView;
 
     }
 
@@ -65,13 +72,10 @@ public class MessageFragmentMain extends MainBaseFragment {
 
         // TODO: Rename and change types and number of view
 
-        mTextView = view.findViewById(R.id.textView);
+        mTextSW = view.findViewById(R.id.textSW);
         mImageView = view.findViewById(R.id.imageView);
-        /*String UrlPath = "android.resource://" + getActivity().getPackageName() + "/" + R.raw.kkk;
-        mVideoView.setVideoURI(Uri.parse(UrlPath));
-        mVideoView.start();*/
 
-
+        mTextSW.setFactory(this);
 
         run();
 
@@ -84,6 +88,10 @@ public class MessageFragmentMain extends MainBaseFragment {
 
     @Override
     protected void applyConfig(ConfigEntity config) {
+        if (mTextSW != null/* && mTextSW.isActivated()*/) {
+            MessageUtil.setCaptionEffect(getContext(), mTextSW, true);
+          setTextProperty();
+        }
 
     }
 
@@ -91,25 +99,39 @@ public class MessageFragmentMain extends MainBaseFragment {
     void run() {
         Log.d(TAG, "run:........");
         mContent = mViewModel.getContent(mPaneNum); //for first content
-        if (mContent == null){
+        if (mContent == null) {
             Log.d(TAG, "mContent null");
             return;
         }
-       // Log.d(TAG, "run: mContent.path=" + mContent.getFilePath());
+        // Log.d(TAG, "run: mContent.path=" + mContent.getFilePath());
 
 
-        if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_TEXT) {
+        int fileType = mContent.getFileType();
+        if (fileType == Definer.DEF_CONTENTS_TYPE_TEXT
+                || fileType == Definer.DEF_CONTENTS_TYPE_RSS) {
             mImageView.setVisibility(View.GONE);
-            mTextView.setVisibility(View.VISIBLE);
+            mTextSW.setVisibility(View.VISIBLE);
 
-            Animation bottomToTop = AnimationUtils.loadAnimation(MessageFragmentMain.this.getContext(), R.anim.slide_in_left);
-            mTextView.setText("Bawoori Test~~~");
-            mTextView.startAnimation(bottomToTop);
-           // bottomToTop.setRepeatCount(Animation.INFINITE);
+            String UrlPath = "";
+            String message = "";
+            if (fileType == Definer.DEF_CONTENTS_TYPE_TEXT) {
+                UrlPath = IOUtils.getDspPlayContent(this.getContext(), mContent.getFilePath());
+                try {
+                    message = IOUtils.readFileAsString(IOUtils.getContentFile(this.getContext(), IOUtils.getFilename(UrlPath)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
 
-        } else if (mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_IMAGE) {
-           mTextView.setVisibility(View.GONE);
-           mImageView.setVisibility(View.VISIBLE);
+            }
+
+            mTextSW.setText(message);
+
+            MessageUtil.setCaptionEffect(getContext(), mTextSW, true);
+
+        } else if (fileType == Definer.DEF_CONTENTS_TYPE_IMAGE) {
+            mTextSW.setVisibility(View.GONE);
+            mImageView.setVisibility(View.VISIBLE);
 
             //TODO:.....
         }
@@ -118,4 +140,36 @@ public class MessageFragmentMain extends MainBaseFragment {
     }
 
 
+    @Override
+    public View makeView() {
+        mTv = new TextView(this.getContext());
+        setTextProperty();
+
+        return mTv;
+    }
+
+    private void setTextProperty() {
+        ConfigHelper DSLibIF = ConfigHelper.getInstance(getContext());
+        int pos = DSLibIF.getCapPosition();
+        int fontSize = DSLibIF.getCapSize();
+
+        //TODO : miss match caption message type and position
+     /*   if (pos == Definer.DEF_MESSAGE_TYPE_STATIC_LEFT) {
+            tv.setGravity(Gravity.LEFT | Gravity.CENTER_HORIZONTAL);
+        } else if (pos == Definer.DEF_MESSAGE_TYPE_STATIC_RIGHT) {
+            tv.setGravity(Gravity.RIGHT | Gravity.CENTER_HORIZONTAL);
+        } else if (pos == Definer.DEF_MESSAGE_TYPE_STATIC_TOP) {
+            tv.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+        } else if (pos == Definer.DEF_MESSAGE_TYPE_STATIC_BOTTOM) {
+            tv.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+        } else if(pos == Definer.DEF_MESSAGE_TYPE_STATIC_MIDDLE){
+            tv.setGravity(Gravity.CENTER | Gravity.CENTER_HORIZONTAL);
+        }*/
+
+        Log.d(TAG, "makeView: pos=" + pos);
+
+        mTv.setTextSize(fontSize);
+        mTv.setTextColor(MessageUtil.getColor(DSLibIF.getCapColor()));
+        mView.setBackgroundColor(MessageUtil.getColor(DSLibIF.getCapBGColor()));
+    }
 }

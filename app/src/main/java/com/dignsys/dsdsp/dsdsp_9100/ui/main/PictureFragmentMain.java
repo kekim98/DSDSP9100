@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
@@ -22,13 +20,11 @@ import com.dignsys.dsdsp.dsdsp_9100.GlideApp;
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
-import com.dignsys.dsdsp.dsdsp_9100.model.ImageAnimInfo;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 import java.io.File;
-import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,9 +91,9 @@ public class PictureFragmentMain extends MainBaseFragment {
         mImageSW = view.findViewById(R.id.imageSW);
 
         if (ConfigHelper.getInstance(getContext()).getResizePic() == Definer.DEF_USE) {
-            setPicOptions(true);
+            setPicResize(true);
         } else {
-            setPicOptions(false);
+            setPicResize(false);
         }
 
 
@@ -122,7 +118,7 @@ public class PictureFragmentMain extends MainBaseFragment {
         //TODO:......
     }
 
-    private void setPicOptions(boolean mode) {
+    private void setPicResize(boolean mode) {
         if (mode) {
             mPicOptions = new RequestOptions()
                     .centerCrop()
@@ -137,9 +133,9 @@ public class PictureFragmentMain extends MainBaseFragment {
     protected void applyConfig(ConfigEntity config) {
 
         if (config.getUseAutoResizeImage() == Definer.DEF_USE) {
-            setPicOptions(true);
+            setPicResize(true);
         } else {
-            setPicOptions(false);
+            setPicResize(false);
         }
 
 

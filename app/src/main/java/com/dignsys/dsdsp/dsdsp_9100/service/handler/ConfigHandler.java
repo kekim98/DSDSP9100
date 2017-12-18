@@ -8,6 +8,8 @@ import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
+import com.dignsys.dsdsp.dsdsp_9100.util.MessageUtil;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -383,28 +385,29 @@ public class ConfigHandler extends BasicHandler {
 //								set dsp screen captionposition top | bottom | left | right
                            if(strSubItem.equals("captionposition")) {
 
-                               int nCurrVal = Integer.valueOf(strValue);
+                             //  int nCurrVal = Integer.valueOf(strValue);
+                               int nCurrVal = MessageUtil.getRssCaptionModeValue(strValue);
                                mConfig.setCapPosition(nCurrVal);
                            }
 
 //								set dsp screen captioncolor red | white ...
                            if(strSubItem.equals("captioncolor")) {
 
-                               int nCurrVal = Integer.valueOf(strValue);
+                               int nCurrVal = MessageUtil.getColorValue(strValue);
                                mConfig.setCapColor(nCurrVal);
                            }
 
 //								set dsp screen captionbgcolor red | transparent ...
                            if(strSubItem.equals("captionbgcolor")) {
 
-                               int nCurrVal = Integer.valueOf(strValue);
+                               int nCurrVal = MessageUtil.getColorValue(strValue);
                                mConfig.setCapBackColor(nCurrVal);
                            }
 
 //								set dsp screen captionscroll quick | normal |slow
                            if(strSubItem.equals("captionscroll")) {
 
-                               int nCurrVal = Integer.valueOf(strValue);
+                               int nCurrVal = MessageUtil.getCapSpeedValue(strValue);
                                mConfig.setCapSpeed(nCurrVal);
                            }
 
@@ -483,8 +486,8 @@ public class ConfigHandler extends BasicHandler {
                            //set dsp rss captionmode scroll | wrapdownwardstop
                            if(strSubItem.equals("captionmode")) {
 
-
-                               int nCurrVal = Integer.valueOf(strValue);
+                              // int nCurrVal = Integer.valueOf(strValue);
+                               int nCurrVal = MessageUtil.getRssCaptionModeValue(strValue);
                                mConfig.setRssCaptionMode(nCurrVal);
                            }
 
@@ -525,7 +528,7 @@ public class ConfigHandler extends BasicHandler {
                            //set dsp time color orange
                            if(strSubItem.equals("color")) {
 
-                               int nCurrVal = Integer.valueOf(strValue);
+                               int nCurrVal = MessageUtil.getColorValue(strValue);
 
                                mConfig.setTimeDisplayColor(nCurrVal);
                            }
@@ -534,7 +537,7 @@ public class ConfigHandler extends BasicHandler {
                            if(strSubItem.equals("bgcolor")) {
 
 
-                               int nCurrVal = Integer.valueOf(strValue);
+                               int nCurrVal = MessageUtil.getColorValue(strValue);
                                mConfig.setTimeDisplayBackColor(nCurrVal);
                            }
 
@@ -542,13 +545,15 @@ public class ConfigHandler extends BasicHandler {
                            if(strSubItem.equals("display")) {
 
                               // int nCurrVal = Integer.valueOf(strValue);
-                               mConfig.setTimeDisplayPosition(strValue);
+                               int nCurrVal = ConfigHelper.getTimePositionValue(strValue);
+                               mConfig.setTimeDisplayPosition(nCurrVal);
                            }
 
                            //set dsp time zone -9
                            if(strSubItem.equals("zone")) {
                             //   int nCurrVal = Integer.valueOf(strValue);
-                               mConfig.setTimezone(strValue);
+                               String zone = ConfigHelper.getTimeZone(strValue);
+                               mConfig.setTimezone( zone);
                            }
 
                            //set dsp time ntpinterval 999

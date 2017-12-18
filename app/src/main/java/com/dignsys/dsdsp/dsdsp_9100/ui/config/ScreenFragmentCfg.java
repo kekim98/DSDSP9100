@@ -162,7 +162,7 @@ public class ScreenFragmentCfg extends Fragment  {
         spCapRSSMode.setSelection(DSLibIF.getCapRSSMode());
 
         ((EditText)mView.findViewById(R.id.cfgValue_etScreenPicTime)).setText(String.valueOf(DSLibIF.getPicChangeTime()));
-        ((EditText)mView.findViewById(R.id.cfgValue_etScreenCapFontSize)).setText(String.valueOf(DSLibIF.getCapFontSize()));
+        ((EditText)mView.findViewById(R.id.cfgValue_etScreenCapFontSize)).setText(String.valueOf(DSLibIF.getCapSize()));
         ((EditText)mView.findViewById(R.id.cfgValue_etScreenCapRSSUpdateTime)).setText(String.valueOf(DSLibIF.getCapRSSUpdateTime()));
         ((EditText)mView.findViewById(R.id.cfgValue_etScreenCapRSSAddress)).setText(DSLibIF.getCapRSSAddress());
 
@@ -180,7 +180,6 @@ public class ScreenFragmentCfg extends Fragment  {
                 int screenRotation = ((Spinner)mView.findViewById(R.id.cfgAS_spScreenRotation)).getSelectedItemPosition();
                 Log.d(TAG, "applyScreenConfig: " + String.valueOf(screenRotation));
 
-                //TODO: must fix after apply rotation display screen problem
                 DSCommanIF.setScreenRotation(screenRotation);
 
 

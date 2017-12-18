@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2a7101648c7623e580e122ae104cb812",
+    "identityHash": "390757381bc57aed5e8b2e3dda895e90",
     "entities": [
       {
         "tableName": "config_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configVersion` TEXT, `firmwareVersion` TEXT, `deviceId` TEXT, `DSPMode` INTEGER NOT NULL, `backlight` INTEGER NOT NULL, `TVMode` INTEGER NOT NULL, `videoOutput` INTEGER NOT NULL, `audioMode` INTEGER NOT NULL, `audioVolume` INTEGER NOT NULL, `serverMode` INTEGER NOT NULL, `serverAddress` TEXT, `serverFolder` TEXT, `serverPort` TEXT, `serverId` TEXT, `serverPwd` TEXT, `serverSyncInterval` INTEGER NOT NULL, `useLAN` INTEGER NOT NULL, `useLAN_DHCP` INTEGER NOT NULL, `LAN_AutoDNS` INTEGER NOT NULL, `LAN_IP` TEXT, `LAN_Subnet` TEXT, `LAN_Gateway` TEXT, `LAN_DNS` TEXT, `useWifi` INTEGER NOT NULL, `useWifi_DHCP` INTEGER NOT NULL, `Wifi_AutoDNS` INTEGER NOT NULL, `Wifi_AuthMode` INTEGER NOT NULL, `Wifi_IP` TEXT, `Wifi_Subnet` TEXT, `Wifi_Gateway` TEXT, `Wifi_DNS` TEXT, `Wifi_ESSID` TEXT, `Wifi_PWD` TEXT, `ImageChangeEffect` INTEGER NOT NULL, `ImageChangeInterval` INTEGER NOT NULL, `UseAutoResizeMovie` INTEGER NOT NULL, `UseAutoResizeImage` INTEGER NOT NULL, `CapMode` INTEGER NOT NULL, `CapPosition` INTEGER NOT NULL, `CapColor` INTEGER NOT NULL, `CapBackColor` INTEGER NOT NULL, `CapSpeed` INTEGER NOT NULL, `CapFont` INTEGER NOT NULL, `CapSize` INTEGER NOT NULL, `RSSMode` INTEGER NOT NULL, `RSSUpdateInterval` INTEGER NOT NULL, `RSSAddress` TEXT, `NTPServer` INTEGER NOT NULL, `Timezone` TEXT, `TimeDisplayPosition` TEXT, `TimeDisplayColor` INTEGER NOT NULL, `TimeDisplayBackColor` INTEGER NOT NULL, `TimeDisplayFont` INTEGER NOT NULL, `TimeDisplayFontSize` INTEGER NOT NULL, `AutoOnOffMode` INTEGER NOT NULL, `OnTime` TEXT, `OffTime` TEXT, `IA_Mode` INTEGER NOT NULL, `IA_ReqMeans` INTEGER NOT NULL, `IA_SerialBaud` INTEGER NOT NULL, `IA_SerialData` INTEGER NOT NULL, `IA_SerialParity` INTEGER NOT NULL, `IA_SerialStop` INTEGER NOT NULL, `IA_NetIP` TEXT, `IA_NetPort` INTEGER NOT NULL, `MS_Mode` INTEGER NOT NULL, `MS_ServerIP` TEXT, `MS_UserCount` INTEGER NOT NULL, `DTV_Modulation` INTEGER NOT NULL, `DTV_AutoSearchRange` INTEGER NOT NULL, `DTV_Channel` TEXT, `UseDefaultContents` INTEGER NOT NULL, `UseSDLogSave` INTEGER NOT NULL, `LogFileSaveDay` INTEGER NOT NULL, `EnableLiveUpload` INTEGER NOT NULL, `EnableLogUpload` INTEGER NOT NULL, `EnableCaptureUpload` INTEGER NOT NULL, `IntervalLive` INTEGER NOT NULL, `IntervalLog` INTEGER NOT NULL, `IntervalCapture` INTEGER NOT NULL, `CaptureScale` INTEGER NOT NULL, `Language` INTEGER NOT NULL, `offDay` INTEGER NOT NULL, `offWeek` TEXT, `rebootTime` INTEGER NOT NULL, `downloadStartTime` INTEGER NOT NULL, `downloadEndTime` INTEGER NOT NULL, `rssCaptionMode` INTEGER NOT NULL, `rssContinueTime` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configVersion` TEXT, `firmwareVersion` TEXT, `deviceId` TEXT, `DSPMode` INTEGER NOT NULL, `backlight` INTEGER NOT NULL, `TVMode` INTEGER NOT NULL, `videoOutput` INTEGER NOT NULL, `audioMode` INTEGER NOT NULL, `audioVolume` INTEGER NOT NULL, `serverMode` INTEGER NOT NULL, `serverAddress` TEXT, `serverFolder` TEXT, `serverPort` TEXT, `serverId` TEXT, `serverPwd` TEXT, `serverSyncInterval` INTEGER NOT NULL, `useLAN` INTEGER NOT NULL, `useLAN_DHCP` INTEGER NOT NULL, `LAN_AutoDNS` INTEGER NOT NULL, `LAN_IP` TEXT, `LAN_Subnet` TEXT, `LAN_Gateway` TEXT, `LAN_DNS` TEXT, `useWifi` INTEGER NOT NULL, `useWifi_DHCP` INTEGER NOT NULL, `Wifi_AutoDNS` INTEGER NOT NULL, `Wifi_AuthMode` INTEGER NOT NULL, `Wifi_IP` TEXT, `Wifi_Subnet` TEXT, `Wifi_Gateway` TEXT, `Wifi_DNS` TEXT, `Wifi_ESSID` TEXT, `Wifi_PWD` TEXT, `ImageChangeEffect` INTEGER NOT NULL, `ImageChangeInterval` INTEGER NOT NULL, `UseAutoResizeMovie` INTEGER NOT NULL, `UseAutoResizeImage` INTEGER NOT NULL, `CapMode` INTEGER NOT NULL, `CapPosition` INTEGER NOT NULL, `CapColor` INTEGER NOT NULL, `CapBackColor` INTEGER NOT NULL, `CapSpeed` INTEGER NOT NULL, `CapFont` INTEGER NOT NULL, `CapSize` INTEGER NOT NULL, `RSSMode` INTEGER NOT NULL, `RSSUpdateInterval` INTEGER NOT NULL, `RSSAddress` TEXT, `NTPServer` INTEGER NOT NULL, `Timezone` TEXT, `TimeDisplayPosition` INTEGER NOT NULL, `TimeDisplayColor` INTEGER NOT NULL, `TimeDisplayBackColor` INTEGER NOT NULL, `TimeDisplayFont` INTEGER NOT NULL, `TimeDisplayFontSize` INTEGER NOT NULL, `AutoOnOffMode` INTEGER NOT NULL, `OnTime` TEXT, `OffTime` TEXT, `IA_Mode` INTEGER NOT NULL, `IA_ReqMeans` INTEGER NOT NULL, `IA_SerialBaud` INTEGER NOT NULL, `IA_SerialData` INTEGER NOT NULL, `IA_SerialParity` INTEGER NOT NULL, `IA_SerialStop` INTEGER NOT NULL, `IA_NetIP` TEXT, `IA_NetPort` INTEGER NOT NULL, `MS_Mode` INTEGER NOT NULL, `MS_ServerIP` TEXT, `MS_UserCount` INTEGER NOT NULL, `DTV_Modulation` INTEGER NOT NULL, `DTV_AutoSearchRange` INTEGER NOT NULL, `DTV_Channel` TEXT, `UseDefaultContents` INTEGER NOT NULL, `UseSDLogSave` INTEGER NOT NULL, `LogFileSaveDay` INTEGER NOT NULL, `EnableLiveUpload` INTEGER NOT NULL, `EnableLogUpload` INTEGER NOT NULL, `EnableCaptureUpload` INTEGER NOT NULL, `IntervalLive` INTEGER NOT NULL, `IntervalLog` INTEGER NOT NULL, `IntervalCapture` INTEGER NOT NULL, `CaptureScale` INTEGER NOT NULL, `Language` INTEGER NOT NULL, `offDay` INTEGER NOT NULL, `offWeek` TEXT, `rebootTime` INTEGER NOT NULL, `downloadStartTime` INTEGER NOT NULL, `downloadEndTime` INTEGER NOT NULL, `rssCaptionMode` INTEGER NOT NULL, `rssContinueTime` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -311,8 +311,8 @@
           {
             "fieldPath": "TimeDisplayPosition",
             "columnName": "TimeDisplayPosition",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "TimeDisplayColor",
@@ -1042,7 +1042,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2a7101648c7623e580e122ae104cb812\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"390757381bc57aed5e8b2e3dda895e90\")"
     ]
   }
 }

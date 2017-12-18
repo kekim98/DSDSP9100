@@ -3,15 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context="com.dignsys.dsdsp.dsdsp_9100.ui.main.ClockFragmentMain">
+    tools:context="com.dignsys.dsdsp.dsdsp_9100.ui.main.MessageFragmentMain">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
-        android:id="@+id/textView"
+    <TextSwitcher
+        android:id="@+id/textSW"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="TextView"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:text=""
         android:textSize="50sp" />
 
     <ImageView

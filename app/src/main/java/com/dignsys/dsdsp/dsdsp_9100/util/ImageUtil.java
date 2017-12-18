@@ -7,8 +7,7 @@ import android.widget.ImageSwitcher;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
-import com.dignsys.dsdsp.dsdsp_9100.model.ImageAnimInfo;
-import com.dignsys.dsdsp.dsdsp_9100.ui.main.PictureFragmentMain;
+import com.dignsys.dsdsp.dsdsp_9100.model.AnimInfo;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 import java.util.Random;
@@ -19,14 +18,14 @@ import java.util.Random;
 
 public class ImageUtil {
 
-    public static ImageAnimInfo getAnim(Context context, int type) {
-        ImageAnimInfo imageAnimInfo = new ImageAnimInfo();
+    public static AnimInfo getAnim(Context context, int type) {
+        AnimInfo animInfo = new AnimInfo();
         Animation in = null;
         Animation out = null;
 
         if (type == Definer.DEF_PIC_EFFECT_NONE) {
-            imageAnimInfo.in = null;
-            imageAnimInfo.out = null;
+            animInfo.in = null;
+            animInfo.out = null;
 
         } else if (type == Definer.DEF_PIC_EFFECT_CROSS_FADE) {
             in = AnimationUtils.loadAnimation(context, R.anim.fade_in);
@@ -54,10 +53,10 @@ public class ImageUtil {
             out = AnimationUtils.loadAnimation(context, R.anim.fade_out);
         }
 
-        imageAnimInfo.in = in;
-        imageAnimInfo.out = out;
+        animInfo.in = in;
+        animInfo.out = out;
 
-        return imageAnimInfo;
+        return animInfo;
     }
 
     public static void setPicEffect(Context context, ImageSwitcher view) {
@@ -69,7 +68,7 @@ public class ImageUtil {
             type = random.nextInt(7);
         }
 
-        ImageAnimInfo imageAnim = ImageUtil.getAnim(context, type);
+        AnimInfo imageAnim = ImageUtil.getAnim(context, type);
 
         view.setInAnimation(imageAnim.in);
         view.setOutAnimation(imageAnim.out);

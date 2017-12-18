@@ -121,9 +121,15 @@ public class Definer {
     public static final int DEF_MESSAGE_TYPE_SCROLL			= 0;
     public static final int DEF_MESSAGE_TYPE_STATIC_LEFT	= 1;
     public static final int DEF_MESSAGE_TYPE_STATIC_RIGHT	= 2;
+	public static final int DEF_MESSAGE_TYPE_STATIC_TOP		= 3;
+	public static final int DEF_MESSAGE_TYPE_STATIC_BOTTOM	= 4;
     public static final int DEF_MESSAGE_TYPE_STATIC_MIDDLE	= 5;
+	public static final int DEF_MESSAGE_TYPE_WRAP_LEFT		= 6;
+	public static final int DEF_MESSAGE_TYPE_WRAP_RIGHT		= 7;
     public static final int DEF_MESSAGE_TYPE_WRAP_UP		= 8;
     public static final int DEF_MESSAGE_TYPE_WRAP_DOWN		= 9;
+	public static final int DEF_MESSAGE_TYPE_WRAP_STOP_LEFT	= 10;
+	public static final int DEF_MESSAGE_TYPE_WRAP_STOP_RIGHT= 11;
     public static final int DEF_MESSAGE_TYPE_WRAP_STOP_UP	= 12;
     public static final int DEF_MESSAGE_TYPE_WRAP_STOP_DOWN	= 13;
 	
@@ -277,4 +283,14 @@ public class Definer {
 	public static final String DEF_OFF_DAY_WEEK_ACTION = "DSDSP.ACTION.OFF.DAY.WEEK";
 	public static final String DEF_ON_TIME_ACTION = "DSDSP.ACTION.ON.TIME";
 	public static final String DEF_OFF_TIME_ACTION = "DSDSP.ACTION.OFF.TIME";
+
+	public static final int DEF_CAP_SPEED_FAST = 0;
+	public static final int DEF_CAP_SPEED_NORMAL = 1;
+	public static final int DEF_CAP_SPEED_SLOW = 2;
+
+	public static int DEF_TIME_DISABLE_POS = 0;
+	public static int DEF_TIME_LEFT_TOP_POS = 1;
+	public static int DEF_TIME_RIGHT_TOP_POS = 2;
+	public static int DEF_TIME_LEFT_BOTTOM_POS = 3;
+	public static int DEF_TIME_RIGHT_BOTTOM_POS = 4;
 }

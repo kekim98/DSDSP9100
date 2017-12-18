@@ -50,7 +50,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ContentDao contentDao();
 
     @Transaction
-    public void updatePlayDataTransaction(List<ScheduleEntity> scheduls,
+    public void updatePlayDataTransaction(List<ScheduleEntity> schedules,
                                           List<SceneEntity> scenes,
                                           List<PaneEntity> panes,
                                           List<ContentEntity> contents)
@@ -61,7 +61,7 @@ public abstract class AppDatabase extends RoomDatabase {
         paneDao().deleteAllPane();
         contentDao().deleteAllContent();
 
-        scheduleDao().insertAll(scheduls);
+        scheduleDao().insertAll(schedules);
         sceneDao().insertAll(scenes);
         paneDao().insertAll(panes);
         contentDao().insertAll(contents);

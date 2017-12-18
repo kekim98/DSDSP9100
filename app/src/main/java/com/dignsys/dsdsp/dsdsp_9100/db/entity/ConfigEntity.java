@@ -76,7 +76,7 @@ public class ConfigEntity  {
     /* Time Setting */
     private int NTPServer;                // NTP server address. 0: Not used.
     private String Timezone;                // Time zone
-    private String TimeDisplayPosition;    // Time display position. 0: Not used.
+    private int TimeDisplayPosition;    // Time display position. 0: Not used.
     private int TimeDisplayColor;        // Time display color
     private int TimeDisplayBackColor;    // Time display background color
     private int TimeDisplayFont;        // Time display font
@@ -591,11 +591,11 @@ public class ConfigEntity  {
         Timezone = timezone;
     }
 
-    public String getTimeDisplayPosition() {
+    public int getTimeDisplayPosition() {
         return TimeDisplayPosition;
     }
 
-    public void setTimeDisplayPosition(String timeDisplayPosition) {
+    public void setTimeDisplayPosition(int timeDisplayPosition) {
         TimeDisplayPosition = timeDisplayPosition;
     }
 

@@ -190,6 +190,8 @@ public class CommandHelper {
     public void setTimeZone(String zone) {
         if(zone.equals(TimeZone.getDefault().getID())) return;
 
+        ConfigHelper.getInstance(_context).setTimezone(zone);
+
         AlarmManager alarm = (AlarmManager) _context.getSystemService(Context.ALARM_SERVICE);
         alarm.setTimeZone(zone);
     }

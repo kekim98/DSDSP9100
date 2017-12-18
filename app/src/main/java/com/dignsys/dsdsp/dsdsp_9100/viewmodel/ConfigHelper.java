@@ -66,7 +66,7 @@ public class ConfigHelper {
         mConfig = mDB.configDao().loadConfig();
 
         mCommand = CommandHelper.getInstance(context);
-       
+
 
 
         // Create the observer which updates the schedule list .
@@ -191,6 +191,10 @@ public class ConfigHelper {
 
     private void applyTimezone() {
         String timezone = _mConfig.getTimezone(); //get rawoffset
+        CommandHelper.getInstance(_context).setTimeZone(timezone);
+    }
+
+    public static String getTimeZone(String timezone) {
         String temp = "GMT"+timezone;
 
         TimeZone tz = TimeZone.getTimeZone(temp);
@@ -208,11 +212,12 @@ public class ConfigHelper {
 
             }
         }
-
         if (searchTimeZone != null) {
             Log.d(TAG, "applyConfigs: searchTimeZone.id=" + searchTimeZone.getID());
-            mCommand.setTimeZone(searchTimeZone.getID());
+            return searchTimeZone.getID();
         }
+
+        return "Asia/Seoul";
     }
 
 
@@ -509,8 +514,8 @@ public class ConfigHelper {
     }
 
     public   void setTimePosition(int n) {
-   /*     _mConfig.setTimeDisplayPosition(n);
-        updateConfig();*/
+        _mConfig.setTimeDisplayPosition(n);
+        updateConfig();
     }
     public   void setTimeColor(int n) {
         _mConfig.setTimeDisplayColor(n);
@@ -767,15 +772,19 @@ public class ConfigHelper {
     public   int getCapRSSUpdateTime(){
         return _mConfig.getRSSUpdateInterval();
     }
+
+    public int getCapSize() {
+        return _mConfig.getCapSize();
+    }
+
     public   int getLanguage(){
         //TODO: not implementation
         return 0;
     }
 
     public   int getTimePosition(){
-        //TODO : must change
-        return 0;
-       // return _mConfig.getTimeDisplayPosition();
+
+        return _mConfig.getTimeDisplayPosition();
     }
 
     public   int getTimeColor(){
@@ -1046,7 +1055,7 @@ public class ConfigHelper {
     public  void setRSSContinueTime(int n)	{ m_nRSSContinueTime = n;		}
     public  int  getRSSContinueTime()			{ return m_nRSSContinueTime;	}
 
-    public  int getPicChangeEffectValue(String str)
+    public static int getPicChangeEffectValue(String str)
     {
         int n = 0;
 
@@ -1063,7 +1072,7 @@ public class ConfigHelper {
 
     }
 
-    public  int getCapPositionValue(String str)
+    public static  int getCapPositionValue(String str)
     {
         int n = 0;
 
@@ -1075,7 +1084,7 @@ public class ConfigHelper {
         return n;
     }
 
-    public  int getTimePositionValue(String str)
+    public static int getTimePositionValue(String str)
     {
         int n = 0;
 
@@ -1088,7 +1097,7 @@ public class ConfigHelper {
         return n;
     }
 
-    public  int getCapSpeedValue(String str)
+    public static int getCapSpeedValue(String str)
     {
 
         int n = 0;
@@ -1100,7 +1109,7 @@ public class ConfigHelper {
         return n;
     }
 
-    public  int getRSSCaptionModeValue(String str)
+    public static  int getRSSCaptionModeValue(String str)
     {
 
         int n = 0;
@@ -1117,7 +1126,7 @@ public class ConfigHelper {
         return n;
     }
 
-    public  int getFontValue(String str)
+    public static  int getFontValue(String str)
     {
         int n = 0;
 
@@ -1127,7 +1136,7 @@ public class ConfigHelper {
         return n;
     }
 
-    public  int getColorValue(String str)
+    public static int getColorValue(String str)
     {
         int n = 0;
 

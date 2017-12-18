@@ -96,12 +96,12 @@ public class DatabaseInitUtil {
 
         configEntity.setRSSAddress("http://rss.com");
 
-        configEntity.setTimezone("+9");
+        configEntity.setTimezone("Asia/Seoul");
        // configEntity.setTimeDisplayPosition(0);
         configEntity.setTimeDisplayColor(7);
         configEntity.setTimeDisplayBackColor(2);
         configEntity.setTimeDisplayFont(0);
-        configEntity.setTimeDisplayFontSize(20);
+        configEntity.setTimeDisplayFontSize(50);
 
         configEntity.setOnTime("0900");
         configEntity.setOffTime("1800");

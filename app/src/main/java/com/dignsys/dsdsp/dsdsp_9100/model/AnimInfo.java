@@ -6,7 +6,7 @@ import android.view.animation.Animation;
  * Created by bawoori on 17. 12. 15.
  */
 
-public class ImageAnimInfo {
+public class AnimInfo {
     public Animation in;
     public Animation out;
 

@@ -113,7 +113,8 @@ public class TimeFragmentCfg extends Fragment {
         ArrayAdapter<String> adpTimeZone	    =  new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item, idArray);
         adpTimeZone.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spTimeZone.setAdapter(adpTimeZone);
-        String currTimeZone = TimeZone.getDefault().getID();
+       // String currTimeZone = TimeZone.getDefault().getID();
+        String currTimeZone = ConfigHelper.getInstance(getContext()).getTimezone();
         for(int i = 0; i < idArray.length; i++) {
             if(idArray[i].equals(currTimeZone)) {
                 spTimeZone.setSelection(i);

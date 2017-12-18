@@ -38,7 +38,7 @@ import java.io.File;
  * Use the {@link VideoFragmentMain#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class VideoFragmentMain extends MainBaseFragment {
+public class VideoFragmentMain extends MainBaseFragment implements ViewSwitcher.ViewFactory {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
     private static final String TAG = VideoFragmentMain.class.getSimpleName();
@@ -124,14 +124,15 @@ public class VideoFragmentMain extends MainBaseFragment {
         });
 
 
+        mImageSW.setFactory(this);
 
-        mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
+       /* mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {
                 ImageView iv = new ImageView(VideoFragmentMain.this.getContext());
                 return iv;
             }
-        });
+        });*/
 
         if (ConfigHelper.getInstance(getContext()).getResizePic() == Definer.DEF_USE) {
             setPicOptions(true);
@@ -258,4 +259,9 @@ public class VideoFragmentMain extends MainBaseFragment {
 
     }
 
+    @Override
+    public View makeView() {
+        ImageView iv = new ImageView(this.getContext());
+        return iv;
+    }
 }
