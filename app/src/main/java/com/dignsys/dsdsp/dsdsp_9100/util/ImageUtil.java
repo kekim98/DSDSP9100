@@ -74,21 +74,5 @@ public class ImageUtil {
         view.setOutAnimation(imageAnim.out);
     }
 
-    public static int getPicChangeEffectValue(String str)
-    {
-        int n = 0;
-
-        if(str.equals("disable")) 	n = 0;
-        if(str.equals("downward")) 	n = 1;
-        if(str.equals("crossfade")) n = 2;
-        if(str.equals("leftward")) 	n = 3;
-        if(str.equals("rightward")) n = 4;
-        if(str.equals("upward")) 	n = 5;
-        if(str.equals("increase")) 	n = 6;
-        if(str.equals("random")) 	n = 7;
-
-        return n;
-
-    }
 
 }

@@ -3,6 +3,7 @@ package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -61,9 +62,7 @@ abstract class MainBaseFragment extends Fragment {
         mViewModel.getConfig().removeObserver(mConfigObserver);
 
         GlideApp.get(getActivity()).clearMemory();
-
         //TODO: release resource
-
     }
 
     void subscribe() {

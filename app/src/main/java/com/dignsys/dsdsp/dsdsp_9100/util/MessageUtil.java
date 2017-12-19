@@ -44,7 +44,6 @@ public class MessageUtil {
         } else if (type == Definer.DEF_MESSAGE_TYPE_WRAP_STOP_DOWN) {
             in = AnimationUtils.loadAnimation(context, R.anim.push_down_in);
             out = AnimationUtils.loadAnimation(context, R.anim.push_up_out);
-
         }
 
         animInfo.in = in;
@@ -54,7 +53,10 @@ public class MessageUtil {
     }
 
     public static void setCaptionEffect(Context context, View view, boolean isText) {
-        int type = ConfigHelper.getInstance(context).getRSSCaptionMode();
+        if (view == null) return;
+
+       // int type = ConfigHelper.getInstance(context).getCapPosition();
+        int type = 0;
         int speed = ConfigHelper.getInstance(context).getCapSpeed();
         AnimInfo anim = MessageUtil.getAnim(context, type);
 
@@ -71,8 +73,6 @@ public class MessageUtil {
                     } else {
                         anim.in.setDuration(20000);
                     }
-
-                  //  view.startAnimation(animation);
                 }
                 view.startAnimation(anim.in);
             } else {
@@ -114,69 +114,6 @@ public class MessageUtil {
         }
             return Color.BLACK;
     }
-
-
-    public static int getRssCaptionModeValue(String str)
-    {
-
-        int n = 0;
-
-        if(str.equals("scroll")) 			n = Definer.DEF_MESSAGE_TYPE_SCROLL;
-        if(str.equals("left")) 		        n = Definer.DEF_MESSAGE_TYPE_STATIC_LEFT;
-        if(str.equals("right")) 		    n = Definer.DEF_MESSAGE_TYPE_STATIC_RIGHT;
-        if(str.equals("top")) 		        n = Definer.DEF_MESSAGE_TYPE_STATIC_TOP;
-        if(str.equals("bottom")) 	    	n = Definer.DEF_MESSAGE_TYPE_STATIC_BOTTOM;
-        if(str.equals("center")) 	    	n = Definer.DEF_MESSAGE_TYPE_STATIC_MIDDLE;
-        if(str.equals("wrapupward")) 		n = Definer.DEF_MESSAGE_TYPE_WRAP_UP;
-        if(str.equals("wrapdownward")) 		n = Definer.DEF_MESSAGE_TYPE_WRAP_DOWN;
-        if(str.equals("wrapupwardstop")) 	n = Definer.DEF_MESSAGE_TYPE_WRAP_STOP_UP;
-        if(str.equals("wrapdownwardstop")) 	n = Definer.DEF_MESSAGE_TYPE_WRAP_STOP_DOWN;
-
-        return n;
-    }
-
-    public static int getColorValue(String str)
-    {
-        int n = 0;
-
-        if(str.equals("red")) 			n = 0;
-        if(str.equals("orange")) 		n = 1;
-        if(str.equals("yellow")) 		n = 2;
-        if(str.equals("green")) 		n = 3;
-        if(str.equals("blue")) 			n = 4;
-        if(str.equals("deepblue")) 		n = 5;
-        if(str.equals("voilet")) 		n = 6;
-        if(str.equals("black")) 		n = 7;
-        if(str.equals("white")) 		n = 8;
-        if(str.equals("transparent")) 	n = 9;
-        return n;
-    }
-
-    public static int getCapSpeedValue(String str)
-    {
-
-        int n = 0;
-
-        if(str.equals("quick")) 	n = 0;
-        if(str.equals("normal")) 	n = 1;
-        if(str.equals("slow")) 		n = 2;
-
-        return n;
-    }
-
-    public static int getTimePositionValue(String str)
-    {
-        int n = 0;
-
-        if(str.equals("disable")) 		n = 0;
-        if(str.equals("lefttop")) 		n = 1;
-        if(str.equals("righttop")) 		n = 2;
-        if(str.equals("leftbottom")) 	n = 3;
-        if(str.equals("rightbottom")) 	n = 4;
-
-        return n;
-    }
-
 
 
 }

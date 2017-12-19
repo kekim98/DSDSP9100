@@ -68,14 +68,15 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
+        super.onViewCreated(view, savedInstanceState);
         // TODO: Rename and change types and number of view
 
         mTextSW = view.findViewById(R.id.textSW);
         mImageView = view.findViewById(R.id.imageView);
 
         mTextSW.setFactory(this);
+
 
         run();
 
@@ -88,7 +89,7 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
     @Override
     protected void applyConfig(ConfigEntity config) {
-        if (mTextSW != null/* && mTextSW.isActivated()*/) {
+        if (mTextSW != null /*&& mTextSW.isActivated()*/) {
             MessageUtil.setCaptionEffect(getContext(), mTextSW, true);
           setTextProperty();
         }
@@ -127,7 +128,10 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
             mTextSW.setText(message);
 
-            MessageUtil.setCaptionEffect(getContext(), mTextSW, true);
+            if (mTextSW != null) {
+                MessageUtil.setCaptionEffect(getContext(), mTextSW, true);
+            }
+
 
         } else if (fileType == Definer.DEF_CONTENTS_TYPE_IMAGE) {
             mTextSW.setVisibility(View.GONE);

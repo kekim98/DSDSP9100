@@ -18,7 +18,6 @@ import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseInitUtil;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.service.AlarmReceiver;
-import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
 
 import org.w3c.dom.Text;
 
@@ -233,20 +232,20 @@ public class ConfigHelper {
     }
 
 
-     String m_strCompanyID		= "000";
+  /*   String m_strCompanyID		= "000";*/
 
      String m_strUserFontPath1	= "";
      String m_strUserFontPath2	= "";
      String m_strUserFontPath3	= "";
 
 
-     int m_nDownStartTime		= 0;
+    /* int m_nDownStartTime		= 0;
      int m_nDownEndTime		= 0;
 
      int m_nRSSCaptionMode 	= Definer.DEF_MESSAGE_TYPE_SCROLL;
      int m_nRSSContinueTime	= 0;
 
-     //boolean m_bCommandOff		= false;
+     //boolean m_bCommandOff		= false;*/
 
     @SuppressLint("StaticFieldLeak")
     private void updateConfig() {
@@ -1037,7 +1036,7 @@ public class ConfigHelper {
     }
 
    /* public  boolean getCommandOff()			{ return m_bCommandOff;			}
-    public  void setCommandOff(boolean b)		{ m_bCommandOff = b;			}*/
+    public  void setCommandOff(boolean b)		{ m_bCommandOff = b;			}
 
     public  void setDownStartTime(int n)		{ m_nDownStartTime 	= n;		}
     public  void setDownEndTime(int n)		{ m_nDownEndTime 	= n;		}
@@ -1054,19 +1053,21 @@ public class ConfigHelper {
 
     public  void setRSSContinueTime(int n)	{ m_nRSSContinueTime = n;		}
     public  int  getRSSContinueTime()			{ return m_nRSSContinueTime;	}
+    */
 
     public static int getPicChangeEffectValue(String str)
     {
         int n = 0;
 
         if(str.equals("disable")) 	n = 0;
-        if(str.equals("random")) 	n = 1;
+        if(str.equals("downward")) 	n = 1;
         if(str.equals("crossfade")) n = 2;
         if(str.equals("leftward")) 	n = 3;
         if(str.equals("rightward")) n = 4;
         if(str.equals("upward")) 	n = 5;
         if(str.equals("increase")) 	n = 6;
-        if(str.equals("downward")) 	n = 7;
+        if(str.equals("random")) 	n = 7;
+
 
         return n;
 
@@ -1115,14 +1116,15 @@ public class ConfigHelper {
         int n = 0;
 
         if(str.equals("scroll")) 			n = Definer.DEF_MESSAGE_TYPE_SCROLL;
-        if(str.equals("left")) 		n = Definer.DEF_MESSAGE_TYPE_STATIC_LEFT;
-        if(str.equals("right")) 		n = Definer.DEF_MESSAGE_TYPE_STATIC_RIGHT;
-        if(str.equals("center")) 		n = Definer.DEF_MESSAGE_TYPE_STATIC_MIDDLE;
+        if(str.equals("left")) 		        n = Definer.DEF_MESSAGE_TYPE_STATIC_LEFT;
+        if(str.equals("right")) 		    n = Definer.DEF_MESSAGE_TYPE_STATIC_RIGHT;
+        if(str.equals("top")) 		        n = Definer.DEF_MESSAGE_TYPE_STATIC_TOP;
+        if(str.equals("bottom")) 	    	n = Definer.DEF_MESSAGE_TYPE_STATIC_BOTTOM;
+        if(str.equals("center")) 	    	n = Definer.DEF_MESSAGE_TYPE_STATIC_MIDDLE;
         if(str.equals("wrapupward")) 		n = Definer.DEF_MESSAGE_TYPE_WRAP_UP;
         if(str.equals("wrapdownward")) 		n = Definer.DEF_MESSAGE_TYPE_WRAP_DOWN;
         if(str.equals("wrapupwardstop")) 	n = Definer.DEF_MESSAGE_TYPE_WRAP_STOP_UP;
         if(str.equals("wrapdownwardstop")) 	n = Definer.DEF_MESSAGE_TYPE_WRAP_STOP_DOWN;
-
         return n;
     }
 

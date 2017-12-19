@@ -359,7 +359,7 @@ public class ConfigHandler extends BasicHandler {
 //								set dsp screen slide downward | increase | upward | leftward | rightward | crossfade | random | disable
                            if(strSubItem.equals("slide")) {
 
-                               mConfig.setImageChangeEffect(ImageUtil.getPicChangeEffectValue(strValue));
+                               mConfig.setImageChangeEffect(ConfigHelper.getPicChangeEffectValue(strValue));
                            }
 
 //								set dsp screen transitiontime 999
@@ -386,28 +386,28 @@ public class ConfigHandler extends BasicHandler {
                            if(strSubItem.equals("captionposition")) {
 
                              //  int nCurrVal = Integer.valueOf(strValue);
-                               int nCurrVal = MessageUtil.getRssCaptionModeValue(strValue);
+                               int nCurrVal = ConfigHelper.getRSSCaptionModeValue(strValue);
                                mConfig.setCapPosition(nCurrVal);
                            }
 
 //								set dsp screen captioncolor red | white ...
                            if(strSubItem.equals("captioncolor")) {
 
-                               int nCurrVal = MessageUtil.getColorValue(strValue);
+                               int nCurrVal = ConfigHelper.getColorValue(strValue);
                                mConfig.setCapColor(nCurrVal);
                            }
 
 //								set dsp screen captionbgcolor red | transparent ...
                            if(strSubItem.equals("captionbgcolor")) {
 
-                               int nCurrVal = MessageUtil.getColorValue(strValue);
+                               int nCurrVal = ConfigHelper.getColorValue(strValue);
                                mConfig.setCapBackColor(nCurrVal);
                            }
 
 //								set dsp screen captionscroll quick | normal |slow
                            if(strSubItem.equals("captionscroll")) {
 
-                               int nCurrVal = MessageUtil.getCapSpeedValue(strValue);
+                               int nCurrVal = ConfigHelper.getCapSpeedValue(strValue);
                                mConfig.setCapSpeed(nCurrVal);
                            }
 
@@ -487,7 +487,7 @@ public class ConfigHandler extends BasicHandler {
                            if(strSubItem.equals("captionmode")) {
 
                               // int nCurrVal = Integer.valueOf(strValue);
-                               int nCurrVal = MessageUtil.getRssCaptionModeValue(strValue);
+                               int nCurrVal = ConfigHelper.getRSSCaptionModeValue(strValue);
                                mConfig.setRssCaptionMode(nCurrVal);
                            }
 
@@ -528,7 +528,7 @@ public class ConfigHandler extends BasicHandler {
                            //set dsp time color orange
                            if(strSubItem.equals("color")) {
 
-                               int nCurrVal = MessageUtil.getColorValue(strValue);
+                               int nCurrVal = ConfigHelper.getColorValue(strValue);
 
                                mConfig.setTimeDisplayColor(nCurrVal);
                            }
@@ -537,7 +537,7 @@ public class ConfigHandler extends BasicHandler {
                            if(strSubItem.equals("bgcolor")) {
 
 
-                               int nCurrVal = MessageUtil.getColorValue(strValue);
+                               int nCurrVal = ConfigHelper.getColorValue(strValue);
                                mConfig.setTimeDisplayBackColor(nCurrVal);
                            }
 
