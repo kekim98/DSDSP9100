@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
@@ -26,7 +24,6 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
-import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 import java.io.File;
 
@@ -73,35 +70,11 @@ public class VideoFragmentMain extends MainBaseFragment implements ViewSwitcher.
 
         makeLayout(view);
 
-        return view;
-
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-        // TODO: Rename and change types and number of view
-
         mVideoView = view.findViewById(R.id.videoView);
-        //mVideoView.setZOrderMediaOverlay(true);
         mVideoView.setZOrderOnTop(true);
-
         mImageSW = view.findViewById(R.id.imageSW);
-
-
-/*        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-        subscribe();*/
-
-        if (ConfigHelper.getInstance(getContext()).getResizeMovie() == Definer.DEF_USE) {
-            mVideoView.setResizeMode(true);
-        } else {
-            mVideoView.setResizeMode(false);
-        }
-
         mVideoView.setSize(getW(), getH());
-
+        mImageSW.setFactory(this);
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -123,22 +96,14 @@ public class VideoFragmentMain extends MainBaseFragment implements ViewSwitcher.
             }
         });
 
+        return view;
 
-        mImageSW.setFactory(this);
+    }
 
-       /* mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-            public View makeView() {
-                ImageView iv = new ImageView(VideoFragmentMain.this.getContext());
-                return iv;
-            }
-        });*/
-
-        if (ConfigHelper.getInstance(getContext()).getResizePic() == Definer.DEF_USE) {
-            setPicOptions(true);
-        } else {
-            setPicOptions(false);
-        }
 
         run();
 

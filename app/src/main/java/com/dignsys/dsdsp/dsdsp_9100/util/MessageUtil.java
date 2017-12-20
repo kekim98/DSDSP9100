@@ -3,19 +3,8 @@ package com.dignsys.dsdsp.dsdsp_9100.util;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageSwitcher;
-import android.widget.TextSwitcher;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
-import com.dignsys.dsdsp.dsdsp_9100.R;
-import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
-import com.dignsys.dsdsp.dsdsp_9100.model.AnimInfo;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 

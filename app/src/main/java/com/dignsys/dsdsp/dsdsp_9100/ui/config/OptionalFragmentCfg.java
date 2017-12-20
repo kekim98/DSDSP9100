@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
-import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
 
@@ -113,6 +111,7 @@ public class OptionalFragmentCfg extends Fragment {
                 }
 
                 Toast.makeText(OptionalFragmentCfg.this.getContext(), R.string.ca_msg_apply_config, Toast.LENGTH_SHORT).show();
+                ConfigActivity.hideKeyboard(getActivity());
             }
         });
 

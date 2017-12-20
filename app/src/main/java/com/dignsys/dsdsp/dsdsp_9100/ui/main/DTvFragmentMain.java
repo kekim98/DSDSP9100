@@ -56,6 +56,15 @@ public class DTvFragmentMain extends MainBaseFragment implements SurfaceHolder.C
         View view = inflater.inflate(R.layout.fragment_dtv, container, false);
 
         makeLayout(view);
+        mSurfaceView = view.findViewById(R.id.surfaceView);
+
+        // mSurfaceView.setZOrderMediaOverlay(true);
+        mSurfaceView.setZOrderOnTop(true);
+
+        mHolder = mSurfaceView.getHolder();
+        mHolder.setFormat(PixelFormat.TRANSLUCENT);
+        mHolder.addCallback(this);
+        mHolder.setSizeFromLayout();
 
         return view;
 
@@ -64,16 +73,6 @@ public class DTvFragmentMain extends MainBaseFragment implements SurfaceHolder.C
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mSurfaceView = view.findViewById(R.id.surfaceView);
-
-       // mSurfaceView.setZOrderMediaOverlay(true);
-        mSurfaceView.setZOrderOnTop(true);
-
-        mHolder = mSurfaceView.getHolder();
-        mHolder.setFormat(PixelFormat.TRANSLUCENT);
-        mHolder.addCallback(this);
-        mHolder.setSizeFromLayout();
 
         run();
 

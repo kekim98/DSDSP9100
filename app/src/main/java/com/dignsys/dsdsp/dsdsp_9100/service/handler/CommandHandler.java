@@ -4,15 +4,11 @@ package com.dignsys.dsdsp.dsdsp_9100.service.handler;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.CommandEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.model.PlayContent;
-import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
-
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

@@ -7,8 +7,6 @@ import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
-import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
-import com.dignsys.dsdsp.dsdsp_9100.util.MessageUtil;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 import java.io.BufferedReader;
@@ -513,15 +511,17 @@ public class ConfigHandler extends BasicHandler {
                            //set dsp time font dotum
                            if(strSubItem.equals("font")) {
 
-                               int nCurrVal = Integer.valueOf(strValue);
-                               mConfig.setTimeDisplayFont(nCurrVal);
+                               //TODO : miss match
+                             /*  int nCurrVal = Integer.valueOf(strValue);
+                               mConfig.setTimeDisplayFont(nCurrVal);*/
                            }
 
                            //set dsp time userfont gulim
                            if(strSubItem.equals("userfont")) {
 
-                               int nCurrVal = Integer.valueOf(strValue);
-                               mConfig.setTimeDisplayFont(nCurrVal);
+                               //TODO : miss match
+                               /*int nCurrVal = Integer.valueOf(strValue);
+                               mConfig.setTimeDisplayFont(nCurrVal);*/
                            }
 
                            //set dsp time color orange

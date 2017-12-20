@@ -22,7 +22,6 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
-import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 import java.io.File;
 
@@ -35,7 +34,7 @@ import java.io.File;
  */
 
 
-public class PictureFragmentMain extends MainBaseFragment {
+public class PictureFragmentMain extends MainBaseFragment implements ViewSwitcher.ViewFactory {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PANE_NUM = "pane_num";
     private static final String TAG = PictureFragmentMain.class.getSimpleName();
@@ -76,6 +75,8 @@ public class PictureFragmentMain extends MainBaseFragment {
         mView = inflater.inflate(R.layout.fragment_picture, container, false);
 
         makeLayout(mView);
+        mImageSW = mView.findViewById(R.id.imageSW);
+        mImageSW.setFactory(this);
 
         return mView;
 
@@ -84,26 +85,6 @@ public class PictureFragmentMain extends MainBaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // TODO: Rename and change types and number of view
-
-        //  mVideoView = view.findViewById(R.id.videoView);
-        mImageSW = view.findViewById(R.id.imageSW);
-
-        if (ConfigHelper.getInstance(getContext()).getResizePic() == Definer.DEF_USE) {
-            setPicResize(true);
-        } else {
-            setPicResize(false);
-        }
-
-
-        mImageSW.setFactory(new ViewSwitcher.ViewFactory() {
-
-            public View makeView() {
-                ImageView iv = new ImageView(PictureFragmentMain.this.getContext());
-                return iv;
-            }
-        });
 
 
         run();
@@ -174,4 +155,9 @@ public class PictureFragmentMain extends MainBaseFragment {
 
     }
 
+    @Override
+    public View makeView() {
+        ImageView iv = new ImageView(getContext());
+        return iv;
+    }
 }

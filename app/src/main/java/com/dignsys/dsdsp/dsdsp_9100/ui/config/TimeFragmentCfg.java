@@ -180,6 +180,7 @@ public class TimeFragmentCfg extends Fragment {
                 DSLibIF.setAutoOnOffMode(((Spinner)mView.findViewById(R.id.cfgAT_spAutoOnOffMode)).getSelectedItemPosition());
 
                 Toast.makeText(TimeFragmentCfg.this.getContext(), R.string.ca_msg_apply_config, Toast.LENGTH_SHORT).show();
+                ConfigActivity.hideKeyboard(getActivity());
             }
         });
 

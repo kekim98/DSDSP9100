@@ -1,8 +1,6 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -54,28 +52,22 @@ public class ClockFragmentMain extends MainBaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_clock, container, false);
-
         makeLayout(mView);
+        mClockView = mView.findViewById(R.id.textClock);
+        mClockView.setFormat12Hour(null);
+        mClockView.setFormat24Hour("hh:mm:ss a");
+
+        Log.d(TAG, "onCreateView: ClockFragmentMain.makeLayout");
+
 
         return mView;
     }
 
-    @SuppressLint("ResourceAsColor")
+
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-      //  view.setBackgroundColor(android.R.color.white);
-
-        mClockView = view.findViewById(R.id.textClock);
-        mClockView.setFormat12Hour(null);
-        //textClock.setFormat24Hour("dd/MM/yyyy hh:mm:ss a");
-       // mClockView.setFormat24Hour("hh:mm:ss a  EEE MMM d");
-        mClockView.setFormat24Hour("hh:mm:ss a");
-       // mClockView.setBackgroundColor(android.R.color.white);
-
-        setTextProperty();
-
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "onDetach: ClockFragment");
     }
 
     @Override
@@ -85,14 +77,11 @@ public class ClockFragmentMain extends MainBaseFragment {
 
     @Override
     void stop() {
-
     }
 
     @Override
     protected void applyConfig(ConfigEntity config) {
-
         setTextProperty();
-
     }
 
     private void setTextProperty() {

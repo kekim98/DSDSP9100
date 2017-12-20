@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,12 +14,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
-import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
-
-import static android.widget.Toast.LENGTH_SHORT;
-import static com.dignsys.dsdsp.dsdsp_9100.R.string.ca_msg_apply_config;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -111,6 +106,7 @@ public class ServerFragmentCfg extends Fragment  {
                 DSLibIF.setServerMode(spServerMode.getSelectedItemPosition());
 
                 Toast.makeText(ServerFragmentCfg.this.getContext(), R.string.ca_msg_apply_config, Toast.LENGTH_SHORT).show();
+                ConfigActivity.hideKeyboard(getActivity());
             }
         });
 

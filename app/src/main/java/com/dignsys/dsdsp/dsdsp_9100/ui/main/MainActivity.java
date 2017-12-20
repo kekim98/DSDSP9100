@@ -99,14 +99,6 @@ public class MainActivity extends AppCompatActivity {
     private void subscribe() {
         // Update the list when the data changes
 
-    /*    mViewModel.getScene().observe(this, new Observer<SceneEntity>() {
-            @Override
-            public void onChanged(@Nullable SceneEntity sceneEntity) {
-                Log.d(TAG, "onChanged: sceneEntity id =" + String.valueOf(sceneEntity.getId()));
-            }
-        });*/
-
-
 
         mViewModel.getPlayCommand().observe(this, new Observer<Integer>() {
             @Override

@@ -1,5 +1,6 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.config;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,8 +10,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
@@ -139,7 +140,6 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container,
                         fragment, null)
-               /* .addToBackStack(null)*/
                 .commit();
     }
 
@@ -151,9 +151,9 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
 
             DSLibIF.initConfigs();
 
-            ((Button)findViewById(R.id.cfgBtnMI_General)).setSelected(true);
-            ((Button)findViewById(R.id.cfgBtnMI_General)).requestFocus();
-            ((Button)findViewById(R.id.cfgBtnMI_General)).callOnClick();
+            findViewById(R.id.cfgBtnMI_General).setSelected(true);
+            findViewById(R.id.cfgBtnMI_General).requestFocus();
+            findViewById(R.id.cfgBtnMI_General).callOnClick();
 
         }
         dlg.dismiss();
@@ -165,5 +165,16 @@ public class ConfigActivity extends AppCompatActivity implements DialogInterface
         Intent intentConfigActivity = new Intent(context, ConfigActivity.class);
         context.startActivity(intentConfigActivity);
 
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

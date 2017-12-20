@@ -65,7 +65,7 @@ public class ImageUtil {
         if (type == 7) {
             Random random = new Random();
 
-            type = random.nextInt(7);
+            type = random.nextInt(6);
         }
 
         AnimInfo imageAnim = ImageUtil.getAnim(context, type);

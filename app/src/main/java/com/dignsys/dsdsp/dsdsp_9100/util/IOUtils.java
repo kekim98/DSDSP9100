@@ -2,8 +2,10 @@
 package com.dignsys.dsdsp.dsdsp_9100.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 import com.turbomanage.httpclient.BasicHttpClient;
 
 import org.mozilla.universalchardet.UniversalDetector;
@@ -224,9 +226,10 @@ public class IOUtils {
     }
 
     public static String getHostAddress(Context mContext) {
-        //TODO : for only testing address
-        String addr = "http://192.168.1.132";
-        return addr;
+       // String addr = "http://192.168.1.132";
+        String addr = ConfigHelper.getInstance(mContext).getServerAddr();
+
+        return String.format("http://%s", addr);
     }
 
 

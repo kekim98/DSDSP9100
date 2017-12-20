@@ -12,17 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Space;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.dignsys.dsdsp.dsdsp_9100.R;
 import com.dignsys.dsdsp.dsdsp_9100.util.DaulUtils;
-import com.dignsys.dsdsp.dsdsp_9100.util.ImageUtil;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.MainViewModel;
@@ -200,6 +197,7 @@ public class ScreenFragmentCfg extends Fragment  {
                 DSLibIF.setCapRSSMode(((Spinner)mView.findViewById(R.id.cfgAS_spCapRSSMode)).getSelectedItemPosition());
 
                 Toast.makeText(ScreenFragmentCfg.this.getContext(), R.string.ca_msg_apply_config, Toast.LENGTH_SHORT).show();
+                ConfigActivity.hideKeyboard(getActivity());
             }
         });
 

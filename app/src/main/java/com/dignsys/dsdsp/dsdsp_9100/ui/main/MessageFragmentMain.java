@@ -2,7 +2,6 @@ package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -88,6 +87,11 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
         makeLayout(mView);
 
+        mTextSW = mView.findViewById(R.id.textSW);
+        mImageView = mView.findViewById(R.id.imageView);
+
+        mTextSW.setFactory(this);
+
         return mView;
 
     }
@@ -98,11 +102,6 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
         super.onViewCreated(view, savedInstanceState);
         // TODO: Rename and change types and number of view
-
-        mTextSW = view.findViewById(R.id.textSW);
-        mImageView = view.findViewById(R.id.imageView);
-
-        mTextSW.setFactory(this);
 
 
         run();
@@ -210,7 +209,7 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
     @Override
     public View makeView() {
         mTv = new TextView(this.getContext());
-        setTextProperty();
+      //  setTextProperty();
 
         return mTv;
     }
@@ -262,11 +261,11 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
         in.setFillAfter(true); // 애니메이션 후 이동한좌표에
 
         if (speed == Definer.DEF_CAP_SPEED_FAST) {
-            in.setDuration(10000 );
+            in.setDuration(15000 );
         } else if (speed == Definer.DEF_CAP_SPEED_NORMAL) {
-            in.setDuration(15000);
-        } else {
             in.setDuration(20000);
+        } else {
+            in.setDuration(25000);
         }
 
         in.setAnimationListener(this);

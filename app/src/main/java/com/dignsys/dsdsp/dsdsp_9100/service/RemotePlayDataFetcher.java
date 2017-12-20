@@ -9,6 +9,7 @@ import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.util.HashUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.IOUtils;
 import com.dignsys.dsdsp.dsdsp_9100.util.TimeUtils;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 import com.turbomanage.httpclient.BasicHttpClient;
 import com.turbomanage.httpclient.ConsoleRequestLogger;
 import com.turbomanage.httpclient.HttpResponse;
@@ -70,10 +71,35 @@ public class RemotePlayDataFetcher {
         mContext = context;
 
         for (int i = 0; i < DATA_KEYS_IN_ORDER.length; i++) {
-            mManifestUrl[i] = URL_KEYS_IN_ORDER[i];
+            //mManifestUrl[i] = URL_KEYS_IN_ORDER[i];
+
+            mManifestUrl[i] = getManifestUrl(i);
             mManifestLTimeStamp[i] = getPlayTimestamp(context, i);
         }
 
+    }
+
+    private String getManifestUrl(int i) {
+
+        ConfigHelper configHelper = ConfigHelper.getInstance(mContext);
+        String serverAddr = configHelper.getServerAddr();
+        String serverFolder = configHelper.getServerFolder();
+        String serverPort = configHelper.getServerPort();
+
+
+        switch (i) {
+            case 0: //playlist.txt
+                return String.format("http://%s:%s/%s/%s", serverAddr, serverPort, serverFolder, Definer.DEF_FILENAME_PLAYLIST);
+            case 1: //format.txt
+                return String.format("http://%s:%s/%s/%s", serverAddr, serverPort, serverFolder, Definer.DEF_FILENAME_FORMAT);
+            case 2: //rss.txt
+                return  configHelper.getCapRSSAddress();
+            case 3: //dspconfig.txt
+                return String.format("http://%s:%s/%s/%s", serverAddr, serverPort, serverFolder, Definer.DEF_FILENAME_DSPCONFIG);
+            case 4: //command.txt
+                return String.format("http://%s:%s/%s/%s", serverAddr, serverPort, serverFolder, Definer.DEF_FILENAME_COMMAND);
+        }
+        return null;
     }
 
     /**

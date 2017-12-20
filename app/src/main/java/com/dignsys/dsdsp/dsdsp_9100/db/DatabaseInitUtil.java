@@ -36,6 +36,7 @@ public class DatabaseInitUtil {
     private static void insertConfigData(AppDatabase db, ConfigEntity configEntity) {
         db.beginTransaction();
         try {
+            db.configDao().delete();
             db.configDao().insertOne(configEntity);
             db.setTransactionSuccessful();
         } finally {

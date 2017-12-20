@@ -2,15 +2,11 @@ package com.dignsys.dsdsp.dsdsp_9100.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.content.ComponentName;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.PersistableBundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -23,7 +19,6 @@ import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.CommandEntity;
-import com.dignsys.dsdsp.dsdsp_9100.service.DspJobService;
 import com.dignsys.dsdsp.dsdsp_9100.service.SyncService;
 
 import java.io.File;

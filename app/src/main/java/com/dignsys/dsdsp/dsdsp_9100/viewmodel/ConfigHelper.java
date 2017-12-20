@@ -20,8 +20,6 @@ import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.RssEntity;
 import com.dignsys.dsdsp.dsdsp_9100.service.AlarmReceiver;
 
-import org.w3c.dom.Text;
-
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -1197,7 +1195,7 @@ public class ConfigHelper {
             @Override
             protected Void doInBackground(Context... params) {
                 final AppDatabase db = DatabaseCreator.getInstance(_context);
-                if(db.configDao().configCount() == 0) DatabaseInitUtil.initializeDb(db);
+                DatabaseInitUtil.initializeDb(db);
                 return null;
             }
 

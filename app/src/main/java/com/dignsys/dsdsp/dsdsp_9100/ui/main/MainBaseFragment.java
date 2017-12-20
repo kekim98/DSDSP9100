@@ -51,6 +51,12 @@ abstract class MainBaseFragment extends Fragment {
             mPaneEntity = ((MainActivity) getActivity()).getPaneEntity(mPaneNum);
             mSpaneEntity =  ((MainActivity) getActivity()).getSpaneEntity();
         }
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         subscribe();
     }

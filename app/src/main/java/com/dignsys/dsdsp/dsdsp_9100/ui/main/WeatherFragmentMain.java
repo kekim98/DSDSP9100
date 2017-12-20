@@ -64,6 +64,7 @@ public class WeatherFragmentMain extends MainBaseFragment {
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
 
         makeLayout(view);
+        mImageView = view.findViewById(R.id.imageView);
 
         return view;
 
@@ -72,11 +73,6 @@ public class WeatherFragmentMain extends MainBaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // TODO: Rename and change types and number of view
-
-        //  mVideoView = view.findViewById(R.id.videoView);
-        mImageView = view.findViewById(R.id.imageView);
 
         run();
 
