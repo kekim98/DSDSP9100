@@ -4,6 +4,7 @@
 
 package com.dignsys.dsdsp.dsdsp_9100.db.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
@@ -23,4 +24,6 @@ public interface RssDao {
     @Insert
     void insert(RssEntity rssEntity);
 
+    @Query("SELECT * FROM rss_info LIMIT 1")
+    LiveData<RssEntity> loadRss();
 }

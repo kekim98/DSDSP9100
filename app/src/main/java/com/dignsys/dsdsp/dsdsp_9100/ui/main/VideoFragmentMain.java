@@ -147,13 +147,19 @@ public class VideoFragmentMain extends MainBaseFragment implements ViewSwitcher.
     @Override
     public void onResume() {
         super.onResume();
-        run();
+        if (mContent != null && mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_VIDEO) {
+            run();
+        }
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        stop();
+        if (mContent != null && mContent.getFileType() == Definer.DEF_CONTENTS_TYPE_VIDEO) {
+            stop();
+        }
+
     }
 
     @Override

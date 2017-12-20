@@ -17,6 +17,7 @@ import com.dignsys.dsdsp.dsdsp_9100.db.AppDatabase;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseCreator;
 import com.dignsys.dsdsp.dsdsp_9100.db.DatabaseInitUtil;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.RssEntity;
 import com.dignsys.dsdsp.dsdsp_9100.service.AlarmReceiver;
 
 import org.w3c.dom.Text;
@@ -52,6 +53,11 @@ public class ConfigHelper {
 
     private ConfigEntity _mConfig;
 
+    private LiveData<RssEntity> mRss;
+    private Observer<RssEntity> mRssObserver;
+    private String mRssTitle;
+    private String mRssDesc;
+
 
     private Context _context;
 
@@ -79,7 +85,30 @@ public class ConfigHelper {
             }
         };
         mConfig.observeForever(configObserver);
+
+        mRss = mDB.rssDao().loadRss();
+
+        // Create the observer which updates the schedule list .
+        mRssObserver = new Observer<RssEntity>() {
+            @Override
+            public void onChanged(@Nullable final RssEntity rss) {
+                if (rss != null ) {
+                    mRssTitle = rss.getTitle_text();
+                    mRssDesc = rss.getDesc_text();
+                }
+            }
+        };
+        mRss.observeForever(mRssObserver);
     }
+
+    public String getRssTitle() {
+        return mRssTitle;
+    }
+
+    public String getRssDesc() {
+        return mRssDesc;
+    }
+
 
     private void applyConfigs() {
         //apply config item only to system configuration(ex, timezone)
@@ -742,6 +771,10 @@ public class ConfigHelper {
 
     public   int getCapPosition(){
         return _mConfig.getCapPosition();
+    }
+
+    public   int getRSSCaptionMode(){
+        return _mConfig.getRssCaptionMode();
     }
 
     public   int getCapColor(){

@@ -2,16 +2,24 @@ package com.dignsys.dsdsp.dsdsp_9100.util;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageSwitcher;
 import android.widget.TextSwitcher;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.R;
+import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.model.AnimInfo;
+import com.dignsys.dsdsp.dsdsp_9100.viewmodel.CommandHelper;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
+
+import java.io.File;
 
 /**
  * Created by bawoori on 17. 12. 15.
@@ -19,74 +27,46 @@ import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
 
 public class MessageUtil {
 
-    public static AnimInfo getAnim(Context context, int type) {
-        AnimInfo animInfo = new AnimInfo();
-        Animation in = null;
-        Animation out = null;
+    private static final String TAG = MessageUtil.class.getSimpleName();
 
-        if (type == Definer.DEF_MESSAGE_TYPE_SCROLL) {
-            in = AnimationUtils.loadAnimation(context, R.anim.text_scroll_right);
-            out = null;
 
-        } else if (type == Definer.DEF_MESSAGE_TYPE_WRAP_UP) {
 
-            in = AnimationUtils.loadAnimation(context, R.anim.push_up_in);
-            out = null;
 
-        } else if (type == Definer.DEF_MESSAGE_TYPE_WRAP_DOWN) {
-            in = AnimationUtils.loadAnimation(context, R.anim.push_down_in);
-            out = null;
+    public static Typeface getTypeface(Context context, int type)
+    {
+        Typeface tf = null;
+        ConfigHelper DSLibIF = ConfigHelper.getInstance(context);
+        CommandHelper DSComIF = CommandHelper.getInstance(context);
+        String custFontPath = Definer.DEF_COMMAND_CONTENT_PATH + File.separator;
 
-        } else if (type == Definer.DEF_MESSAGE_TYPE_WRAP_STOP_UP) {
-            in = AnimationUtils.loadAnimation(context, R.anim.push_up_in);
-            out = AnimationUtils.loadAnimation(context, R.anim.push_down_out);
+        int index = type==0?DSLibIF.getCapFont():DSLibIF.getTimeFont();
 
-        } else if (type == Definer.DEF_MESSAGE_TYPE_WRAP_STOP_DOWN) {
-            in = AnimationUtils.loadAnimation(context, R.anim.push_down_in);
-            out = AnimationUtils.loadAnimation(context, R.anim.push_up_out);
+        switch(index)	{
+            case 0:
+                tf = Typeface.create(Typeface.DEFAULT,Typeface.NORMAL );
+                break;
+            case 1:
+                tf = Typeface.createFromAsset(context.getAssets(), "fonts/NANUMGOTHIC.TTF");
+                break;
+            case 2:
+                tf = Typeface.createFromAsset(context.getAssets(), "fonts/NANUMMYEONGJO.TTF");
+                break;
+            case 3:
+                tf = Typeface.createFromFile(custFontPath + DSComIF.getUserFont(1));
+                break;
+            case 4:
+                tf = Typeface.createFromFile(custFontPath + DSComIF.getUserFont(2));
+                break;
+            case 5:
+                tf = Typeface.createFromFile(custFontPath + DSComIF.getUserFont(3));
+                break;
+
         }
 
-        animInfo.in = in;
-        animInfo.out = out;
-
-        return animInfo;
+        return tf;
     }
 
-    public static void setCaptionEffect(Context context, View view, boolean isText) {
-        if (view == null) return;
 
-       // int type = ConfigHelper.getInstance(context).getCapPosition();
-        int type = 0;
-        int speed = ConfigHelper.getInstance(context).getCapSpeed();
-        AnimInfo anim = MessageUtil.getAnim(context, type);
-
-        if (isText) {
-
-            if (anim.out == null) {
-                if (type == Definer.DEF_CFG_MESSAGE_TYPE_SCROLL) {
-                   // Animation animation = AnimationUtils.loadAnimation(context, R.anim.text_scroll_right);
-
-                    if (speed == Definer.DEF_CAP_SPEED_FAST) {
-                        anim.in.setDuration(10000);
-                    } else if (speed == Definer.DEF_CAP_SPEED_NORMAL) {
-                        anim.in.setDuration(15000);
-                    } else {
-                        anim.in.setDuration(20000);
-                    }
-                }
-                view.startAnimation(anim.in);
-            } else {
-                ((TextSwitcher) view).setInAnimation(anim.in);
-                ((TextSwitcher) view).setOutAnimation(anim.out);
-            }
-
-        } else {
-            AnimInfo imageAnim = MessageUtil.getAnim(context, type);
-            ((ImageSwitcher)view).setInAnimation(imageAnim.in);
-            ((ImageSwitcher)view).setOutAnimation(imageAnim.out);
-        }
-
-    }
 
     public static  int getColor(int color)
     {
@@ -114,6 +94,7 @@ public class MessageUtil {
         }
             return Color.BLACK;
     }
+
 
 
 }

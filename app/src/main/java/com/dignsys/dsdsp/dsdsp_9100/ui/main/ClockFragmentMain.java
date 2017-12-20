@@ -119,6 +119,7 @@ public class ClockFragmentMain extends MainBaseFragment {
         Log.d(TAG, "makeView: pos=" + pos);
 
         mClockView.setTextSize(fontSize);
+        mClockView.setTypeface(MessageUtil.getTypeface(getContext(), 1));
         mClockView.setTextColor(MessageUtil.getColor(DSLibIF.getTimeColor()));
         mView.setBackgroundColor(MessageUtil.getColor(DSLibIF.getTimeBGColor()));
     }

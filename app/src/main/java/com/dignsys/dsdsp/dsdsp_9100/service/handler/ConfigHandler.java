@@ -385,8 +385,7 @@ public class ConfigHandler extends BasicHandler {
 //								set dsp screen captionposition top | bottom | left | right
                            if(strSubItem.equals("captionposition")) {
 
-                             //  int nCurrVal = Integer.valueOf(strValue);
-                               int nCurrVal = ConfigHelper.getRSSCaptionModeValue(strValue);
+                               int nCurrVal = ConfigHelper.getCapPositionValue(strValue);
                                mConfig.setCapPosition(nCurrVal);
                            }
 
