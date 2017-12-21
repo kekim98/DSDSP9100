@@ -10,10 +10,10 @@
     <TextSwitcher
         android:id="@+id/textSW"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:maxLines="1"
         android:layout_gravity="center"
+        android:maxLines="1"
         android:text=""
         android:textSize="50sp" />
 

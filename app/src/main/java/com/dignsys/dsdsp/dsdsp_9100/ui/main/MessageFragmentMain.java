@@ -1,11 +1,15 @@
 package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,29 +120,36 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
     @Override
     protected void applyConfig(ConfigEntity config) {
         if (mTextSW != null /*&& mTextSW.isActivated()*/) {
-            String rssTitle = DSLibIF.getRssTitle();
-            String rssDesc = DSLibIF.getRssDesc();
-            int type = DSLibIF.getRSSCaptionMode();
-
-            if (type == Definer.DEF_CFG_MESSAGE_TYPE_SCROLL) {
-               // MessageUtil.setCaptionEffect(getContext(), mTextSW, true, this);
-               // getScrollAnimation
-                if (DSLibIF.getCapMode() == Definer.DEF_CFG_ITEM_VALUE_CAP_TEXT_RSS) {
-                    if (DSLibIF.getCapRSSMode() == Definer.DEF_MESSAGE_RSS_MODE_DESC) {
-                        messageMap.put(RSS_KEY, rssDesc);
-                    } else if (DSLibIF.getCapRSSMode() == Definer.DEF_MESSAGE_RSS_MODE_TITLE) {
-                        messageMap.put(RSS_KEY, rssTitle);
-                    } else {
-                        messageMap.put(RSS_KEY, rssTitle + rssDesc);
-                    }
-                } else {
-                    messageMap.remove(RSS_KEY);
-                }
-            }
 
             setTextProperty();
+            initRssMessage();
         }
 
+    }
+
+    private void initRssMessage() {
+        String rssTitle = DSLibIF.getRssTitle();
+        String rssDesc = DSLibIF.getRssDesc();
+        int type = DSLibIF.getRSSCaptionMode();
+
+        if (type == Definer.DEF_CFG_MESSAGE_TYPE_SCROLL) {
+          //  String message = "[법제처 공고 제2014-72호]법제지원단 기간제 근로자 채용 공고 | [법제처 입찰공고";
+            if (DSLibIF.getCapMode() == Definer.DEF_CFG_ITEM_VALUE_CAP_TEXT_RSS) {
+                messageMap.remove(RSS_KEY);
+                if (DSLibIF.getCapRSSMode() == Definer.DEF_MESSAGE_RSS_MODE_DESC) {
+                    messageMap.put(RSS_KEY, rssDesc);
+                  //  messageMap.put(RSS_KEY, message);
+
+                } else if (DSLibIF.getCapRSSMode() == Definer.DEF_MESSAGE_RSS_MODE_TITLE) {
+                    messageMap.put(RSS_KEY, rssTitle);
+                  //  messageMap.put(RSS_KEY, message);
+                } else {
+                    messageMap.put(RSS_KEY, rssTitle + rssDesc);
+                }
+            } else {
+                messageMap.remove(RSS_KEY);
+            }
+        }
     }
 
     @Override
@@ -150,7 +161,6 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
             return;
         }
         // Log.d(TAG, "run: mContent.path=" + mContent.getFilePath());
-        messageMap.clear();
 
 
         int fileType = mContent.getFileType();
@@ -166,6 +176,7 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
                 try {
                     message = IOUtils.readFileAsString(IOUtils.getContentFile(this.getContext(), IOUtils.getFilename(UrlPath)));
 
+
                     messageMap.put(MESSAGE_KEY, message);
 
 
@@ -176,9 +187,9 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
             }
 
-            mTextSW.setText(messageMap.get(MESSAGE_LIST_ORDER[++messageIndex % messageMap.size()]));
-            float width = getTextLength(message);
-            Animation ani= getScrollAnimation(width);
+            mTextSW.setText(messageMap.get(MESSAGE_LIST_ORDER[messageIndex++ % messageMap.size()]));
+           // float width = getTextLength(message);
+            Animation ani= getScrollAnimation(message);
             mTextSW.startAnimation(ani);
             ani.setAnimationListener(this);
 
@@ -194,15 +205,15 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
     }
 
-    private float getTextLength(String text) {
+    private int getTextLength(String text) {
         int fontSize = DSLibIF.getCapSize();
         Paint paint = new Paint();
 
-        paint.setTypeface(Typeface.DEFAULT);// your preference here
+        paint.setTypeface(Typeface.DEFAULT_BOLD);// your preference here
         paint.setTextSize(fontSize);// have this the same as your text size
 
 
-        return paint.measureText(text);
+        return Math.round(paint.measureText(text));
     }
 
 
@@ -234,39 +245,78 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
         Log.d(TAG, "makeView: pos=" + pos);
 
-        mTv.setSingleLine();
+
         mTv.setTextSize(fontSize);
         mTv.setTypeface(MessageUtil.getTypeface(getContext(), 0));
         mTv.setTextColor(MessageUtil.getColor(DSLibIF.getCapColor()));
+        mTv.setMaxLines(1);
+       // mTv.setGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
         mView.setBackgroundColor(MessageUtil.getColor(DSLibIF.getCapBGColor()));
     }
 
+   /* public  float convertPixelsToDp(float px){
+        Resources resources = getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return dp;
+    }*/
 
 
-    public  Animation getScrollAnimation(float width) {
+    public  Animation getScrollAnimation(String msg) {
         Animation in;
         int speed = DSLibIF.getCapSpeed();
 
-        float toX =  (-1.0f * width/getW());
-        Log.d(TAG, "getScrollAnimation: toX=" + toX);
+        int width = getTextLength(msg);
+        Log.d(TAG, "getScrollAnimation: width=" + width + " msg=" + msg);
 
-        in = new TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 1.0f,
-                Animation.RELATIVE_TO_SELF, toX,
-                Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f);
+        if (width > getW()) {
+            ViewGroup.LayoutParams params = mTextSW.getLayoutParams();
+           // params.width = (int) (convertPixelsToDp(width));
+            params.width =  width;
+            mTextSW.setLayoutParams(params);
+
+            in = new TranslateAnimation(
+                    Animation.RELATIVE_TO_PARENT,1.0f,
+                    Animation.ABSOLUTE, -width,
+                    Animation.ABSOLUTE, 0.0f,
+                    Animation.ABSOLUTE, 0.0f);
+
+            if (speed == Definer.DEF_CAP_SPEED_FAST) {
+                in.setDuration((long) (10 * width/2));
+            } else if (speed == Definer.DEF_CAP_SPEED_NORMAL) {
+                in.setDuration((long) (20 * width/2));
+            } else {
+                in.setDuration((long) (30 * width/2));
+            }
+
+
+        } else {
+            ViewGroup.LayoutParams params = mTextSW.getLayoutParams();
+            params.width = params. MATCH_PARENT;
+            mTextSW.setLayoutParams(params);
+
+            in = new TranslateAnimation(
+                    Animation.RELATIVE_TO_PARENT,1.0f,
+                    Animation.ABSOLUTE, -width,
+                    Animation.ABSOLUTE, 0.0f,
+                    Animation.ABSOLUTE, 0.0f);
+
+            if (speed == Definer.DEF_CAP_SPEED_FAST) {
+                in.setDuration((long) (10 * width));
+            } else if (speed == Definer.DEF_CAP_SPEED_NORMAL) {
+                in.setDuration((long) (20 * width));
+            } else {
+                in.setDuration((long) (30 * width));
+            }
+
+        }
+
+
+
 
         in.setInterpolator(new LinearInterpolator());
         in.setFillEnabled(true);
-        in.setFillAfter(true); // 애니메이션 후 이동한좌표에
-
-        if (speed == Definer.DEF_CAP_SPEED_FAST) {
-            in.setDuration(15000 );
-        } else if (speed == Definer.DEF_CAP_SPEED_NORMAL) {
-            in.setDuration(20000);
-        } else {
-            in.setDuration(25000);
-        }
+        in.setFillAfter(true);
 
         in.setAnimationListener(this);
 
@@ -274,7 +324,7 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
     }
 
 
-    public  void setCaptionEffect(Context context, View view, boolean isText) {
+   /* public  void setCaptionEffect(Context context, View view, boolean isText) {
         if (view == null) return;
 
         int type = DSLibIF.getRSSCaptionMode();
@@ -318,7 +368,7 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
         Animation in = null;
         Animation out = null;
 
-        /*if (type == Definer.DEF_MESSAGE_TYPE_SCROLL) {
+        *//*if (type == Definer.DEF_MESSAGE_TYPE_SCROLL) {
             //  in = AnimationUtils.loadAnimation(context, R.anim.text_scroll_right);
             in = new TranslateAnimation(
                     Animation.RELATIVE_TO_SELF, 1.0f,
@@ -333,7 +383,7 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
             //in.setToX
             out = null;
 
-        } else */if (type == Definer.DEF_MESSAGE_TYPE_WRAP_UP) {
+        } else *//*if (type == Definer.DEF_MESSAGE_TYPE_WRAP_UP) {
 
             in = AnimationUtils.loadAnimation(context, R.anim.push_up_in);
             out = null;
@@ -356,7 +406,7 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
         return animInfo;
     }
-
+*/
 
     @Override
     public void onAnimationStart(Animation animation) {
@@ -365,14 +415,17 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        Log.d(TAG, "onAnimationEnd: ");
 
-        String msg = messageMap.get(MESSAGE_LIST_ORDER[++messageIndex % messageMap.size()]);
-        float width = getTextLength(msg);
-        Animation ani= getScrollAnimation(width);
+        String msg = messageMap.get(MESSAGE_LIST_ORDER[messageIndex++ % messageMap.size()]);
+       // String msg = "[법제처 공고 제2014-72호]법제지원단 기간제 근로자 채용 공고 | [법제처 입찰공고";
+
+       // float width = getTextLength(msg);
+        Animation ani= getScrollAnimation(msg);
+      //  Log.d(TAG, "onAnimationEnd: msg=" + msg + " width=" + width);
         ani.setAnimationListener(this);
 
        // mTextSW.setText(msg);
+
         mTextSW.setCurrentText(msg);
 
         mTextSW.startAnimation(ani);

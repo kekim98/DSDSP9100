@@ -177,7 +177,8 @@ public class PlayDataHandler {
 
         RssEntity rss = mRssHandler.getRss();
         if (rss != null) {
-            db.rssDao().update(rss);
+            db.rssDao().delete();
+            db.rssDao().insert(rss);
         }
 
     }

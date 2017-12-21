@@ -2,6 +2,7 @@ package com.dignsys.dsdsp.dsdsp_9100.ui.main;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -88,8 +89,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy()
     {
-        stopDSDSP();
-        mViewModel.removeObservers();
+        MutableLiveData<Integer> command = CommandHelper.getInstance(this).getPlayCommand();
+        command.setValue(Definer.DEF_PLAY_IDLE_COMMAND);
+       /* stopDSDSP();
+        mViewModel.removeObservers();*/
         super.onDestroy();
 
     }
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         mViewModel.getPlayCommand().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer command) {
-                Log.d(TAG, "onChanged:bawoori1 command=" + String.valueOf(command));
+                Log.d(TAG, "onChanged:bawoori1 command=" +command);
                // mPlayStart =1;
 
                 if (command == Definer.DEF_PLAY_START_COMMAND) {

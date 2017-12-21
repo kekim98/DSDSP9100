@@ -26,4 +26,7 @@ public interface RssDao {
 
     @Query("SELECT * FROM rss_info LIMIT 1")
     LiveData<RssEntity> loadRss();
+
+    @Query("DELETE FROM rss_info")
+    void delete();
 }

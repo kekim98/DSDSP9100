@@ -37,6 +37,8 @@ public class RssHandler extends BasicHandler {
 
         boolean bIsItem = false;
 
+        String tempTitle = "";
+        String tempDesc = "";
         String strTitle 	= "";
         String strDesc 		= "";
       //  String strRSSText 	= "";
@@ -73,12 +75,12 @@ public class RssHandler extends BasicHandler {
                     }
 
                     if(strStartTag.equals("title")) {
-                        if(bIsItem) strTitle = Html.fromHtml(xpp.nextText()).toString().trim();
+                        if(bIsItem) tempTitle = Html.fromHtml(xpp.nextText()).toString().trim();
                     }
                     if(strStartTag.equals("link")) {
                     }
                     if(strStartTag.equals("description")) {
-                        if(bIsItem) strDesc = Html.fromHtml(xpp.nextText()).toString().trim();
+                        if(bIsItem) tempDesc = Html.fromHtml(xpp.nextText()).toString().trim();
                     }
                     if(strStartTag.equals("image")) {
                     }
@@ -92,10 +94,11 @@ public class RssHandler extends BasicHandler {
 
                     if(strEndTag.equals("item")) {
 
-                        if(!strDesc.isEmpty())	strDesc = strDesc + " | ";
+                        if(!tempTitle.isEmpty())	strDesc = strDesc + tempTitle + " | ";
 
-                        if(!strTitle.isEmpty())	strTitle = strTitle + " ▶ ";
-
+                        Log.d(TAG, "process: strDesc=" + strDesc);
+                        if(!tempDesc.isEmpty())	strTitle = strTitle + tempDesc + " ▶ ";
+                        Log.d(TAG, "process: strTitle=" + strTitle);
                         bIsItem = false;
 
                     }
