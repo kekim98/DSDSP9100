@@ -249,7 +249,8 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
         mTv.setTextSize(fontSize);
         mTv.setTypeface(MessageUtil.getTypeface(getContext(), 0));
         mTv.setTextColor(MessageUtil.getColor(DSLibIF.getCapColor()));
-        mTv.setMaxLines(1);
+      //  mTv.setMaxLines(1);
+        mTv.setSingleLine();
        // mTv.setGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
         mView.setBackgroundColor(MessageUtil.getColor(DSLibIF.getCapBGColor()));
     }
@@ -278,8 +279,8 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
             in = new TranslateAnimation(
                     Animation.RELATIVE_TO_PARENT,1.0f,
                     Animation.ABSOLUTE, -width,
-                    Animation.ABSOLUTE, 0.0f,
-                    Animation.ABSOLUTE, 0.0f);
+                    Animation.RELATIVE_TO_PARENT, 0.15f,
+                    Animation.RELATIVE_TO_PARENT, 0.15f);
 
             if (speed == Definer.DEF_CAP_SPEED_FAST) {
                 in.setDuration((long) (10 * width/2));
@@ -298,8 +299,8 @@ public class MessageFragmentMain extends MainBaseFragment implements ViewSwitche
             in = new TranslateAnimation(
                     Animation.RELATIVE_TO_PARENT,1.0f,
                     Animation.ABSOLUTE, -width,
-                    Animation.ABSOLUTE, 0.0f,
-                    Animation.ABSOLUTE, 0.0f);
+                    Animation.RELATIVE_TO_PARENT, 0.15f,
+                    Animation.RELATIVE_TO_PARENT, 0.15f);
 
             if (speed == Definer.DEF_CAP_SPEED_FAST) {
                 in.setDuration((long) (10 * width));
