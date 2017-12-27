@@ -69,9 +69,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(Definer.DEF_ON_TIME_ACTION)) {
             if (config.getAutoOnOffMode() == Definer.DEF_USE) { //0=ON, 1=OFF
                 MutableLiveData<Integer> cmd = CommandHelper.getInstance(context).getPlayCommand();
-             //   if (cmd.getValue() == Definer.DEF_SLEEP_IN_COMMAND) {
+                if (cmd.getValue() == Definer.DEF_SLEEP_IN_COMMAND) {
                     cmd.postValue(Definer.DEF_SLEEP_OUT_COMMAND);
-             //   }
+                }
 
             }
         }
