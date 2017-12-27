@@ -716,6 +716,7 @@ public class ConfigHelper {
     }
 
     public   int getServerSyncInterval(){
+        if(_mConfig == null) return 60;
         return _mConfig.getServerSyncInterval();
     }
 
@@ -804,6 +805,7 @@ public class ConfigHelper {
     }
 
     public int getCapSize() {
+        if(_mConfig == null) return 50;
         return _mConfig.getCapSize();
     }
 
@@ -905,14 +907,17 @@ public class ConfigHelper {
     }
 
     public   int getIntervalLive(){
+        if(_mConfig == null) return 60;
         return _mConfig.getIntervalLive();
     }
 
     public   int getIntervalLog(){
+        if(_mConfig == null) return 60;
         return _mConfig.getIntervalLog();
     }
 
     public   int getIntervalCapture(){
+        if(_mConfig == null) return 60;
         return _mConfig.getIntervalCapture();
     }
 

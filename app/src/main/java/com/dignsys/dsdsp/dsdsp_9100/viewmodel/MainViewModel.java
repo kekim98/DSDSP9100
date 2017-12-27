@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ConfigEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.ContentEntity;
 import com.dignsys.dsdsp.dsdsp_9100.db.entity.PaneEntity;
+import com.dignsys.dsdsp.dsdsp_9100.service.LogService;
 import com.dignsys.dsdsp.dsdsp_9100.service.SyncService;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class MainViewModel extends AndroidViewModel {
     private final ScheduleHelper mScheduleHelper = ScheduleHelper.getInstance(this.getApplication());
     private final CommandHelper mCommandHelper = CommandHelper.getInstance(this.getApplication());
     private ConfigHelper mConfigHelper = ConfigHelper.getInstance(this.getApplication());
+    private LogHelper mLogHelper = LogHelper.getInstance(this.getApplication());
 
 
     public MainViewModel(@NonNull final Application application){
@@ -94,6 +96,15 @@ public class MainViewModel extends AndroidViewModel {
                 if ((mTickCount*DSDSP_TICK % getPlayDataDownloadInterval()) == 0) {
                     SyncService.startDownload(MainViewModel.this.getApplication(), null, null);
                 }
+                if ((mTickCount*DSDSP_TICK % getLogUploadInterval()) == 0) {
+                    LogService.startLogUpload(MainViewModel.this.getApplication(), null, null);
+                }
+                if ((mTickCount*DSDSP_TICK % getLiveStateUploadInterval()) == 0) {
+                    LogService.startLiveStateUpload(MainViewModel.this.getApplication(), null, null);
+                }
+                if ((mTickCount*DSDSP_TICK % getLiveScreenUploadInterval()) == 0) {
+                    LogService.startLiveScreenUpload(MainViewModel.this.getApplication(), null, null);
+                }
 
                 //for playlist schedule
                 mScheduleHelper.updateScheduleTick();
@@ -105,9 +116,35 @@ public class MainViewModel extends AndroidViewModel {
 
     private long getPlayDataDownloadInterval() {
 
-        //TODO : have to change
-        return 6*1000;
+        int interval = mConfigHelper.getServerSyncInterval();
+
+        return interval*1000;
+
     }
+
+    private long getLogUploadInterval() {
+
+        int interval = mConfigHelper.getIntervalLog();
+
+        return interval*1000;
+    }
+
+    private long getLiveStateUploadInterval() {
+
+        int interval = mConfigHelper.getIntervalLive();
+
+        return interval*1000;
+    }
+
+
+    private long getLiveScreenUploadInterval() {
+
+        int interval = mConfigHelper.getIntervalCapture();
+
+        return interval*1000;
+    }
+
+
 
     private void stopDSPTimer() {
         if (mTimerTask != null) {

@@ -46,6 +46,11 @@ public class CommandHelper {
 
     // For Singleton instantiation
     private static final Object LOCK = new Object();
+
+    public int get_command() {
+        return mPlayCommand.getValue();
+    }
+
     private CommandEntity _command;
 
     private CommandHelper(Context context) {

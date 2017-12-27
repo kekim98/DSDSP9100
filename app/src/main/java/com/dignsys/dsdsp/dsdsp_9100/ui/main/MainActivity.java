@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
     {
         MutableLiveData<Integer> command = CommandHelper.getInstance(this).getPlayCommand();
         command.setValue(Definer.DEF_PLAY_IDLE_COMMAND);
-       /* stopDSDSP();
-        mViewModel.removeObservers();*/
+        stopDSDSP();
+        mViewModel.removeObservers();
         super.onDestroy();
 
     }

@@ -3,6 +3,7 @@ package com.dignsys.dsdsp.dsdsp_9100.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 
 import com.dignsys.dsdsp.dsdsp_9100.Definer;
 import com.dignsys.dsdsp.dsdsp_9100.viewmodel.ConfigHelper;
@@ -228,8 +229,10 @@ public class IOUtils {
     public static String getHostAddress(Context mContext) {
        // String addr = "http://192.168.1.132";
         String addr = ConfigHelper.getInstance(mContext).getServerAddr();
+        String port = ConfigHelper.getInstance(mContext).getServerPort();
+        if(TextUtils.isEmpty(port)) port = "80";
 
-        return String.format("http://%s", addr);
+        return String.format("http://%s:%s", addr, port);
     }
 
 
