@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (command == Definer.DEF_SLEEP_OUT_COMMAND) {
                     mCommand.screenOnOff(true);
+                    stopDSDSP();
                     playDSDSP();
                 }
 

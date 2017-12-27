@@ -60,18 +60,18 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         if (intent.getAction().equals(Definer.DEF_OFF_TIME_ACTION)) {
-            if (config.getAutoOnOffMode() == 0) { //0=ON, 1=OFF
+            if (config.getAutoOnOffMode() == Definer.DEF_USE) { //0=ON, 1=OFF
                 MutableLiveData<Integer> cmd = CommandHelper.getInstance(context).getPlayCommand();
                 cmd.postValue(Definer.DEF_SLEEP_IN_COMMAND);
             }
         }
 
         if (intent.getAction().equals(Definer.DEF_ON_TIME_ACTION)) {
-            if (config.getAutoOnOffMode() == 0) { //0=ON, 1=OFF
+            if (config.getAutoOnOffMode() == Definer.DEF_USE) { //0=ON, 1=OFF
                 MutableLiveData<Integer> cmd = CommandHelper.getInstance(context).getPlayCommand();
-                if (cmd.getValue() == Definer.DEF_SLEEP_IN_COMMAND) {
+             //   if (cmd.getValue() == Definer.DEF_SLEEP_IN_COMMAND) {
                     cmd.postValue(Definer.DEF_SLEEP_OUT_COMMAND);
-                }
+             //   }
 
             }
         }

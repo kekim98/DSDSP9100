@@ -7,6 +7,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -118,14 +119,47 @@ public class ConfigHelper {
     }
 
     private void applyOnOffTime() {
+        if(_mConfig.getAutoOnOffMode() == Definer.DEF_NOT_USED) return;
+        Calendar cal = Calendar.getInstance();
+        ConfigHelper DSLibIF = ConfigHelper.getInstance(this._context);
 
-        applyOffTime();
-        applyOnTime();
+        int nTime	= Integer.valueOf(String.format("%02d%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)));
+        int nSTime	= Integer.valueOf(DSLibIF.getAutoOnTime());
+        int nETime	= Integer.valueOf(DSLibIF.getAutoOffTime());
+
+        if(nSTime != nETime)	{
+
+            if(nSTime >= nETime)	{
+                if(nSTime <= nTime || nTime < nETime )	{
+
+                    applyOnTime();
+
+                }
+                else {
+                    applyOffTime();
+
+                }
+
+            }
+            else {
+                if(nTime >= nSTime && nTime < nETime)	{
+                    applyOnTime();
+                }
+                else {
+                    applyOffTime();
+                }
+            }
+
+
+        }
+
+       /* applyOffTime();
+        applyOnTime();*/
 
     }
 
     private void applyOffTime() {
-        if(_mConfig.getAutoOnOffMode() == 1) return;
+
 
         if (mOffTimeAlarm != null) {
             mOffTimeAlarm.cancel(mOffTimePI);
@@ -137,7 +171,7 @@ public class ConfigHelper {
 
     private void applyOnTime() {
 
-        if(_mConfig.getAutoOnOffMode() == 1) return;
+
 
         if (mOnTimeAlarm != null) {
             mOnTimeAlarm.cancel(mOnTimePI);
