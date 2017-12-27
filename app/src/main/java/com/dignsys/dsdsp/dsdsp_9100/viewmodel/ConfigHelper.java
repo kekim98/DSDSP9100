@@ -836,6 +836,7 @@ public class ConfigHelper {
     }
 
     public   int getAutoOnOffMode(){
+        if(_mConfig== null) return 0;
         return _mConfig.getAutoOnOffMode();
     }
 

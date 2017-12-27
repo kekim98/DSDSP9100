@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    @Override
+    /*@Override
     protected void onDestroy()
     {
         MutableLiveData<Integer> command = CommandHelper.getInstance(this).getPlayCommand();
@@ -96,8 +96,18 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
 
     }
+*/
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
 
 
+        MutableLiveData<Integer> command = CommandHelper.getInstance(this).getPlayCommand();
+        command.setValue(Definer.DEF_PLAY_IDLE_COMMAND);
+        stopDSDSP();
+        mViewModel.removeObservers();
+        super.onSaveInstanceState(outState);
+    }
 
     private void subscribe() {
         // Update the list when the data changes
@@ -236,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             fragmentTransaction.commit();
+           // fragmentTransaction.commitAllowingStateLoss();
         }
     }
 
